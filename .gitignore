@@ -1,0 +1,49 @@
+# Python cache
+
+**pycache**/
+*.py[cod]
+*$py.class
+
+# Virtual environments
+
+.venv/
+venv/
+env/
+ENV/
+
+# Pytest
+
+.pytest_cache/
+.coverage
+coverage.xml
+htmlcov/
+
+# Environment config (local secrets)
+
+config/env_config.py
+
+# Logs
+
+*.log
+
+# IDE
+
+.vscode/
+.idea/
+
+# OS files
+
+.DS_Store
+Thumbs.db
+
+# Test artifacts
+
+screenshots/
+reports/
+allure-results/
+allure-report/
+
+# Temporary files
+
+*.tmp
+*.temp
