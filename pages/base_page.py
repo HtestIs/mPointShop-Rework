@@ -60,4 +60,5 @@ class BasePage:
         element = self.wait_presence(location)
         return element.get_attribute(attribute)
     def hover(self,location):
-        self.actions.move_to_element(location).perform()
+        element = self.wait_clickable(location)
+        self.actions.move_to_element(element).perform()

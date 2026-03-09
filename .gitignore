@@ -38,10 +38,12 @@ Thumbs.db
 
 # Test artifacts
 
-screenshots/
-reports/
-allure-results/
-allure-report/
+reports/*
+!reports/.gitkeep
+!reports/assets/
+!reports/screenshots/
+reports/assets/*
+reports/screenshots/*
 
 # Temporary files
 

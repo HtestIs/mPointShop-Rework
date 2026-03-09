@@ -8,7 +8,10 @@ class StoreManage(BasePage):
     FIRST_STORE = (By.XPATH,"(//div[contains(@class,'branchmanagement-container')])[1]")
     FIRST_STORE_NAME =(By.XPATH,"(//div[contains(@class,'branchmanagement-form-content')]//b)[1]")
     FIRST_STORE_BUTTON=(By.XPATH,"(//button[normalize-space()='Đổi mật khẩu'])[1]")
+    FIRST_STORE_EDIT=(By.CSS_SELECTOR,".branchmanagement-container:first-of-type .branchmanagement-right button:nth-of-type(2)")
     FIRST_SWITCH_BUTTON = (By.CSS_SELECTOR, ".branchmanagement-container:first-of-type .rs-toggle")
+    FIRST_STORE_USERNAME = (By.XPATH,"//b[contains(text(),'Tên đăng nhập')]/following-sibling::input")
+    MODAL_CANCEL = (By.XPATH, "//button[normalize-space()='Hủy']")
     FIRST_SWITCH = (By.CSS_SELECTOR,".branchmanagement-container:first-of-type input[aria-checked]")
     TEXT_PASSWORD_MODAL=(By.XPATH,"//div[contains(@class,'rs-modal-content')]//b[contains(text(),'Mật khẩu mới')]/ancestor::div[@role='row']//input")
     CONFIRM_BUTTON =(By.XPATH,"//div[@role='dialog']//button[.//span[normalize-space()='Xác nhận']]")
@@ -42,7 +45,16 @@ class StoreManage(BasePage):
         self.wait_attribute_change(self.FIRST_SWITCH,"aria-checked",current)
     def click_logout(self):
         self.click(self.BTN_LOG_OUT)
+        return LoginPage(self.driver)
     def hover_user(self):
         self.hover(self.USER_BLOCK)
     def get_lock_status(self):
         return self.get_attribute_status(self.FIRST_SWITCH,"aria-checked")
+    def get_store_username(self):
+        self.click(self.FIRST_STORE_EDIT)
+        username = self.get_attribute_status(self.FIRST_STORE_USERNAME,"value")
+        self.click(self.MODAL_CANCEL)
+        return username
+    def ensure_locked(self):
+        if self.get_lock_status() == "false":
+            self.toggle_store()
