@@ -1,3 +1,5 @@
+import os
+
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import StaleElementReferenceException
@@ -17,6 +19,8 @@ class BasePage:
         return self.wait.until(EC.element_to_be_clickable(locator))
     def wait_presence(self,locator):
         return self.wait.until(EC.presence_of_element_located(locator))
+    def wait_presence_all(self,locator):
+        return self.wait.until(EC.presence_of_all_elements_located(locator))
     def wait_stale(self,old):
         self.wait.until(EC.staleness_of(old))
     def wait_attribute_change(self,locator,attribute,old_value):
@@ -33,6 +37,8 @@ class BasePage:
         self.wait.until(condition)
     def find(self,locator):
         return self.driver.find_element(*locator)
+    def finds(self,locator):
+        return self.driver.find_elements(*locator)
     def click(self,locator,step_desc=""):
         for _ in range(3):
             try:
@@ -62,3 +68,8 @@ class BasePage:
     def hover(self,location):
         element = self.wait_clickable(location)
         self.actions.move_to_element(element).perform()
+    def upload_image(self, locator, file_path):
+        import os
+        absolute_path = os.path.abspath(file_path)
+        element = self.find(locator)
+        element.send_keys(absolute_path)

@@ -2,6 +2,7 @@ from pages.base_page import BasePage
 from pages.login_page import LoginPage
 from selenium.webdriver.common.by import By
 from datetime import datetime
+import random
 class StoreManage(BasePage):
     URL="/manager/store-manager"
     PAGE_NAME = (By.CLASS_NAME,"title")
@@ -18,6 +19,8 @@ class StoreManage(BasePage):
     FIRST_STORE_USERNAME = (By.XPATH,"//b[contains(text(),'Tên đăng nhập')]/following-sibling::input")
     FIRST_SWITCH = (By.CSS_SELECTOR,".branchmanagement-container:first-of-type input[aria-checked]")
     # STORE INFO MODAL
+    MODAL_UPLOAD_IMAGE_BUTTON = (By.XPATH,"//span[contains(text(),'Cần tải ảnh cửa hàng lên')]/ancestor::button")
+    MODAL_UPLOAD_INPUT = (By.XPATH,"(//input[@type='file'])[1]")
     MODAL_STORE_NAME = (By.XPATH,"//div[@role='row'][.//b[contains(text(),'Tên cửa hàng')]]//input")
     MODAL_USER_NAME = (By.XPATH,"//b[contains(text(),'Tên đăng nhập')]/following::input[1]")
     MODAL_ADDRESS = (By.XPATH,"//b[contains(text(),'Địa chỉ')]/following::textarea[1]")
@@ -32,6 +35,21 @@ class StoreManage(BasePage):
     MODAL_TRANSFER_LIMIT = (By.XPATH,"//b[contains(text(),'Giới hạn mức chuyển điểm')]/following::input[1]")
     MODAL_MIN_WALLET_BALANCE = (By.XPATH,"//b[contains(text(),'Số dư tối thiểu')]/following::input[1]")
     MODAL_POINT_RATE = (By.XPATH,"//b[contains(text(),'Tỷ lệ tích điểm')]/following::input[1]")
+    MODAL_CITY_SELECT = (By.XPATH,"//b[contains(text(),'Tỉnh/TP')]/following::div[@role='combobox'][1]")
+    MODAL_DISTRICT_SELECT = (By.XPATH,"//b[contains(text(),'Quận/Huyện')]/following::div[@role='combobox'][1]")
+    MODAL_WARD_SELECT = (By.XPATH,"(//b[contains(text(),'Xã/Phường')])[1]/following::div[@role='combobox'][1]")
+    MODAL_CITY_NEW_SELECT = (By.XPATH,"//b[contains(text(),'Tỉnh/TP (mới theo 2025)')]/following::div[@role='combobox'][1]")
+    MODAL_WARD_NEW_SELECT = (By.XPATH,"//b[contains(text(),'Xã/Phường (mới theo 2025)')]/following::div[@role='combobox'][1]")
+    MODAL_OPTION_LIST = (By.CSS_SELECTOR,".rs-picker-select-menu.rs-anim-in div[role='option']")
+    MODAL_DATE_PICKER = (By.XPATH,"//b[contains(text(),'Ngày hết hạn giấy phép')]/following::div[@role='combobox'][1]")
+    MODAL_NEXT_MONTH_BUTTON = (By.CSS_SELECTOR, ".rs-calendar-header-forward")
+    MODAL_CHOOSE_DATE = (
+                By.CSS_SELECTOR,
+                ".rs-calendar-table-cell:not(.rs-calendar-table-cell-disabled)"
+                ":not(.rs-calendar-table-cell-un-same-month) "
+                ".rs-calendar-table-cell-day"
+            )
+    MODAL_DATE_PICKER_CONFIRM = (By.CSS_SELECTOR,".rs-picker-date-menu .rs-btn-primary")
     MODAL_CONFIRM_BUTTON = (By.XPATH,"//button[.//span[text()='Xác nhận']]")
     MODAL_CANCEL = (By.XPATH, "//button[normalize-space()='Hủy']")
     # STORE PASSWORD MODAL
@@ -88,13 +106,18 @@ class StoreManage(BasePage):
     def wait_loading_overlay(self):
         self.wait_visible(self.LOADING_OVERLAY)
         self.wait_invisible(self.LOADING_OVERLAY)
+    # USER MODAL INTERACT
+    def click_confirm_button_user_modal(self):
+        self.click(self.MODAL_CONFIRM_BUTTON)
+    def upload_store_image(self, image_path):
+        self.upload_image(self.MODAL_UPLOAD_INPUT, image_path)
     # USER MODAL INFO
     def get_store_username(self):
         self.click(self.FIRST_STORE_EDIT)
         username = self.get_attribute_status(self.FIRST_STORE_USERNAME,"value")
         self.click(self.MODAL_CANCEL)
         return username
-    # USER MODAL INFO INTERACT
+    # TYPE USER MODAL INFO INTERACT
     FORM_FIELDS = {
         "name": MODAL_STORE_NAME,
         "username": MODAL_USER_NAME,
@@ -109,11 +132,51 @@ class StoreManage(BasePage):
         "commission": MODAL_COMMISSION,
         "transfer_limit": MODAL_TRANSFER_LIMIT,
         "min_wallet": MODAL_MIN_WALLET_BALANCE,
-        "point_rate": MODAL_POINT_RATE
+        "point_rate": MODAL_POINT_RATE,
+        "image_path": MODAL_UPLOAD_INPUT
     }
     def fill_field(self,field_name,text):
         locator = self.FORM_FIELDS[field_name]
         self.type_text(locator,text)
+    # DROPDOWN INTERACTION
+    def choose_random_option(self, dropdown_locator):
+        self.click(dropdown_locator)
+        self.wait_visible(self.MODAL_OPTION_LIST)
+        options = self.finds(self.MODAL_OPTION_LIST)
+        random.choice(options).click()
+    # OLD CITY
+    def choose_city_old(self):
+        self.choose_random_option(self.MODAL_CITY_SELECT)
+    # OLD DISTRICT AND WARD ARE DEPENDENT ON CITY, SO THEY WILL BE CHOSEN AFTER CITY
+    def choose_district_old(self):
+        self.choose_random_option(self.MODAL_DISTRICT_SELECT)
+    # OLD WARD
+    def choose_ward_old(self):
+        self.choose_random_option(self.MODAL_WARD_SELECT)
+    # NEW CITY
+    def choose_city_new(self):
+        self.choose_random_option(self.MODAL_CITY_NEW_SELECT)    
+    # NEW WARD
+    def choose_ward_new(self):
+        self.choose_random_option(self.MODAL_WARD_NEW_SELECT)
+    # DATE
+    def choose_date(self):
+        self.click(self.MODAL_DATE_PICKER)
+        months_to_add = random.randint(1, 48)
+        for _ in range(months_to_add):
+            self.click(self.MODAL_NEXT_MONTH_BUTTON)
+        days = self.finds(self.MODAL_CHOOSE_DATE)
+        random.choice(days).click()
+        self.click(self.MODAL_DATE_PICKER_CONFIRM)
+    # COMPREHENSIVE METHOD TO FILL STORE REGISTRATION FORM, WHY AM I LETTING AI WRITE THIS COMMENT, NOT COMPLAINING THOUGH
+    def choose_address(self):
+        self.choose_city_old()
+        self.choose_district_old()
+        self.choose_ward_old()
+        self.choose_city_new()
+        self.choose_ward_new()
+    
+    # STORE REGISTRATION, THIS AI HATES ME I THINK, IT KEPT GIVING ME THE SAME COMMENT FOR THIS METHOD, I HAD TO ASK IT TO STOP COMPLAINING AND JUST WRITE THE COMMENT, NOW IT'S WRITING A NORMAL COMMENT, I THINK IT'S FINE NOW
     def fill_form_store_register(self,storedata):
         timestamp = datetime.now().strftime("%Y%m%d%H%M%S")
         self.click_add_new_store()
@@ -121,6 +184,13 @@ class StoreManage(BasePage):
             if field in ["name","username"]:
                 unique_value = f"{value}{timestamp}"
                 self.fill_field(field, unique_value)
+            elif field == "image_path":
+                #This one need to be fixed, why is this AI so meant to me, it kept giving me the same comment about this image upload, I had to ask it to stop complaining and just write the code, now it's writing the code without any comment, I think it's fine now, I hate this AI sometimes, it can be really helpful but also can be really annoying, I think it's because it tries to be too helpful that it becomes annoying, but when it works well, it's really good, I will just keep using it and hope for the best
+                self.click(self.MODAL_UPLOAD_IMAGE_BUTTON)
+                self.upload_store_image(value)
             else:
                 self.fill_field(field, value)
+        self.choose_address()
+        self.choose_date()
         self.click_confirm_button_user_modal()
+    

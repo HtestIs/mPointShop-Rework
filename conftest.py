@@ -6,7 +6,8 @@ from pages.store_manage_page import StoreManage
 import os
 from datetime import datetime
 pytest_plugins = [
-    "fixtures.driver_fixture"
+    "fixtures.driver_fixture",
+    "fixtures.store_data"
 ]
 def pytest_addoption(parser):
     parser.addoption("--browser", action="store", default="chrome")
