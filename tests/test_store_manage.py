@@ -36,4 +36,23 @@ def test_lock_store(login_partner_success):
 
 def test_register_new_store(login_partner_success,storedata):
     login_partner_success.fill_form_store_register(storedata)
-    
+
+@pytest.mark.parametrize("field, field_name",[
+    # ("name", "Tên cửa hàng"),
+    # ("username", "Tên đăng nhập"),
+    ("city_old", "Tỉnh/Thành phố"),
+    ("district_old", "Quận/Huyện")
+    # ("ward_old", "Phường/Xã"),
+    # ("address", "Địa chỉ"),
+    # ("gps", "GPS"),
+    # ("manager_name", "Tên người phụ trách"),
+    # ("manager_phone", "Số điện thoại người phụ trách"),
+    # ("customer_service_phone", "Số điện thoại chăm sóc khách hàng"),
+    # ("password", "Mật khẩu"),
+    # ("confirm_password", "Nhập lại mật khẩu"),
+])
+def test_missing_field_store_registration(login_partner_success,storedata,field,field_name):
+    data = storedata.copy()
+    data[field] = ""
+    login_partner_success.fill_form_store_register(data)
+    assert "Trường này là bắt buộc" in login_partner_success.get_field_error(field_name)

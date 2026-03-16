@@ -49,3 +49,8 @@ reports/screenshots/*
 
 *.tmp
 *.temp
+
+# Allure reports
+allure-results/
+allure-report/
+allure-reports/

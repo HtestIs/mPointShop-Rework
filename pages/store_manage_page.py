@@ -6,11 +6,11 @@ import random
 class StoreManage(BasePage):
     URL="/manager/store-manager"
     PAGE_NAME = (By.CLASS_NAME,"title")
-    # LIST HEAD
+# LIST HEAD
     SEARCH_TEXT_FIND = (By.CSS_SELECTOR,"input[placeholder='Tìm cửa hàng']")
     SEARCH_PHONE_SEARCH_INPUT = (By.CSS_SELECTOR, "input[placeholder='Tìm theo số điện thoại']")
     ADD_STORE_BUTTON = (By.XPATH,"//button[.//span[text()='Thêm cửa hàng']]")
-    # LIST
+# LIST
     FIRST_STORE = (By.XPATH,"(//div[contains(@class,'branchmanagement-container')])[1]")
     FIRST_STORE_NAME =(By.XPATH,"(//div[contains(@class,'branchmanagement-form-content')]//b)[1]")
     FIRST_STORE_BUTTON=(By.XPATH,"(//button[normalize-space()='Đổi mật khẩu'])[1]")
@@ -18,7 +18,8 @@ class StoreManage(BasePage):
     FIRST_SWITCH_BUTTON = (By.CSS_SELECTOR, ".branchmanagement-container:first-of-type .rs-toggle")
     FIRST_STORE_USERNAME = (By.XPATH,"//b[contains(text(),'Tên đăng nhập')]/following-sibling::input")
     FIRST_SWITCH = (By.CSS_SELECTOR,".branchmanagement-container:first-of-type input[aria-checked]")
-    # STORE INFO MODAL
+# STORE INFO MODAL
+    MODAL_FULL = (By.XPATH, "//div[@class='rs-modal-content']")
     MODAL_UPLOAD_IMAGE_BUTTON = (By.XPATH,"//span[contains(text(),'Cần tải ảnh cửa hàng lên')]/ancestor::button")
     MODAL_UPLOAD_INPUT = (By.XPATH,"(//input[@type='file'])[1]")
     MODAL_STORE_NAME = (By.XPATH,"//div[@role='row'][.//b[contains(text(),'Tên cửa hàng')]]//input")
@@ -41,35 +42,31 @@ class StoreManage(BasePage):
     MODAL_CITY_NEW_SELECT = (By.XPATH,"//b[contains(text(),'Tỉnh/TP (mới theo 2025)')]/following::div[@role='combobox'][1]")
     MODAL_WARD_NEW_SELECT = (By.XPATH,"//b[contains(text(),'Xã/Phường (mới theo 2025)')]/following::div[@role='combobox'][1]")
     MODAL_OPTION_LIST = (By.CSS_SELECTOR,".rs-picker-select-menu.rs-anim-in div[role='option']")
+    MODAL_SEARCH_OPTION =(By.XPATH, "//input[@class='rs-picker-search-bar-input']")
     MODAL_DATE_PICKER = (By.XPATH,"//b[contains(text(),'Ngày hết hạn giấy phép')]/following::div[@role='combobox'][1]")
     MODAL_NEXT_MONTH_BUTTON = (By.CSS_SELECTOR, ".rs-calendar-header-forward")
-    MODAL_CHOOSE_DATE = (
-                By.CSS_SELECTOR,
-                ".rs-calendar-table-cell:not(.rs-calendar-table-cell-disabled)"
-                ":not(.rs-calendar-table-cell-un-same-month) "
-                ".rs-calendar-table-cell-day"
-            )
+    MODAL_CHOOSE_DATE = (By.CSS_SELECTOR,".rs-calendar-table-cell:not(.rs-calendar-table-cell-disabled)"":not(.rs-calendar-table-cell-un-same-month) "".rs-calendar-table-cell-day")
     MODAL_DATE_PICKER_CONFIRM = (By.CSS_SELECTOR,".rs-picker-date-menu .rs-btn-primary")
     MODAL_CONFIRM_BUTTON = (By.XPATH,"//button[.//span[text()='Xác nhận']]")
     MODAL_CANCEL = (By.XPATH, "//button[normalize-space()='Hủy']")
-    # STORE PASSWORD MODAL
+# STORE PASSWORD MODAL
     TEXT_PASSWORD_MODAL=(By.XPATH,"//div[contains(@class,'rs-modal-content')]//b[contains(text(),'Mật khẩu mới')]/ancestor::div[@role='row']//input")
     CONFIRM_BUTTON =(By.XPATH,"//div[@role='dialog']//button[.//span[normalize-space()='Xác nhận']]")
-    # ETC
+# ETC
     TOAST_MESSAGE =(By.XPATH,"//div[@role='alert']/div[2]")
     BTN_LOG_OUT = (By.XPATH,"//span[text()='Đăng xuất']")
     USER_BLOCK = (By.CSS_SELECTOR,"#cheader > section > div > div.c-header__right > div > a > div")
     LOADING_OVERLAY = (By.CSS_SELECTOR, "div.c-loading-page")
     def get_page_name(self):
         return self.get_text(self.PAGE_NAME)
-    # LIST HEAD INTERACT
+# LIST HEAD INTERACT
     def find_store_with_name(self,text):
         self.type_text(self.SEARCH_TEXT_FIND,text)
     def click_add_new_store(self):
         self.click(self.ADD_STORE_BUTTON)
     def find_store_with_number(self,text):
         self.type_text(self.SEARCH_PHONE_SEARCH_INPUT,text)
-    # LIST
+# LIST
     def get_store_name(self):
         return self.get_text(self.FIRST_STORE_NAME)
     def toggle_store(self):
@@ -84,7 +81,7 @@ class StoreManage(BasePage):
     def ensure_locked(self):
         if self.get_lock_status() == "false":
             self.toggle_store()
-    # STORE PASSWORD
+# STORE PASSWORD
     def click_change_password(self):
         self.click(self.FIRST_STORE_BUTTON)
     def enter_password_update(self,text):
@@ -95,7 +92,7 @@ class StoreManage(BasePage):
         self.click_change_password()
         self.enter_password_update(new_password)
         self.click_confirm_button_password_modal()
-    # ETC
+# ETC
     def get_toast_msg(self):
         return self.get_text(self.TOAST_MESSAGE)
     def click_logout(self):
@@ -106,21 +103,26 @@ class StoreManage(BasePage):
     def wait_loading_overlay(self):
         self.wait_visible(self.LOADING_OVERLAY)
         self.wait_invisible(self.LOADING_OVERLAY)
-    # USER MODAL INTERACT
+# USER MODAL INTERACT
     def click_confirm_button_user_modal(self):
         self.click(self.MODAL_CONFIRM_BUTTON)
     def upload_store_image(self, image_path):
         self.upload_image(self.MODAL_UPLOAD_INPUT, image_path)
-    # USER MODAL INFO
+# USER MODAL INFO
     def get_store_username(self):
         self.click(self.FIRST_STORE_EDIT)
         username = self.get_attribute_status(self.FIRST_STORE_USERNAME,"value")
         self.click(self.MODAL_CANCEL)
         return username
-    # TYPE USER MODAL INFO INTERACT
+# TYPE USER MODAL INFO INTERACT
     FORM_FIELDS = {
         "name": MODAL_STORE_NAME,
         "username": MODAL_USER_NAME,
+        "city_old": MODAL_CITY_SELECT,
+        "district_old": MODAL_DISTRICT_SELECT,
+        "ward_old": MODAL_WARD_SELECT,
+        "city_new": MODAL_CITY_NEW_SELECT,
+        "ward_new": MODAL_WARD_NEW_SELECT,
         "address": MODAL_ADDRESS,
         "gps": MODAL_GPS,
         "manager_name": MODAL_MANAGER_NAME,
@@ -138,28 +140,37 @@ class StoreManage(BasePage):
     def fill_field(self,field_name,text):
         locator = self.FORM_FIELDS[field_name]
         self.type_text(locator,text)
-    # DROPDOWN INTERACTION
-    def choose_random_option(self, dropdown_locator):
+    def choose_option(self,field_name,value):
+        dropdown_locator = self.FORM_FIELDS[field_name]
         self.click(dropdown_locator)
+        self.search_option(value)
+# DROPDOWN INTERACTION
+    # THIS ONE IS FOR SEARCHING THE DROPDOWN OPTION, 
+    # IT'S CALLED BY choose_option METHOD, 
+    # IT WILL TYPE IN THE SEARCH BOX AND CLICK THE FIRST OPTION,
+    def search_option(self,value):
+        self.type_text(self.MODAL_SEARCH_OPTION,value)
         self.wait_visible(self.MODAL_OPTION_LIST)
         options = self.finds(self.MODAL_OPTION_LIST)
-        random.choice(options).click()
-    # OLD CITY
-    def choose_city_old(self):
-        self.choose_random_option(self.MODAL_CITY_SELECT)
-    # OLD DISTRICT AND WARD ARE DEPENDENT ON CITY, SO THEY WILL BE CHOSEN AFTER CITY
-    def choose_district_old(self):
-        self.choose_random_option(self.MODAL_DISTRICT_SELECT)
-    # OLD WARD
-    def choose_ward_old(self):
-        self.choose_random_option(self.MODAL_WARD_SELECT)
-    # NEW CITY
-    def choose_city_new(self):
-        self.choose_random_option(self.MODAL_CITY_NEW_SELECT)    
-    # NEW WARD
-    def choose_ward_new(self):
-        self.choose_random_option(self.MODAL_WARD_NEW_SELECT)
-    # DATE
+        if options:
+            options[0].click()
+    # THIS ONE IS FOR SELECTING THE LOCATION OPTION,
+    # IT'S CALLED BY select_option METHOD, 
+    # IT WILL SELECT THE CITY, DISTRICT, WARD IN ORDER,
+    # ADDITIONALLY, IF THE CITY IS NOT SELECTED, 
+    # IT WILL NOT SELECT THE DISTRICT AND WARD,
+    # IF THE DISTRICT IS NOT SELECTED, IT WILL NOT SELECT THE WARD.
+    def select_option(self,data):
+        city = data.get("city_old")
+        district = data.get("district_old")
+        ward = data.get("ward_old")
+        if city:
+            self.choose_option("city_old",city)
+            if district:
+                self.choose_option("district_old",district)
+                if ward:
+                    self.choose_option("ward_old",ward)
+# DATE CHOOSE
     def choose_date(self):
         self.click(self.MODAL_DATE_PICKER)
         months_to_add = random.randint(1, 48)
@@ -168,29 +179,40 @@ class StoreManage(BasePage):
         days = self.finds(self.MODAL_CHOOSE_DATE)
         random.choice(days).click()
         self.click(self.MODAL_DATE_PICKER_CONFIRM)
-    # COMPREHENSIVE METHOD TO FILL STORE REGISTRATION FORM, WHY AM I LETTING AI WRITE THIS COMMENT, NOT COMPLAINING THOUGH
-    def choose_address(self):
-        self.choose_city_old()
-        self.choose_district_old()
-        self.choose_ward_old()
-        self.choose_city_new()
-        self.choose_ward_new()
     
-    # STORE REGISTRATION, THIS AI HATES ME I THINK, IT KEPT GIVING ME THE SAME COMMENT FOR THIS METHOD, I HAD TO ASK IT TO STOP COMPLAINING AND JUST WRITE THE COMMENT, NOW IT'S WRITING A NORMAL COMMENT, I THINK IT'S FINE NOW
-    def fill_form_store_register(self,storedata):
+    # THIS ONE FOR ENTERIN VALUE IN STORE REGISTRATION, 
+    # I KNOW IT LOOKS SCARY, BUT IT'S ACTUALLY NOT THAT BAD, 
+    # JUST A LOT OF FIELDS TO FILL, 
+    # I TRIED TO MAKE IT AS GENERIC AS POSSIBLE 
+    # SO THAT IT CAN HANDLE ANY FIELD IN THE FUTURE, HOPEFULLY
+    def enter_value(self,storedata):
         timestamp = datetime.now().strftime("%Y%m%d%H%M%S")
-        self.click_add_new_store()
+        username = storedata["username"]
         for field, value in storedata.items():
-            if field in ["name","username"]:
-                unique_value = f"{value}{timestamp}"
-                self.fill_field(field, unique_value)
+            if field in ["username"]:
+                if username:
+                    unique_value = f"{value}{timestamp}"
+                    self.fill_field(field, unique_value)
             elif field == "image_path":
-                #This one need to be fixed, why is this AI so meant to me, it kept giving me the same comment about this image upload, I had to ask it to stop complaining and just write the code, now it's writing the code without any comment, I think it's fine now, I hate this AI sometimes, it can be really helpful but also can be really annoying, I think it's because it tries to be too helpful that it becomes annoying, but when it works well, it's really good, I will just keep using it and hope for the best
-                self.click(self.MODAL_UPLOAD_IMAGE_BUTTON)
                 self.upload_store_image(value)
             else:
                 self.fill_field(field, value)
-        self.choose_address()
+
+# STORE REGISTRATION
+    # THIS AI HATES ME I THINK, 
+    # IT KEPT GIVING ME THE SAME COMMENT FOR THIS METHOD, 
+    # I HAD TO ASK IT TO STOP COMPLAINING AND JUST WRITE THE COMMENT, 
+    # NOW IT'S WRITING A NORMAL COMMENT, I THINK IT'S FINE NOW
+    def fill_form_store_register(self,storedata):
+        self.click_add_new_store()
+        self.enter_value(storedata)
+        self.select_option(storedata)
         self.choose_date()
-        self.click_confirm_button_user_modal()
+        # self.click_confirm_button_user_modal()
     
+# ERROR HANDLING
+    # THIS ONE FOR FIELDS ERROR
+    # SELECTBOX MIGHT F THIS ONE UP
+    def get_field_error(self,field_name):
+        locator = (By.XPATH,f"//b[contains(text(),'{field_name}')]/following-sibling::span")
+        return self.find(locator).text

@@ -2,7 +2,7 @@ import os
 
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-from selenium.common.exceptions import StaleElementReferenceException
+from selenium.common.exceptions import StaleElementReferenceException,ElementClickInterceptedException,ElementNotInteractableException
 from selenium.webdriver.common.action_chains import ActionChains
 class BasePage:
     def __init__(self, driver):
@@ -39,15 +39,26 @@ class BasePage:
         return self.driver.find_element(*locator)
     def finds(self,locator):
         return self.driver.find_elements(*locator)
-    def click(self,locator,step_desc=""):
-        for _ in range(3):
+    def click(self,locator,step_desc="", retries=3):
+        for attempts in range(retries):
             try:
                 element = self.wait_clickable(locator)
                 element.click()
                 return
-            except StaleElementReferenceException:
-                pass
-        raise
+            except (
+            StaleElementReferenceException,
+            ElementClickInterceptedException,
+            ElementNotInteractableException
+        ):
+                self.scroll_into_view(locator)
+                if attempts == retries - 1:
+                    raise
+    def scroll_into_view(self,locator):
+        element = self.find(locator)
+        self.driver.execute_script(
+            "arguments[0].scrollIntoView({block:'center'});",
+            element
+        )
     def type_text(self,locator,text):
         self.wait_visible(locator)
         self.find(locator).send_keys(text)

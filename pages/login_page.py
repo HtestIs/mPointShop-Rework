@@ -1,5 +1,6 @@
 from pages.base_page import BasePage
 from selenium.webdriver.common.by import By
+import allure
 class LoginPage(BasePage):
     TEXT_USERNAME = (By.XPATH,"//input[@placeholder='Tên đăng nhập']")
     TEXT_PASSWORD = (By.XPATH,"//input[@placeholder='Mật khẩu']")
@@ -12,6 +13,7 @@ class LoginPage(BasePage):
         self.type_text(self.TEXT_USERNAME,username)
     def enter_password(self,password):
         self.type_text(self.TEXT_PASSWORD,password)
+    @allure.step("Fill login form with username: {username}")
     def fill_login(self,username,password):
         self.enter_username(username)
         self.enter_password(password)
