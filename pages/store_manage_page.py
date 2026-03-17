@@ -1,3 +1,5 @@
+import allure
+
 from pages.base_page import BasePage
 from pages.login_page import LoginPage
 from selenium.webdriver.common.by import By
@@ -143,7 +145,7 @@ class StoreManage(BasePage):
     def choose_option(self,field_name,value):
         dropdown_locator = self.FORM_FIELDS[field_name]
         self.click(dropdown_locator)
-        self.search_option(value)
+        return self.search_option(value)
 # DROPDOWN INTERACTION
     # THIS ONE IS FOR SEARCHING THE DROPDOWN OPTION, 
     # IT'S CALLED BY choose_option METHOD, 
@@ -152,8 +154,10 @@ class StoreManage(BasePage):
         self.type_text(self.MODAL_SEARCH_OPTION,value)
         self.wait_visible(self.MODAL_OPTION_LIST)
         options = self.finds(self.MODAL_OPTION_LIST)
-        if options:
-            options[0].click()
+        if not options:
+            return False
+        options[0].click()
+        return True
     # THIS ONE IS FOR SELECTING THE LOCATION OPTION,
     # IT'S CALLED BY select_option METHOD, 
     # IT WILL SELECT THE CITY, DISTRICT, WARD IN ORDER,
@@ -170,6 +174,23 @@ class StoreManage(BasePage):
                 self.choose_option("district_old",district)
                 if ward:
                     self.choose_option("ward_old",ward)
+    # THIS ONE IS FOR SELECTING INNER LOCATION OPTION,
+    # CHECK IF USER CHOOSE BIGGER LOCATION YET
+    def setup_location(self,setup,storedata):
+        if setup == "missing_city":
+            return
+        elif setup == "missing_district":
+            self.choose_option("city_old",storedata["city_old"])
+        elif setup == "missing_city_new":
+            return
+    def has_selectable_option(self):
+        options = self.finds(self.MODAL_OPTION_LIST)
+        
+        for option in options:
+            text = option.text.strip().lower()
+            if text and text != "no results":
+                return True
+        return False
 # DATE CHOOSE
     def choose_date(self):
         self.click(self.MODAL_DATE_PICKER)
@@ -192,24 +213,33 @@ class StoreManage(BasePage):
             if field in ["username"]:
                 if username:
                     unique_value = f"{value}{timestamp}"
-                    self.fill_field(field, unique_value)
+                    with allure.step(f"Fill {field} with unique value: {unique_value}"):
+                        self.fill_field(field, unique_value)
             elif field == "image_path":
-                self.upload_store_image(value)
+                with allure.step("Upload store image"):
+                    self.upload_store_image(value)
             else:
-                self.fill_field(field, value)
+                with allure.step(f"Fill {field} with value: {value}"):
+                    self.fill_field(field, value)
 
 # STORE REGISTRATION
     # THIS AI HATES ME I THINK, 
     # IT KEPT GIVING ME THE SAME COMMENT FOR THIS METHOD, 
     # I HAD TO ASK IT TO STOP COMPLAINING AND JUST WRITE THE COMMENT, 
     # NOW IT'S WRITING A NORMAL COMMENT, I THINK IT'S FINE NOW
-    def fill_form_store_register(self,storedata):
-        self.click_add_new_store()
-        self.enter_value(storedata)
-        self.select_option(storedata)
-        self.choose_date()
-        # self.click_confirm_button_user_modal()
-    
+    def fill_form_store_register(self,storedata,with_dropdown=True):
+        with allure.step("Click add new store and fill the form"):
+            self.click_add_new_store()
+        with allure.step("Enter value in the form"):
+            self.enter_value(storedata)
+        if with_dropdown:
+            with allure.step("Select location"):
+                self.select_option(storedata)
+        with allure.step("Choose date"):
+            self.choose_date()
+        with allure.step("Click confirm button"):
+            self.click_confirm_button_user_modal()
+
 # ERROR HANDLING
     # THIS ONE FOR FIELDS ERROR
     # SELECTBOX MIGHT F THIS ONE UP
