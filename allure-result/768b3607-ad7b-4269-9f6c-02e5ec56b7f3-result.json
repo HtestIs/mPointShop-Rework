@@ -1,0 +1,1 @@
+{"name": "Test successful login for merchant", "status": "passed", "start": 1773413855915, "stop": 1773413857583, "uuid": "60a81e53-5b30-4a8c-ac38-9ee13fb77da6", "testCaseId": "f4a2324e09409e6e5fce7f22c027df21", "fullName": "tests.test_login#test_login_success_merchant", "titlePath": ["tests", "test_login.py"]}

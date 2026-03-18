@@ -45,6 +45,7 @@ class StoreManage(BasePage):
     MODAL_WARD_NEW_SELECT = (By.XPATH,"//b[contains(text(),'Xã/Phường (mới theo 2025)')]/following::div[@role='combobox'][1]")
     MODAL_OPTION_LIST = (By.CSS_SELECTOR,".rs-picker-select-menu.rs-anim-in div[role='option']")
     MODAL_SEARCH_OPTION =(By.XPATH, "//input[@class='rs-picker-search-bar-input']")
+    MODAL_NO_RESULT =(By.CSS_SELECTOR,".rs-picker-none")
     MODAL_DATE_PICKER = (By.XPATH,"//b[contains(text(),'Ngày hết hạn giấy phép')]/following::div[@role='combobox'][1]")
     MODAL_NEXT_MONTH_BUTTON = (By.CSS_SELECTOR, ".rs-calendar-header-forward")
     MODAL_CHOOSE_DATE = (By.CSS_SELECTOR,".rs-calendar-table-cell:not(.rs-calendar-table-cell-disabled)"":not(.rs-calendar-table-cell-un-same-month) "".rs-calendar-table-cell-day")
@@ -120,11 +121,6 @@ class StoreManage(BasePage):
     FORM_FIELDS = {
         "name": MODAL_STORE_NAME,
         "username": MODAL_USER_NAME,
-        "city_old": MODAL_CITY_SELECT,
-        "district_old": MODAL_DISTRICT_SELECT,
-        "ward_old": MODAL_WARD_SELECT,
-        "city_new": MODAL_CITY_NEW_SELECT,
-        "ward_new": MODAL_WARD_NEW_SELECT,
         "address": MODAL_ADDRESS,
         "gps": MODAL_GPS,
         "manager_name": MODAL_MANAGER_NAME,
@@ -139,23 +135,48 @@ class StoreManage(BasePage):
         "point_rate": MODAL_POINT_RATE,
         "image_path": MODAL_UPLOAD_INPUT
     }
-    def fill_field(self,field_name,text):
+    COMBO_FIELDS = {
+        "city_old": MODAL_CITY_SELECT,
+        "district_old": MODAL_DISTRICT_SELECT,
+        "ward_old": MODAL_WARD_SELECT,
+        "city_new": MODAL_CITY_NEW_SELECT,
+        "ward_new": MODAL_WARD_NEW_SELECT
+    }
+    def fill_field(self, field_name, value):
         locator = self.FORM_FIELDS[field_name]
-        self.type_text(locator,text)
-    def choose_option(self,field_name,value):
-        dropdown_locator = self.FORM_FIELDS[field_name]
-        self.click(dropdown_locator)
-        return self.search_option(value)
-# DROPDOWN INTERACTION
+        self.type_text(locator, value)
+    def choose_option(self, field_name, value):
+        dropdown = self.COMBO_FIELDS[field_name]
+
+        self.click(dropdown)
+
+        success = self.search_option(value)
+
+        if not success:
+            raise Exception(f"{value} not found in {field_name}")
+
+        self.wait.until(
+            lambda d: self.get_selected_text(field_name) == value
+        )
+        # DROPDOWN INTERACTION
     # THIS ONE IS FOR SEARCHING THE DROPDOWN OPTION, 
     # IT'S CALLED BY choose_option METHOD, 
     # IT WILL TYPE IN THE SEARCH BOX AND CLICK THE FIRST OPTION,
-    def search_option(self,value):
-        self.type_text(self.MODAL_SEARCH_OPTION,value)
-        self.wait_visible(self.MODAL_OPTION_LIST)
+    def search_option(self, value):
+        self.type_text(self.MODAL_SEARCH_OPTION, value)
+
+        self.wait.until(
+            lambda d: (
+                self.finds(self.MODAL_OPTION_LIST)
+                or self.is_visible(self.MODAL_NO_RESULT)
+            )
+        )
+
         options = self.finds(self.MODAL_OPTION_LIST)
+
         if not options:
             return False
+
         options[0].click()
         return True
     # THIS ONE IS FOR SELECTING THE LOCATION OPTION,
@@ -184,13 +205,14 @@ class StoreManage(BasePage):
         elif setup == "missing_city_new":
             return
     def has_selectable_option(self):
-        options = self.finds(self.MODAL_OPTION_LIST)
-        
-        for option in options:
-            text = option.text.strip().lower()
-            if text and text != "no results":
-                return True
-        return False
+        self.wait.until(
+        lambda d: (
+            self.finds(self.MODAL_OPTION_LIST)
+            or self.is_visible(self.MODAL_NO_RESULT)
+        )
+    )
+
+        return len(self.finds(self.MODAL_OPTION_LIST)) > 0
 # DATE CHOOSE
     def choose_date(self):
         self.click(self.MODAL_DATE_PICKER)
@@ -239,6 +261,17 @@ class StoreManage(BasePage):
             self.choose_date()
         with allure.step("Click confirm button"):
             self.click_confirm_button_user_modal()
+    
+    def fill_all_fields(self, storedata):
+        for field in self.FORM_FIELDS:
+            value = storedata.get(field)
+            if value:
+                self.fill_field(field, value)
+    def select_all_dropdowns(self, storedata):
+        for field in self.COMBO_FIELDS:
+            value = storedata.get(field)
+            if value:
+                self.choose_option(field, value)
 
 # ERROR HANDLING
     # THIS ONE FOR FIELDS ERROR
