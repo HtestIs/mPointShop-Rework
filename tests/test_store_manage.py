@@ -1,3 +1,5 @@
+from data.builders import build_store_data
+from data.fake_location import fake_new_location, fake_old_location
 from pages.store_manage_page import StoreManage
 from pages.login_page import LoginPage
 import pytest
@@ -69,7 +71,9 @@ def test_new_store_registration(login_partner_success,storedata):
     login_partner_success.click_add_new_store()
     login_partner_success.fill_all_fields(storedata)
     login_partner_success.select_all_dropdowns(storedata)
-    sleep(5)
+    login_partner_success.choose_date()
+    login_partner_success.click_confirm_button_user_modal()
+    assert "Thành công" in login_partner_success.get_toast_msg()
 @allure.story("Registering stores")
 @allure.title("Register store with missing required fields")
 @allure.severity(allure.severity_level.CRITICAL)
@@ -87,7 +91,11 @@ def test_new_store_registration(login_partner_success,storedata):
 def test_missing_field_store_registration(login_partner_success,storedata,field,field_name):
     data = storedata.copy()
     data[field] = ""
-    login_partner_success.fill_form_store_register(data,with_dropdown=True)
+    login_partner_success.click_add_new_store()
+    login_partner_success.fill_all_fields(data)
+    login_partner_success.select_all_dropdowns(storedata)
+    login_partner_success.choose_date()
+    login_partner_success.click_confirm_button_user_modal()
     assert "bắt buộc" in login_partner_success.get_field_error(field_name)
 
 @allure.story("Registering stores")
@@ -104,7 +112,18 @@ def test_missing_dropdown_store_registration(login_partner_success,storedata,fie
     data = storedata.copy()
     data[field] = ""
     login_partner_success.click_add_new_store()
-    login_partner_success.enter_value(data)
+    login_partner_success.fill_all_fields(storedata)
+    login_partner_success.select_option(data)
     login_partner_success.choose_date()
     login_partner_success.click_confirm_button_user_modal()
     assert "bắt buộc" in login_partner_success.get_field_error(field_name)
+
+def test_update_dropdown_options(login_partner_success,storedata):
+    page = login_partner_success
+    data1 = storedata.copy()
+    data2_old = fake_old_location(exclude_city=data1["city_old"])
+    data2_new = fake_new_location(exclude_city=data1["city_new"])
+    data2 = build_store_data(storedata, **data2_old, **data2_new)
+    page.click_add_new_store()
+    page.select_all_dropdowns(data1)
+    page.select_all_dropdowns(data2)

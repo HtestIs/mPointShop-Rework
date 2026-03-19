@@ -1,3 +1,5 @@
+from datetime import datetime
+
 import pytest
 from faker import Faker
 from config.paths import ICON_AUTO_PATH
@@ -5,15 +7,16 @@ from data.fake_location import fake_old_location, fake_new_location
 fake = Faker('vi_VN')
 @pytest.fixture
 def storedata():
-    old_ward, old_district, old_city = fake_old_location()
-    new_city, new_ward = fake_new_location()
+    old_location = fake_old_location()
+    new_location = fake_new_location()
+    timestamp = datetime.now().strftime("%Y%m%d%H%M%S")
     return {"name": fake.company(), 
-     "username": fake.user_name(),
-     "city_old": old_city,
-     "district_old": old_district,
-     "ward_old": old_ward,
-     "city_new": new_city,
-     "ward_new": new_ward,
+     "username": fake.user_name()+timestamp,
+     "city_old": old_location["city_old"],
+     "district_old": old_location["district_old"],
+     "ward_old": old_location["ward_old"],
+     "city_new": new_location["city_new"],
+     "ward_new": new_location["ward_new"],
      "address": fake.address(),
      "gps": "9.814872168201843/105.61238136803532", 
      "manager_name": fake.name(), 

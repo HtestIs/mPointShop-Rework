@@ -150,11 +150,29 @@ class StoreManage(BasePage):
 
         self.click(dropdown)
 
-        success = self.search_option(value)
+        self.wait.until(
+            lambda d: (
+                self.finds(self.MODAL_OPTION_LIST)
+                or self.is_visible(self.MODAL_NO_RESULT)
+            )
+        )
+        options = self.finds(self.MODAL_OPTION_LIST)
+        if not options:
+            raise Exception(f"No options available for {field_name}")
+        for option in options:
+            if option.text.strip() == value:
+                option.click()
+                break
+        else:
+            raise Exception(f"Option '{value}' not found for {field_name}")
+        
+        self.wait.until(
+            lambda d: self.get_selected_text(field_name) == value
+        )
 
-        if not success:
-            raise Exception(f"{value} not found in {field_name}")
-#
+    def get_selected_text(self, field_name):
+        dropdown = self.COMBO_FIELDS[field_name]
+        return self.find(dropdown).text.strip()
 #
 #
 #
@@ -167,26 +185,6 @@ class StoreManage(BasePage):
 # 
 #  
         # DROPDOWN INTERACTION
-    # THIS ONE IS FOR SEARCHING THE DROPDOWN OPTION, 
-    # IT'S CALLED BY choose_option METHOD, 
-    # IT WILL TYPE IN THE SEARCH BOX AND CLICK THE FIRST OPTION,
-    def search_option(self, value):
-        self.type_text(self.MODAL_SEARCH_OPTION, value)
-
-        self.wait.until(
-            lambda d: (
-                self.finds(self.MODAL_OPTION_LIST)
-                or self.is_visible(self.MODAL_NO_RESULT)
-            )
-        )
-
-        options = self.finds(self.MODAL_OPTION_LIST)
-
-        if not options:
-            return False
-
-        options[0].click()
-        return True
     # THIS ONE IS FOR SELECTING THE LOCATION OPTION,
     # IT'S CALLED BY select_option METHOD, 
     # IT WILL SELECT THE CITY, DISTRICT, WARD IN ORDER,
@@ -197,12 +195,18 @@ class StoreManage(BasePage):
         city = data.get("city_old")
         district = data.get("district_old")
         ward = data.get("ward_old")
+        city_new = data.get("city_new")
+        ward_new = data.get("ward_new")
         if city:
             self.choose_option("city_old",city)
             if district:
                 self.choose_option("district_old",district)
                 if ward:
                     self.choose_option("ward_old",ward)
+        if city_new:
+            self.choose_option("city_new",city_new)
+            if ward_new:
+                self.choose_option("ward_new",ward_new)
     # THIS ONE IS FOR SELECTING INNER LOCATION OPTION,
     # CHECK IF USER CHOOSE BIGGER LOCATION YET
     def setup_location(self,setup,storedata):
@@ -230,54 +234,20 @@ class StoreManage(BasePage):
         days = self.finds(self.MODAL_CHOOSE_DATE)
         random.choice(days).click()
         self.click(self.MODAL_DATE_PICKER_CONFIRM)
-    
-    # THIS ONE FOR ENTERIN VALUE IN STORE REGISTRATION, 
-    # I KNOW IT LOOKS SCARY, BUT IT'S ACTUALLY NOT THAT BAD, 
-    # JUST A LOT OF FIELDS TO FILL, 
-    # I TRIED TO MAKE IT AS GENERIC AS POSSIBLE 
-    # SO THAT IT CAN HANDLE ANY FIELD IN THE FUTURE, HOPEFULLY
-    def enter_value(self,storedata):
-        timestamp = datetime.now().strftime("%Y%m%d%H%M%S")
-        username = storedata["username"]
-        for field, value in storedata.items():
-            if field in ["username"]:
-                if username:
-                    unique_value = f"{value}{timestamp}"
-                    with allure.step(f"Fill {field} with unique value: {unique_value}"):
-                        self.fill_field(field, unique_value)
-            elif field == "image_path":
-                with allure.step("Upload store image"):
-                    self.upload_store_image(value)
-            else:
-                with allure.step(f"Fill {field} with value: {value}"):
-                    self.fill_field(field, value)
 
 # STORE REGISTRATION
     # THIS AI HATES ME I THINK, 
     # IT KEPT GIVING ME THE SAME COMMENT FOR THIS METHOD, 
     # I HAD TO ASK IT TO STOP COMPLAINING AND JUST WRITE THE COMMENT, 
     # NOW IT'S WRITING A NORMAL COMMENT, I THINK IT'S FINE NOW
-    def fill_form_store_register(self,storedata,with_dropdown=True):
-        with allure.step("Click add new store and fill the form"):
-            self.click_add_new_store()
-        with allure.step("Enter value in the form"):
-            self.enter_value(storedata)
-        if with_dropdown:
-            with allure.step("Select location"):
-                self.select_option(storedata)
-        with allure.step("Choose date"):
-            self.choose_date()
-        with allure.step("Click confirm button"):
-            self.click_confirm_button_user_modal()
-    
     def fill_all_fields(self, storedata):
         for field in self.FORM_FIELDS:
             value = storedata.get(field)
-            if value and field != "image_path":
-                self.fill_field(field, value)
-            elif field == "image_path":
-                with allure.step("Upload store image"):
+            if value:
+                if field == "image_path":
                     self.upload_store_image(value)
+                else:
+                    self.fill_field(field, value)
     def select_all_dropdowns(self, storedata):
         for field in self.COMBO_FIELDS:
             value = storedata.get(field)
