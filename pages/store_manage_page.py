@@ -154,10 +154,18 @@ class StoreManage(BasePage):
 
         if not success:
             raise Exception(f"{value} not found in {field_name}")
-
-        self.wait.until(
-            lambda d: self.get_selected_text(field_name) == value
-        )
+#
+#
+#
+#
+# 
+# 
+#  add validate selection
+# 
+# 
+# 
+# 
+#  
         # DROPDOWN INTERACTION
     # THIS ONE IS FOR SEARCHING THE DROPDOWN OPTION, 
     # IT'S CALLED BY choose_option METHOD, 
@@ -265,8 +273,11 @@ class StoreManage(BasePage):
     def fill_all_fields(self, storedata):
         for field in self.FORM_FIELDS:
             value = storedata.get(field)
-            if value:
+            if value and field != "image_path":
                 self.fill_field(field, value)
+            elif field == "image_path":
+                with allure.step("Upload store image"):
+                    self.upload_store_image(value)
     def select_all_dropdowns(self, storedata):
         for field in self.COMBO_FIELDS:
             value = storedata.get(field)

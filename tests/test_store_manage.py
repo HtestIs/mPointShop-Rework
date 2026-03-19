@@ -67,9 +67,9 @@ def test_dropdown_location(login_partner_success,storedata,setup,target_field):
 @allure.severity(allure.severity_level.CRITICAL)
 def test_new_store_registration(login_partner_success,storedata):
     login_partner_success.click_add_new_store()
-    login_partner_success.enter_value(storedata)
+    login_partner_success.fill_all_fields(storedata)
     login_partner_success.select_all_dropdowns(storedata)
-
+    sleep(5)
 @allure.story("Registering stores")
 @allure.title("Register store with missing required fields")
 @allure.severity(allure.severity_level.CRITICAL)
