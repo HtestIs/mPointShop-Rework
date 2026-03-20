@@ -34,14 +34,19 @@ location_new_data = {
         "Thường Tân"
     ]
     }
-def fake_old_location(exclude_city=None):
+def fake_old_location(exclude_city=None,exclude_district=None):
     cities = list(location_data.keys())
     if exclude_city in cities:
         cities = [c for c in cities if c != exclude_city]
     if not cities:
         raise Exception("No cities available to choose from.")
     city = random.choice(cities)
-    district = random.choice(list(location_data[city].keys()))
+    districts = list(location_data[city].keys())
+    if exclude_district:
+        districts = [d for d in location_data[city].keys() if d != exclude_district]
+    else:
+        districts = list(location_data[city].keys())
+    district = random.choice(districts)
     ward = random.choice(location_data[city][district])
     return {
     "city_old": city,

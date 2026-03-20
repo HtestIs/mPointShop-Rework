@@ -1,4 +1,4 @@
-from data.builders import build_store_data
+from data.builders import build_location_data, build_store_data
 from data.fake_location import fake_new_location, fake_old_location
 from pages.store_manage_page import StoreManage
 from pages.login_page import LoginPage
@@ -122,8 +122,30 @@ def test_update_dropdown_options(login_partner_success,storedata):
     page = login_partner_success
     data1 = storedata.copy()
     data2_old = fake_old_location(exclude_city=data1["city_old"])
+    
     data2_new = fake_new_location(exclude_city=data1["city_new"])
     data2 = build_store_data(storedata, **data2_old, **data2_new)
     page.click_add_new_store()
     page.select_all_dropdowns(data1)
     page.select_all_dropdowns(data2)
+    assert page.get_selected_text("city_old") == data2["city_old"], "City dropdown did not update to new selection"
+    assert page.get_selected_text("district_old") == data2["district_old"], "District dropdown did not update based on new city selection"
+    assert page.get_selected_text("ward_old") == data2["ward_old"], "Ward dropdown did not update based on new district selection"
+    assert page.get_selected_text("city_new") == data2["city_new"], "New city dropdown did not update to new selection"
+    assert page.get_selected_text("ward_new") == data2["ward_new"], "New ward dropdown did not update based on new city selection"
+
+@pytest.mark.parametrize("superior_field,target_field,dataset",[
+    ("city_old", "district_old","missing_city"),
+    ("city_old", "ward_old","missing_city"),
+    ("district_old", "ward_old","missing_district"),
+    ("city_new", "ward_new","missing_city")
+])
+def test_dependent_dropdown_behavior(login_partner_success,storedata,superior_field,target_field,dataset):
+    page = login_partner_success
+    page.click_add_new_store()
+    data1 = storedata.copy()
+    data2 = build_location_data(data1, dataset)
+    page.select_all_dropdowns(data1)
+    page.choose_option(superior_field, data2[superior_field])
+    sleep(3)
+    assert page.get_selected_text(target_field) != data1[target_field], f"{target_field} should reset when {superior_field} changes"

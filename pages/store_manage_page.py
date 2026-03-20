@@ -169,7 +169,6 @@ class StoreManage(BasePage):
         self.wait.until(
             lambda d: self.get_selected_text(field_name) == value
         )
-
     def get_selected_text(self, field_name):
         dropdown = self.COMBO_FIELDS[field_name]
         return self.find(dropdown).text.strip()

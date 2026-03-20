@@ -1,0 +1,6 @@
+pytest
+pytest-xdist
+pytest-repeat
+allure-pytest
+faker
+selenium

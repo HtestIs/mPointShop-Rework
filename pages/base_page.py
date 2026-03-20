@@ -84,3 +84,9 @@ class BasePage:
         absolute_path = os.path.abspath(file_path)
         element = self.find(locator)
         element.send_keys(absolute_path)
+    def is_visible(self,locator):
+        try:
+            self.wait_visible(locator)
+            return True
+        except:
+            return False
