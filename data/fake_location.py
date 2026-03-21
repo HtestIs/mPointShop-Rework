@@ -42,7 +42,7 @@ def fake_old_location(exclude_city=None,exclude_district=None):
         raise Exception("No cities available to choose from.")
     city = random.choice(cities)
     districts = list(location_data[city].keys())
-    if exclude_district:
+    if exclude_district in districts:
         districts = [d for d in location_data[city].keys() if d != exclude_district]
     else:
         districts = list(location_data[city].keys())

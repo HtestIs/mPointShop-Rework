@@ -134,18 +134,17 @@ def test_update_dropdown_options(login_partner_success,storedata):
     assert page.get_selected_text("city_new") == data2["city_new"], "New city dropdown did not update to new selection"
     assert page.get_selected_text("ward_new") == data2["ward_new"], "New ward dropdown did not update based on new city selection"
 
-@pytest.mark.parametrize("superior_field,target_field,dataset",[
-    ("city_old", "district_old","missing_city"),
-    ("city_old", "ward_old","missing_city"),
-    ("district_old", "ward_old","missing_district"),
-    ("city_new", "ward_new","missing_city")
+@pytest.mark.parametrize("superior_field,target_field,dataset,expected",[
+    ("city_old", "district_old","missing_city","Chọn Quận/Huyện"),
+    ("city_old", "ward_old","missing_city","Chọn Xã/Phường"),
+    ("district_old", "ward_old","missing_district","Chọn Xã/Phường"),
+    ("city_new", "ward_new","missing_city","Chọn Xã/Phường")
 ])
-def test_dependent_dropdown_behavior(login_partner_success,storedata,superior_field,target_field,dataset):
+def test_dependent_dropdown_behavior(login_partner_success,storedata,superior_field,target_field,dataset,expected):
     page = login_partner_success
     page.click_add_new_store()
     data1 = storedata.copy()
     data2 = build_location_data(data1, dataset)
     page.select_all_dropdowns(data1)
     page.choose_option(superior_field, data2[superior_field])
-    sleep(3)
-    assert page.get_selected_text(target_field) != data1[target_field], f"{target_field} should reset when {superior_field} changes"
+    assert page.get_selected_text(target_field) == expected, f"{target_field} should reset when {superior_field} changes"
