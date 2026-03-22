@@ -80,16 +80,16 @@ def test_new_store_registration(login_partner_success,storedata):
 @allure.title("Register store with missing required fields")
 @allure.severity(allure.severity_level.CRITICAL)
 @pytest.mark.parametrize("field, field_name",[
-    ("image_path", "THÊM CỬA HÀNG")
-    # ("name", "Tên cửa hàng"),
-    # ("username", "Tên đăng nhập"),
-    # ("address", "Địa chỉ"),
-    # ("gps", "GPS"),
-    # ("manager_name", "Tên người phụ trách"),
-    # ("manager_phone", "Số điện thoại người phụ trách"),
-    # ("customer_service_phone", "Số điện thoại chăm sóc khách hàng"),
-    # ("password", "Mật khẩu"),
-    # ("confirm_password", "Nhập lại mật khẩu")
+    # ("image_path", "THÊM CỬA HÀNG")
+    ("name", "Tên cửa hàng"),
+    ("username", "Tên đăng nhập"),
+    ("address", "Địa chỉ"),
+    ("gps", "GPS"),
+    ("manager_name", "Tên người phụ trách"),
+    ("manager_phone", "Số điện thoại người phụ trách"),
+    ("customer_service_phone", "Số điện thoại chăm sóc khách hàng"),
+    ("password", "Mật khẩu"),
+    ("confirm_password", "Nhập lại mật khẩu")
 ])
 def test_missing_field_store_registration(login_partner_success,storedata,field,field_name):
     data = storedata.copy()
@@ -169,13 +169,13 @@ def test_invalid_field_span_error(login_partner_success,storedata,field,invalid_
     assert error_msg in page.get_field_error(location), f"Expected error message for {field} was not displayed"
 
 @pytest.mark.parametrize("field,invalid_value,error_msg",[
-    # ("name","max_255", "Tham số đầu vào không hợp lệ!"),
-    # ("username","max_255", "Tham số đầu vào không hợp lệ!"),
-    # ("gps","","Tham số đầu vào không hợp lệ!"),
-    # ("manager_name","max_255","Tham số đầu vào không hợp lệ!"),
-    # ("manager_phone","max_255","Tham số đầu vào không hợp lệ!"),
-    # ("customer_service_phone","max_255","Tham số đầu vào không hợp lệ!"),
-    # ("password","max_255","Tham số đầu vào không hợp lệ!"),
+    ("name","max_255", "Tham số đầu vào không hợp lệ!"),
+    ("username","max_255", "Tham số đầu vào không hợp lệ!"),
+    ("gps","","Tham số đầu vào không hợp lệ!"),
+    ("manager_name","max_255","Tham số đầu vào không hợp lệ!"),
+    ("manager_phone","max_255","Tham số đầu vào không hợp lệ!"),
+    ("customer_service_phone","max_255","Tham số đầu vào không hợp lệ!"),
+    ("password","max_255","Tham số đầu vào không hợp lệ!"),
     ("confirm_password","max_255","Tham số đầu vào không hợp lệ!"),
     ("username","duplicate_user","tồn tại trên hệ thống"),
 ])
