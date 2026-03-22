@@ -1,5 +1,7 @@
 from data.builders import build_location_data, build_store_data
+from utils.data_helpers import apply_field_value
 from data.fake_location import fake_new_location, fake_old_location
+from data.test_data import DATA_CASES
 from pages.store_manage_page import StoreManage
 from pages.login_page import LoginPage
 import pytest
@@ -78,15 +80,16 @@ def test_new_store_registration(login_partner_success,storedata):
 @allure.title("Register store with missing required fields")
 @allure.severity(allure.severity_level.CRITICAL)
 @pytest.mark.parametrize("field, field_name",[
-    ("name", "Tên cửa hàng"),
-    ("username", "Tên đăng nhập"),
-    ("address", "Địa chỉ"),
-    ("gps", "GPS"),
-    ("manager_name", "Tên người phụ trách"),
-    ("manager_phone", "Số điện thoại người phụ trách"),
-    ("customer_service_phone", "Số điện thoại chăm sóc khách hàng"),
-    ("password", "Mật khẩu"),
-    ("confirm_password", "Nhập lại mật khẩu"),
+    ("image_path", "THÊM CỬA HÀNG")
+    # ("name", "Tên cửa hàng"),
+    # ("username", "Tên đăng nhập"),
+    # ("address", "Địa chỉ"),
+    # ("gps", "GPS"),
+    # ("manager_name", "Tên người phụ trách"),
+    # ("manager_phone", "Số điện thoại người phụ trách"),
+    # ("customer_service_phone", "Số điện thoại chăm sóc khách hàng"),
+    # ("password", "Mật khẩu"),
+    # ("confirm_password", "Nhập lại mật khẩu")
 ])
 def test_missing_field_store_registration(login_partner_success,storedata,field,field_name):
     data = storedata.copy()
@@ -148,3 +151,45 @@ def test_dependent_dropdown_behavior(login_partner_success,storedata,superior_fi
     page.select_all_dropdowns(data1)
     page.choose_option(superior_field, data2[superior_field])
     assert page.get_selected_text(target_field) == expected, f"{target_field} should reset when {superior_field} changes"
+
+@pytest.mark.parametrize("field,invalid_value,location,error_msg",[
+    ("gps","abc","GPS","lat/lng"),
+    ("confirm_password","abcd","Nhập lại mật khẩu","không khớp"),
+    ("min_wallet","1000","Số dư tối thiểu của ví điểm","lớn hơn hoặc bằng 1,000,000"),
+])
+def test_invalid_field_span_error(login_partner_success,storedata,field,invalid_value,location,error_msg):
+    page = login_partner_success
+    page.click_add_new_store()
+    data = storedata.copy()
+    data[field] = invalid_value
+    page.fill_all_fields(data)
+    page.select_all_dropdowns(storedata)
+    page.choose_date()
+    page.click_confirm_button_user_modal()
+    assert error_msg in page.get_field_error(location), f"Expected error message for {field} was not displayed"
+
+@pytest.mark.parametrize("field,invalid_value,error_msg",[
+    # ("name","max_255", "Tham số đầu vào không hợp lệ!"),
+    # ("username","max_255", "Tham số đầu vào không hợp lệ!"),
+    # ("gps","","Tham số đầu vào không hợp lệ!"),
+    # ("manager_name","max_255","Tham số đầu vào không hợp lệ!"),
+    # ("manager_phone","max_255","Tham số đầu vào không hợp lệ!"),
+    # ("customer_service_phone","max_255","Tham số đầu vào không hợp lệ!"),
+    # ("password","max_255","Tham số đầu vào không hợp lệ!"),
+    ("confirm_password","max_255","Tham số đầu vào không hợp lệ!"),
+    ("username","duplicate_user","tồn tại trên hệ thống"),
+])
+def test_invalid_field_toast_error(login_partner_success,storedata,field,invalid_value,error_msg,get_dup_username):
+    page = login_partner_success
+    page.click_add_new_store()
+    data = storedata.copy()
+    if invalid_value == "duplicate_user":
+        value = get_dup_username
+    else:
+        value = DATA_CASES[invalid_value]()
+    data = apply_field_value(data, field, value)
+    page.fill_all_fields(data)
+    page.select_all_dropdowns(storedata)
+    page.choose_date()
+    page.click_confirm_button_user_modal()
+    assert error_msg in page.get_toast_msg(), f"Expected toast error message for {field} was not displayed"

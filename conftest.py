@@ -45,7 +45,9 @@ def login_partner_success(driver,base_url,env_config):
     yield page
     with allure.step("Logging out partner"):
         driver.delete_all_cookies()
-
+@pytest.fixture
+def get_dup_username(env_config):
+    return env_config["dup_username"]
 @pytest.hookimpl(hookwrapper=True)
 def pytest_runtest_makereport(item,call):
     outcome = yield

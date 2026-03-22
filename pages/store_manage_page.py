@@ -252,7 +252,6 @@ class StoreManage(BasePage):
             value = storedata.get(field)
             if value:
                 self.choose_option(field, value)
-
 # ERROR HANDLING
     # THIS ONE FOR FIELDS ERROR
     # SELECTBOX MIGHT F THIS ONE UP

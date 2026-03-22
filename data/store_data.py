@@ -10,6 +10,7 @@ def storedata():
     old_location = fake_old_location()
     new_location = fake_new_location()
     timestamp = datetime.now().strftime("%Y%m%d%H%M%S")
+    password = "Abc@1234"
     return {"name": fake.company(), 
      "username": fake.user_name()+timestamp,
      "city_old": old_location["city_old"],
@@ -23,8 +24,8 @@ def storedata():
      "manager_phone": fake.phone_number(), 
      "customer_service_phone": fake.phone_number(), 
      "sale_code": "1", 
-     "password": "Abc@1234", 
-     "confirm_password": "Abc@1234", 
+     "password": password, 
+     "confirm_password": password, 
      "commission": fake.random_int(min=1, max=100),
      "min_wallet": "1000000", 
      "transfer_limit": fake.random_int(min=1000000, max=10000000),
