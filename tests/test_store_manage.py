@@ -70,11 +70,8 @@ def test_dropdown_location(login_partner_success,storedata,setup,target_field):
 @allure.title("Register store")
 @allure.severity(allure.severity_level.CRITICAL)
 def test_new_store_registration(login_partner_success,storedata):
-    login_partner_success.click_add_new_store()
-    login_partner_success.fill_all_fields(storedata)
-    login_partner_success.select_all_dropdowns(storedata)
-    login_partner_success.choose_date()
-    login_partner_success.click_confirm_button_user_modal()
+    page = login_partner_success
+    page.register_new_store(storedata)
     assert "Thành công" in login_partner_success.get_toast_msg()
 @allure.story("Registering stores")
 @allure.title("Register store with missing required fields")
@@ -92,13 +89,10 @@ def test_new_store_registration(login_partner_success,storedata):
     ("confirm_password", "Nhập lại mật khẩu")
 ])
 def test_missing_field_store_registration(login_partner_success,storedata,field,field_name):
+    page = login_partner_success
     data = storedata.copy()
     data[field] = ""
-    login_partner_success.click_add_new_store()
-    login_partner_success.fill_all_fields(data)
-    login_partner_success.select_all_dropdowns(storedata)
-    login_partner_success.choose_date()
-    login_partner_success.click_confirm_button_user_modal()
+    page.register_new_store(data)
     assert "bắt buộc" in login_partner_success.get_field_error(field_name)
 
 @allure.story("Registering stores")
@@ -112,14 +106,15 @@ def test_missing_field_store_registration(login_partner_success,storedata,field,
     ("ward_new", "Xã/Phường (mới theo 2025)")
 ])
 def test_missing_dropdown_store_registration(login_partner_success,storedata,field,field_name):
+    page = login_partner_success
     data = storedata.copy()
     data[field] = ""
-    login_partner_success.click_add_new_store()
-    login_partner_success.fill_all_fields(storedata)
-    login_partner_success.select_option(data)
-    login_partner_success.choose_date()
-    login_partner_success.click_confirm_button_user_modal()
-    assert "bắt buộc" in login_partner_success.get_field_error(field_name)
+    page.click_add_new_store()
+    page.fill_all_fields(storedata)
+    page.select_option(data)
+    page.choose_date()
+    page.click_confirm_button_user_modal()
+    assert "bắt buộc" in page.get_field_error(field_name)
 
 def test_update_dropdown_options(login_partner_success,storedata):
     page = login_partner_success
@@ -145,9 +140,9 @@ def test_update_dropdown_options(login_partner_success,storedata):
 ])
 def test_dependent_dropdown_behavior(login_partner_success,storedata,superior_field,target_field,dataset,expected):
     page = login_partner_success
-    page.click_add_new_store()
     data1 = storedata.copy()
     data2 = build_location_data(data1, dataset)
+    page.click_add_new_store()
     page.select_all_dropdowns(data1)
     page.choose_option(superior_field, data2[superior_field])
     assert page.get_selected_text(target_field) == expected, f"{target_field} should reset when {superior_field} changes"
@@ -159,37 +154,40 @@ def test_dependent_dropdown_behavior(login_partner_success,storedata,superior_fi
 ])
 def test_invalid_field_span_error(login_partner_success,storedata,field,invalid_value,location,error_msg):
     page = login_partner_success
-    page.click_add_new_store()
     data = storedata.copy()
     data[field] = invalid_value
-    page.fill_all_fields(data)
-    page.select_all_dropdowns(storedata)
-    page.choose_date()
-    page.click_confirm_button_user_modal()
+    page.register_new_store(data)
     assert error_msg in page.get_field_error(location), f"Expected error message for {field} was not displayed"
 
+@pytest.mark.parametrize("field,error_msg",[
+    ("name", "Tham số đầu vào không hợp lệ!"),
+    ("username", "Tham số đầu vào không hợp lệ!"),
+    ("manager_name","Tham số đầu vào không hợp lệ!"),
+    ("manager_phone","Tham số đầu vào không hợp lệ!"),
+    ("customer_service_phone","Tham số đầu vào không hợp lệ!")
+])
+def test_buffer_error(login_partner_success,storedata,field,error_msg,get_dup_username):
+    page = login_partner_success
+    data = storedata.copy()
+    data[field] = DATA_CASES["max_255"]()
+    page.register_new_store(data)
+    assert error_msg in page.get_toast_msg(), f"Expected toast error message for {field} was not displayed"
+
 @pytest.mark.parametrize("field,invalid_value,error_msg",[
-    ("name","max_255", "Tham số đầu vào không hợp lệ!"),
-    ("username","max_255", "Tham số đầu vào không hợp lệ!"),
-    ("gps","","Tham số đầu vào không hợp lệ!"),
-    ("manager_name","max_255","Tham số đầu vào không hợp lệ!"),
-    ("manager_phone","max_255","Tham số đầu vào không hợp lệ!"),
-    ("customer_service_phone","max_255","Tham số đầu vào không hợp lệ!"),
-    ("password","max_255","Tham số đầu vào không hợp lệ!"),
-    ("confirm_password","max_255","Tham số đầu vào không hợp lệ!"),
-    ("username","duplicate_user","tồn tại trên hệ thống"),
+    ("username","duplicate_user","Tên đăng nhập đã tồn tại trên hệ thống. Xin vui lòng thử lại !"),
+    ("password", "short", "Mật khẩu từ 6-20 ký tự, ít nhất 1 chữ viết hoa, 1 kí tự đặc biệt."),
+    ("password", "noupper", "Mật khẩu từ 6-20 ký tự, ít nhất 1 chữ viết hoa, 1 kí tự đặc biệt."),
+    ("password", "nolower", "Mật khẩu từ 6-20 ký tự, ít nhất 1 chữ viết hoa, 1 kí tự đặc biệt."),
+    ("password", "nodigit", "Mật khẩu từ 6-20 ký tự, ít nhất 1 chữ viết hoa, 1 kí tự đặc biệt."),
+    ("password", "no_special", "Mật khẩu từ 6-20 ký tự, ít nhất 1 chữ viết hoa, 1 kí tự đặc biệt.")
 ])
 def test_invalid_field_toast_error(login_partner_success,storedata,field,invalid_value,error_msg,get_dup_username):
     page = login_partner_success
-    page.click_add_new_store()
     data = storedata.copy()
     if invalid_value == "duplicate_user":
         value = get_dup_username
     else:
         value = DATA_CASES[invalid_value]()
     data = apply_field_value(data, field, value)
-    page.fill_all_fields(data)
-    page.select_all_dropdowns(storedata)
-    page.choose_date()
-    page.click_confirm_button_user_modal()
-    assert error_msg in page.get_toast_msg(), f"Expected toast error message for {field} was not displayed"
+    page.register_new_store(data)
+    assert error_msg in page.get_toast_msg(), f"Expected toast error message for {field} was not displayed,data used: {data['password']} / {data['username']}"

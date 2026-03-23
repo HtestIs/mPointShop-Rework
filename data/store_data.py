@@ -9,10 +9,10 @@ fake = Faker('vi_VN')
 def storedata():
     old_location = fake_old_location()
     new_location = fake_new_location()
-    timestamp = datetime.now().strftime("%Y%m%d%H%M%S")
+    timestamp = datetime.now().strftime("%d%H%M%S%f")
     password = "Abc@1234"
     return {"name": fake.company(), 
-     "username": fake.user_name()+timestamp,
+     "username": (fake.user_name()+timestamp)[:20],
      "city_old": old_location["city_old"],
      "district_old": old_location["district_old"],
      "ward_old": old_location["ward_old"],

@@ -252,6 +252,13 @@ class StoreManage(BasePage):
             value = storedata.get(field)
             if value:
                 self.choose_option(field, value)
+    def register_new_store(self, storedata):
+        self.click_add_new_store()
+        self.fill_all_fields(storedata)
+        self.select_all_dropdowns(storedata)
+        self.choose_date()
+        self.click_confirm_button_user_modal()
+
 # ERROR HANDLING
     # THIS ONE FOR FIELDS ERROR
     # SELECTBOX MIGHT F THIS ONE UP
