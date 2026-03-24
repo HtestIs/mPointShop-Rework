@@ -1,6 +1,10 @@
 pytest
-pytest-xdist
-pytest-repeat
-allure-pytest
-faker
 selenium
+requests
+python-dotenv
+allure-pytest
+Faker
+pytest-html
+pytest-metadata
+pytest-repeat
+pytest-xdist

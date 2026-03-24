@@ -1,71 +1,11 @@
-from data.builders import build_location_data, build_store_data
 from utils.data_helpers import apply_field_value
-from data.fake_location import fake_new_location, fake_old_location
 from data.test_data import DATA_CASES
-from pages.store_manage_page import StoreManage
-from pages.login_page import LoginPage
 import pytest
 import allure
-from time import sleep
-from faker import Faker
 
-fake = Faker('vi_VN')
-@allure.story("Finding stores")
-@allure.title("Find store with name")
-@allure.severity(allure.severity_level.NORMAL)
-def test_find_store_with_name(login_partner_success):
-    keyword = "Craft Mbeer"
-    login_partner_success.find_store_with_name(keyword)
-    login_partner_success.wait_loading_overlay()
-    assert keyword in login_partner_success.get_store_name()
-@allure.story("Finding stores")
-@allure.title("Find store with phone number")
-@allure.severity(allure.severity_level.NORMAL)
-def test_find_store_with_phone(login_partner_success):
-    keyword = "0393254477"
-    login_partner_success.find_store_with_number(keyword)
-    login_partner_success.wait_loading_overlay()
-    assert keyword in login_partner_success.get_store_name()
 
-@allure.story("Changing store password")
-@allure.title("Change store password")
-@allure.severity(allure.severity_level.CRITICAL)
-@pytest.mark.parametrize("password,toast",[
-    ("123456789","Thành công"),
-    ("","Vui")
-    ])
-def test_change_store_password(login_partner_success,password,toast):
-    login_partner_success.change_password(password)
-    assert toast in login_partner_success.get_toast_msg()
 
-@allure.story("Locking stores")
-@allure.title("Lock store")
-@allure.severity(allure.severity_level.CRITICAL)
-def test_lock_store(login_partner_success):
-    login_partner_success.ensure_locked()
-    locked_username = login_partner_success.get_store_username()
-    login_partner_success.hover_user()
-    login = login_partner_success.click_logout()
-    login.fill_login(locked_username,"1")
-    assert "Tài khoản đang bị khóa!" in login.get_toast_message()
-    assert "/login" in login.get_current_url()
-@allure.story("User choosing inferior location")
-@allure.title("Options management")
-@allure.severity(allure.severity_level.MINOR)
-@pytest.mark.parametrize("setup,target_field",[
-    ("missing_city", "district_old"),
-    ("missing_city", "ward_old"),   
-    ("missing_district", "ward_old"),
-    ("missing_city_new", "ward_new")
-])
-def test_dropdown_location(login_partner_success,storedata,setup,target_field):
-    page = login_partner_success
-    page.click_add_new_store()
-    page.setup_location(setup,storedata)
-    page.click(page.FORM_FIELDS[target_field])
-    options = page.has_selectable_option()
-    assert options is False, f"Dropdown options for {target_field} should be empty when required location is missing"
-    
+@pytest.mark.registration
 @allure.story("Registering stores")
 @allure.title("Register store")
 @allure.severity(allure.severity_level.CRITICAL)
@@ -73,6 +13,10 @@ def test_new_store_registration(login_partner_success,storedata):
     page = login_partner_success
     page.register_new_store(storedata)
     assert "Thành công" in login_partner_success.get_toast_msg()
+
+
+
+@pytest.mark.registration
 @allure.story("Registering stores")
 @allure.title("Register store with missing required fields")
 @allure.severity(allure.severity_level.CRITICAL)
@@ -95,6 +39,7 @@ def test_missing_field_store_registration(login_partner_success,storedata,field,
     page.register_new_store(data)
     assert "bắt buộc" in login_partner_success.get_field_error(field_name)
 
+@pytest.mark.registration
 @allure.story("Registering stores")
 @allure.title("Register store with missing dropdown fields")
 @allure.severity(allure.severity_level.CRITICAL)
@@ -110,43 +55,16 @@ def test_missing_dropdown_store_registration(login_partner_success,storedata,fie
     data = storedata.copy()
     data[field] = ""
     page.click_add_new_store()
-    page.fill_all_fields(storedata)
+    page.fill_store_form_fields(storedata)
     page.select_option(data)
     page.choose_date()
     page.click_confirm_button_user_modal()
     assert "bắt buộc" in page.get_field_error(field_name)
 
-def test_update_dropdown_options(login_partner_success,storedata):
-    page = login_partner_success
-    data1 = storedata.copy()
-    data2_old = fake_old_location(exclude_city=data1["city_old"])
-    
-    data2_new = fake_new_location(exclude_city=data1["city_new"])
-    data2 = build_store_data(storedata, **data2_old, **data2_new)
-    page.click_add_new_store()
-    page.select_all_dropdowns(data1)
-    page.select_all_dropdowns(data2)
-    assert page.get_selected_text("city_old") == data2["city_old"], "City dropdown did not update to new selection"
-    assert page.get_selected_text("district_old") == data2["district_old"], "District dropdown did not update based on new city selection"
-    assert page.get_selected_text("ward_old") == data2["ward_old"], "Ward dropdown did not update based on new district selection"
-    assert page.get_selected_text("city_new") == data2["city_new"], "New city dropdown did not update to new selection"
-    assert page.get_selected_text("ward_new") == data2["ward_new"], "New ward dropdown did not update based on new city selection"
-
-@pytest.mark.parametrize("superior_field,target_field,dataset,expected",[
-    ("city_old", "district_old","missing_city","Chọn Quận/Huyện"),
-    ("city_old", "ward_old","missing_city","Chọn Xã/Phường"),
-    ("district_old", "ward_old","missing_district","Chọn Xã/Phường"),
-    ("city_new", "ward_new","missing_city","Chọn Xã/Phường")
-])
-def test_dependent_dropdown_behavior(login_partner_success,storedata,superior_field,target_field,dataset,expected):
-    page = login_partner_success
-    data1 = storedata.copy()
-    data2 = build_location_data(data1, dataset)
-    page.click_add_new_store()
-    page.select_all_dropdowns(data1)
-    page.choose_option(superior_field, data2[superior_field])
-    assert page.get_selected_text(target_field) == expected, f"{target_field} should reset when {superior_field} changes"
-
+@pytest.mark.registration
+@allure.story("Registering stores")
+@allure.title("Register store with invalid input fields shows field error")
+@allure.severity(allure.severity_level.CRITICAL)
 @pytest.mark.parametrize("field,invalid_value,location,error_msg",[
     ("gps","abc","GPS","lat/lng"),
     ("confirm_password","abcd","Nhập lại mật khẩu","không khớp"),
@@ -159,6 +77,10 @@ def test_invalid_field_span_error(login_partner_success,storedata,field,invalid_
     page.register_new_store(data)
     assert error_msg in page.get_field_error(location), f"Expected error message for {field} was not displayed"
 
+@pytest.mark.registration
+@allure.story("Registering stores")
+@allure.title("Register store with oversized input fields")
+@allure.severity(allure.severity_level.CRITICAL)
 @pytest.mark.parametrize("field,error_msg",[
     ("name", "Tham số đầu vào không hợp lệ!"),
     ("username", "Tham số đầu vào không hợp lệ!"),
@@ -166,13 +88,17 @@ def test_invalid_field_span_error(login_partner_success,storedata,field,invalid_
     ("manager_phone","Tham số đầu vào không hợp lệ!"),
     ("customer_service_phone","Tham số đầu vào không hợp lệ!")
 ])
-def test_buffer_error(login_partner_success,storedata,field,error_msg,get_dup_username):
+def test_register_store_shows_toast_for_oversized_input(login_partner_success,storedata,field,error_msg,get_dup_username):
     page = login_partner_success
     data = storedata.copy()
     data[field] = DATA_CASES["max_255"]()
     page.register_new_store(data)
     assert error_msg in page.get_toast_msg(), f"Expected toast error message for {field} was not displayed"
 
+@pytest.mark.registration
+@allure.story("Registering stores")
+@allure.title("Register store with invalid input fields shows toast error")
+@allure.severity(allure.severity_level.CRITICAL)
 @pytest.mark.parametrize("field,invalid_value,error_msg",[
     ("username","duplicate_user","Tên đăng nhập đã tồn tại trên hệ thống. Xin vui lòng thử lại !"),
     ("password", "short", "Mật khẩu từ 6-20 ký tự, ít nhất 1 chữ viết hoa, 1 kí tự đặc biệt."),

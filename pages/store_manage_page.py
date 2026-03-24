@@ -20,6 +20,7 @@ class StoreManage(BasePage):
     FIRST_SWITCH_BUTTON = (By.CSS_SELECTOR, ".branchmanagement-container:first-of-type .rs-toggle")
     FIRST_STORE_USERNAME = (By.XPATH,"//b[contains(text(),'Tên đăng nhập')]/following-sibling::input")
     FIRST_SWITCH = (By.CSS_SELECTOR,".branchmanagement-container:first-of-type input[aria-checked]")
+    FIRST_PHONE_NUMBER = (By.XPATH,"//div[contains(@class,'branchmanagement-form-content')]//span[contains(normalize-space(.), 'Số điện thoại:')]")
 # STORE INFO MODAL
     MODAL_FULL = (By.XPATH, "//div[@class='rs-modal-content']")
     MODAL_UPLOAD_IMAGE_BUTTON = (By.XPATH,"//span[contains(text(),'Cần tải ảnh cửa hàng lên')]/ancestor::button")
@@ -59,7 +60,6 @@ class StoreManage(BasePage):
     TOAST_MESSAGE =(By.XPATH,"//div[@role='alert']/div[2]")
     BTN_LOG_OUT = (By.XPATH,"//span[text()='Đăng xuất']")
     USER_BLOCK = (By.CSS_SELECTOR,"#cheader > section > div > div.c-header__right > div > a > div")
-    LOADING_OVERLAY = (By.CSS_SELECTOR, "div.c-loading-page")
     def get_page_name(self):
         return self.get_text(self.PAGE_NAME)
 # LIST HEAD INTERACT
@@ -72,6 +72,16 @@ class StoreManage(BasePage):
 # LIST
     def get_store_name(self):
         return self.get_text(self.FIRST_STORE_NAME)
+    def get_store_phone(self):
+        return self.get_text(self.FIRST_PHONE_NUMBER).replace("Số điện thoại:","").strip()
+    def wait_store_info_loaded(self,keyword=None):
+        def condition():
+            name = self.get_store_name()
+            phone = self.get_store_phone()
+            if keyword:
+                return keyword in name or keyword in phone
+            return bool(name) and bool(phone)
+        self.wait_until(condition)
     def toggle_store(self):
         old = self.find(self.FIRST_SWITCH_BUTTON)
         current = self.get_lock_status()
@@ -103,16 +113,13 @@ class StoreManage(BasePage):
         return LoginPage(self.driver)
     def hover_user(self):
         self.hover(self.USER_BLOCK)
-    def wait_loading_overlay(self):
-        self.wait_visible(self.LOADING_OVERLAY)
-        self.wait_invisible(self.LOADING_OVERLAY)
 # USER MODAL INTERACT
     def click_confirm_button_user_modal(self):
         self.click(self.MODAL_CONFIRM_BUTTON)
     def upload_store_image(self, image_path):
         self.upload_image(self.MODAL_UPLOAD_INPUT, image_path)
 # USER MODAL INFO
-    def get_store_username(self):
+    def get_first_store_username_from_edit_modal(self):
         self.click(self.FIRST_STORE_EDIT)
         username = self.get_attribute_status(self.FIRST_STORE_USERNAME,"value")
         self.click(self.MODAL_CANCEL)
@@ -239,7 +246,7 @@ class StoreManage(BasePage):
     # IT KEPT GIVING ME THE SAME COMMENT FOR THIS METHOD, 
     # I HAD TO ASK IT TO STOP COMPLAINING AND JUST WRITE THE COMMENT, 
     # NOW IT'S WRITING A NORMAL COMMENT, I THINK IT'S FINE NOW
-    def fill_all_fields(self, storedata):
+    def fill_store_form_fields(self, storedata):
         for field in self.FORM_FIELDS:
             value = storedata.get(field)
             if value:
@@ -247,15 +254,15 @@ class StoreManage(BasePage):
                     self.upload_store_image(value)
                 else:
                     self.fill_field(field, value)
-    def select_all_dropdowns(self, storedata):
+    def select_store_location_fields(self, storedata):
         for field in self.COMBO_FIELDS:
             value = storedata.get(field)
             if value:
                 self.choose_option(field, value)
     def register_new_store(self, storedata):
         self.click_add_new_store()
-        self.fill_all_fields(storedata)
-        self.select_all_dropdowns(storedata)
+        self.fill_store_form_fields(storedata)
+        self.select_store_location_fields(storedata)
         self.choose_date()
         self.click_confirm_button_user_modal()
 

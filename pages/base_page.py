@@ -21,6 +21,9 @@ class BasePage:
         return self.wait.until(EC.presence_of_element_located(locator))
     def wait_presence_all(self,locator):
         return self.wait.until(EC.presence_of_all_elements_located(locator))
+    #Superior Wait/ ONE WAIT TO RULE THEM ALL
+    def wait_until(self,condition):
+        self.wait.until(lambda d: condition())
     def wait_stale(self,old):
         self.wait.until(EC.staleness_of(old))
     def wait_attribute_change(self,locator,attribute,old_value):

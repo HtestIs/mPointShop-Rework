@@ -1,0 +1,122 @@
+QA Automation Project (Selenium + Pytest + API)
+
+This project demonstrates end-to-end (E2E) and API testing using Python.
+It focuses on real-world QA practices including structured test design, environment configuration, and stable automation.
+-------------------------------------------------------------------------------------------------------
+🚀 Tech Stack
+Python 3.12
+Selenium
+Pytest
+Requests (API testing)
+Allure (reporting)
+python-dotenv (environment config)
+Faker (test data)
+-------------------------------------------------------------------------------------------------------
+📁 Project Structure
+project/
+├── config/
+│   └── env_config.py        # Environment config (no secrets)
+├── pages/                  # Page Object Model
+├── drivers/                # WebDriver setup
+├── fixtures/               # Pytest fixtures
+├── utils/                  # Helpers & utilities
+├── data/                   # Test data & builders
+├── tests/
+│   ├── e2e/                # UI tests (Selenium)
+│   │   ├── test_store_search.py
+│   │   ├── test_store_registration.py
+│   │   ├── test_store_location.py
+│   │   ├── test_store_security.py
+│   │   └── test_login.py
+│   └── api/                # API tests (requests)
+│       └── test_login_api.py
+├── conftest.py             # Shared fixtures
+├── pytest.ini              # Pytest config & markers
+├── requirements.txt
+├── .env.example            # Example environment variables
+└── README.md
+-------------------------------------------------------------------------------------------------------
+⚙️ Setup
+
+1. Install dependencies
+
+pip install -r requirements.txt
+
+2. Configure environment
+
+Copy .env.example:
+
+cp .env.example .env
+
+Fill in your values:
+
+DEV_API_BASE_URL=https://your-api-url
+DEV_WEB_BASE_URL=https://your-web-url
+DEV_PARTNER_USERNAME=your_username
+DEV_PARTNER_PASSWORD=your_password
+DEV_MERCHANT_USERNAME=your_username
+DEV_MERCHANT_PASSWORD=your_password
+DEV_DUP_USERNAME=existing_username
+
+⚠️ .env is not committed for security reasons
+
+🧪 Running Tests
+Run all tests
+pytest
+Run E2E tests
+pytest tests/e2e
+Run API tests
+pytest tests/api
+Run by marker
+pytest -m search
+pytest -m registration
+pytest -m security
+pytest -m api
+🏷️ Test Markers
+search – store search functionality
+registration – store creation & validation
+security – password & account lock
+api – API tests
+smoke, regression, slow – execution grouping
+🔑 Key Features
+✅ Page Object Model (POM)
+
+Encapsulates UI interactions for maintainability and readability.
+
+✅ Data-driven Testing
+
+Uses pytest.mark.parametrize for validation scenarios and edge cases.
+
+✅ Environment-based Configuration
+
+Separates:
+
+UI base URL
+API base URL
+credentials
+
+Using .env and env_config.py.
+
+✅ Stable Synchronization
+
+Implements result-based waiting instead of relying only on UI loaders to reduce flaky tests.
+
+✅ API Testing
+Login API (success & failure scenarios)
+Validates both:
+HTTP response
+business logic (code, message)
+⚠️ Notes
+Sensitive data (URLs, credentials) are NOT committed.
+.env.example is provided for setup reference.
+Some API endpoints require valid credentials.
+-------------------------------------------------------------------------------------------------------
+📌 Future Improvements
+API client abstraction layer
+Token-based authentication handling
+CI integration (GitHub Actions)
+Enhanced reporting (Allure HTML)
+Mock API for public-safe demonstration
+-------------------------------------------------------------------------------------------------------
+👤 Author
+QA Automation practice project focused on building job-ready testing skills.

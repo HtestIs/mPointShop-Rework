@@ -18,9 +18,6 @@ ENV/
 coverage.xml
 htmlcov/
 
-# Environment config (local secrets)
-
-config/env_config.py
 
 # Logs
 
@@ -54,3 +51,8 @@ reports/screenshots/*
 allure-results/*
 allure-report/*
 allure-reports/*
+
+#env files
+.env
+.env.*
+!.env.example
