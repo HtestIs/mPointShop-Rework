@@ -39,7 +39,6 @@ def login_partner_success(driver,base_url,env_config):
     login = LoginPage(driver)
     creds = env_config["users"]["partner"]
     with allure.step("Logging in as partner"):
-        login = LoginPage(driver)
         login.open_url(base_url)
         login.fill_login(creds["username"], creds["password"])
     page = StoreManage(driver)
