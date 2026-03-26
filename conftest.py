@@ -8,7 +8,8 @@ from datetime import datetime
 import allure
 pytest_plugins = [
     "fixtures.driver_fixture",
-    "data.store_data"
+    "data.store_data",
+    "fixtures.api_fixture"
 ]
 def pytest_addoption(parser):
     parser.addoption("--browser", action="store", default="chrome")
