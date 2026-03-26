@@ -1,10 +1,9 @@
 # mPointShop-Rework 🚀
-
-![Python](https://img.shields.io/badge/Python-3.12-blue)
-![Pytest](https://img.shields.io/badge/Pytest-Framework-green)
-![Selenium](https://img.shields.io/badge/Selenium-UI%20Automation-brightgreen)
-![Requests](https://img.shields.io/badge/Requests-API%20Testing-orange)
-![Allure](https://img.shields.io/badge/Allure-Reporting-purple)
+![Python](https://img.shields.io/badge/Python-3.12-3776AB?style=for-the-badge&logo=python&logoColor=white)
+![Pytest](https://img.shields.io/badge/Pytest-Framework-0A9EDC?style=for-the-badge&logo=pytest&logoColor=white)
+![Selenium](https://img.shields.io/badge/Selenium-Automation-43B02A?style=for-the-badge&logo=selenium&logoColor=white)
+![Requests](https://img.shields.io/badge/Requests-API-FF6F00?style=for-the-badge)
+![Allure](https://img.shields.io/badge/Allure-Reports-8A2BE2?style=for-the-badge)
 
 A QA automation framework combining **UI testing** and **API testing** using modern Python tools.
 
