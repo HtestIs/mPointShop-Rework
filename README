@@ -1,207 +1,179 @@
-# 🛒 mPointShop-Rework
+# mPointShop-Rework 🚀
 
-> End-to-end UI and API test automation framework for the mPointShop platform — built with Python, Selenium, and pytest.
+![Python](https://img.shields.io/badge/Python-3.12-blue)
+![Pytest](https://img.shields.io/badge/Pytest-Framework-green)
+![Selenium](https://img.shields.io/badge/Selenium-UI%20Automation-brightgreen)
+![Requests](https://img.shields.io/badge/Requests-API%20Testing-orange)
+![Allure](https://img.shields.io/badge/Allure-Reporting-purple)
 
-![Python](https://img.shields.io/badge/Python-3.12-3776AB?style=flat&logo=python&logoColor=white)
-![Selenium](https://img.shields.io/badge/Selenium-4.x-43B02A?style=flat&logo=selenium&logoColor=white)
-![pytest](https://img.shields.io/badge/pytest-8.x-0A9EDC?style=flat&logo=pytest&logoColor=white)
-![Allure](https://img.shields.io/badge/Allure-Report-orange?style=flat)
-![Requests](https://img.shields.io/badge/Requests-API_Testing-red?style=flat)
+A QA automation framework combining **UI testing** and **API testing** using modern Python tools.
 
----
+Built as a **job-ready portfolio project** to demonstrate real-world automation practices:
 
-## 📌 Overview
-
-This project demonstrates real-world QA automation practices including structured test design, Page Object Model architecture, environment configuration, and stable synchronization strategies.
-
-It covers both **UI (E2E) testing** via Selenium and **API testing** via Requests — with full Allure reporting and automatic failure artifact collection.
-
----
-
-## ⚙️ Tech Stack
-
-| Tool | Purpose |
-|---|---|
-| Python 3.12 | Language |
-| Selenium | Browser automation |
-| pytest | Test runner |
-| Requests | API testing |
-| Allure | Test reporting |
-| Faker | Dynamic test data generation |
-| python-dotenv | Environment variable management |
-| pytest-xdist | Parallel test execution |
-| pytest-repeat | Repeat tests for stability checks |
+* Page Object Model (UI)
+* API abstraction layer
+* Data-driven testing
+* Environment-based configuration
 
 ---
 
-## 🗂️ Project Structure
+## ✨ Features
 
-```
+* UI automation with **Selenium + Page Object Model**
+* API testing with **Requests + structured endpoints**
+* Clean test separation: `UI (e2e)` vs `API`
+* Reusable fixtures for driver, API, and data
+* Environment handling via `.env`
+* Parametrized test cases (data-driven)
+* Allure report integration
+
+---
+
+## 🧱 Project Structure
+
+```text
 mPointShop-Rework/
-│
-├── api/
-│   ├── endpoints/
-│   │   └── auth_api.py             # Auth endpoint methods
-│   └── client.py                   # Base API client (session, headers, base URL)
-│
-├── config/
-│   └── env_config.py               # Environment config (no secrets)
-├── pages/                          # Page Object Model classes
-├── drivers/                        # WebDriver setup
-├── fixtures/                       # Reusable pytest fixtures
-├── utils/                          # Helpers & utilities
-├── data/                           # Test data & builders
-│
+├── api/                 # API client + endpoints
+│   ├── client.py
+│   └── endpoints/
+├── config/              # env configs and paths
+├── data/                # test data + generators
+├── drivers/             # browser setup
+├── fixtures/            # pytest fixtures
+├── pages/               # page objects (UI)
 ├── tests/
-│   ├── e2e/                        # UI tests (Selenium)
-│   │   ├── test_login.py
-│   │   ├── test_store_search.py
-│   │   ├── test_store_registration.py
-│   │   ├── test_store_location.py
-│   │   └── test_store_security.py
-│   └── api/                        # API tests (Requests)
-│       └── test_login_api.py
-│
-├── conftest.py                     # Global fixtures and hooks
-├── pytest.ini                      # pytest config and markers
-├── requirements.txt
-├── .env.example                    # Example environment variables
-└── README.md
+│   ├── e2e/             # UI tests
+│   └── api/             # API tests
+├── utils/               # helpers, logger
+├── .env.example
+├── conftest.py
+├── pytest.ini
+└── requirements.txt
 ```
 
 ---
 
-## 🚀 Getting Started
+## 🧪 Test Coverage
 
-### 1. Clone the repository
+### UI Tests (E2E)
+
+* Login flow
+* Store registration
+* Store search
+* Store location validation
+* Store security
+* Voucher scan
+
+### API Tests
+
+* ✅ Valid login (partner & merchant)
+* ❌ Invalid credentials
+* ❌ Missing fields
+* ❌ Empty username/password
+* 🔐 Role-based validation
+
+---
+
+## ⚙️ Setup
+
+### 1. Clone repo
 
 ```bash
 git clone https://github.com/HtestIs/mPointShop-Rework.git
 cd mPointShop-Rework
 ```
 
-### 2. Create and activate a virtual environment
-
-```bash
-python -m venv venv
-
-# Windows
-venv\Scripts\activate
-
-# macOS / Linux
-source venv/bin/activate
-```
-
-### 3. Install dependencies
+### 2. Install dependencies
 
 ```bash
 pip install -r requirements.txt
 ```
 
-### 4. Configure environment
+### 3. Configure environment
 
-Copy the example file and fill in your values:
-
-```bash
-cp .env.example .env
-```
+Create `.env` from `.env.example`:
 
 ```env
-DEV_API_BASE_URL=https://your-api-url
-DEV_WEB_BASE_URL=https://your-web-url
-DEV_PARTNER_USERNAME=your_username
-DEV_PARTNER_PASSWORD=your_password
-DEV_MERCHANT_USERNAME=your_username
-DEV_MERCHANT_PASSWORD=your_password
-DEV_DUP_USERNAME=existing_username
-```
+DEV_WEB_BASE_URL=your_web_url
+DEV_API_BASE_URL=your_api_url
 
-> ⚠️ `.env` is not committed. Credentials are never hardcoded.
+DEV_PARTNER_USERNAME=your_partner_username
+DEV_PARTNER_PASSWORD=your_partner_password
+
+DEV_MERCHANT_USERNAME=your_merchant_username
+DEV_MERCHANT_PASSWORD=your_merchant_password
+```
 
 ---
 
 ## ▶️ Running Tests
 
+### Run all tests
+
 ```bash
-# Run all tests
 pytest
+```
 
-# Run UI tests only
+### Run UI tests only
+
+```bash
 pytest tests/e2e
+```
 
-# Run API tests only
+### Run API tests only
+
+```bash
 pytest tests/api
+```
 
-# Run by environment
-pytest --env=dev
-pytest --env=staging
+### Run by marker
 
-# Run by marker
-pytest -m smoke
-pytest -m regression
+```bash
 pytest -m api
+pytest -m search
+pytest -m registration
+pytest -m security
+```
 
-# Run in parallel
-pytest -n 4
+---
 
-# Run with Allure report
+## 📊 Reporting (Allure)
+
+```bash
 pytest --alluredir=allure-results
 allure serve allure-results
 ```
 
 ---
 
-## 🏷️ Test Markers
+## 🧠 Design Principles
 
-| Marker | Description |
-|---|---|
-| `search` | Store search functionality |
-| `registration` | Store creation and validation |
-| `security` | Password and account lock scenarios |
-| `api` | API tests |
-| `smoke` | Critical path — run before every release |
-| `regression` | Full test suite |
-| `slow` | Long-running tests |
+* Separate **UI layer** and **API layer**
+* Keep tests **clean and readable**
+* Move logic into **pages / endpoints / fixtures**
+* Prefer **data-driven tests over duplication**
+* Fail fast with clear assertions
 
 ---
 
-## ✨ Key Features
+## 🚀 Future Improvements
 
-**Page Object Model (POM)**
-Separates UI interaction logic from test logic — pages, fixtures, data, and utilities are fully decoupled.
-
-**Data-driven Testing**
-Uses `pytest.mark.parametrize` to cover validation scenarios, edge cases, and multi-field inputs cleanly.
-
-**Environment-based Configuration**
-UI base URL, API base URL, and credentials are managed through `.env` and `env_config.py` — switchable via `--env` CLI flag.
-
-**Stable Synchronization**
-Implements result-based waiting instead of `time.sleep()` to reduce flaky tests on dynamic UI elements.
-
-**API Testing**
-Login API tests cover success and failure scenarios, validating both HTTP status codes and business logic (response code, message body).
-
-**Automatic Failure Artifacts**
-On every test failure, Allure captures:
-- 📸 Screenshot
-- 🌐 Current URL
-- 📄 Page source (HTML)
-- 🖥️ Browser console logs
+* Token reuse across API tests
+* API + UI hybrid testing (skip UI login)
+* CI/CD integration (GitHub Actions)
+* Better test data management
+* Expanded API coverage
 
 ---
 
-## 🔭 Future Improvements
+## 🔒 Notes
 
-- [x] API client abstraction layer
-- [ ] Token-based authentication handling
-- [ ] CI/CD integration (GitHub Actions)
-- [ ] Mock API for public-safe demonstration
+* Sensitive data is NOT committed
+* Use `.env.example` as reference
+* Replace credentials before running tests
 
 ---
 
-## 👤 Author
+## 👨‍💻 Author
 
-**Tran Minh Hieu** — QA automation practice project focused on building job-ready testing skills.
-
-[![GitHub](https://img.shields.io/badge/GitHub-HtestIs-181717?style=flat&logo=github)](https://github.com/HtestIs)
+Built as a QA Automation portfolio project focused on becoming **job-ready in test automation**.
