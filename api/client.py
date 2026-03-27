@@ -5,9 +5,9 @@ class APIClient:
         self.session = requests.Session()
         if default_headers:
             self.session.headers.update(default_headers)
-    def get(self,endpoint,params=None,headers=None):
+    def get(self,endpoint,params=None,data=None,json_data=None,headers=None):
         url = self.base_url + endpoint
-        response = self.session.get(url,params=params,headers=headers)
+        response = self.session.get(url,params=params,data=data,json=json_data,headers=headers)
         return response
     def post(self,endpoint,data=None,json_data=None,headers=None):
         url = self.base_url + endpoint
