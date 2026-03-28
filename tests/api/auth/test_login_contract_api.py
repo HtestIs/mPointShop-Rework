@@ -14,7 +14,6 @@ def test_invalid_contract_login_api(auth_api, method, send_payload, status_code,
     actual_payload = payload if send_payload else None
     response = auth_api.login_request(payload=actual_payload, method=method) 
     data = response.json()
-    auth_api.client.debug_response(response)
     assert response.request.method == method.upper()
     assert response.status_code == status_code
     assert data["code"] == code

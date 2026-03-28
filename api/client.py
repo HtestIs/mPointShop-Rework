@@ -3,8 +3,12 @@ class APIClient:
     def __init__(self,base_url,default_headers=None):
         self.base_url = base_url
         self.session = requests.Session()
+        self.token = None
         if default_headers:
             self.session.headers.update(default_headers)
+    def set_token(self, token):
+        self.token = token
+        self.session.headers.update({"Authorization": f"Bearer {token}", "Accept": "application/json"})
     def get(self,endpoint,params=None,data=None,json_data=None,headers=None):
         url = self.base_url + endpoint
         response = self.session.get(url,params=params,data=data,json=json_data,headers=headers)

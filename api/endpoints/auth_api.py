@@ -2,7 +2,7 @@ from wsgiref import headers
 
 
 class AuthAPI:
-    LOGIN_ENDPOINT = "/login"
+    LOGIN_ENDPOINT = "/api/v2/appuser/login"
     def __init__(self, client):
         self.client = client
 
