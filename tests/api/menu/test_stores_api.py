@@ -58,7 +58,7 @@ def test_get_store_list_invalid_page_params(logged_in_client_partner,page,pageSi
     assert response.status_code == 422, f"Expected status code 422 for invalid page parameter, got {response.status_code}"
     assert body["code"] == 422, f"Expected code 422 for invalid page parameter, got {body['code']}"
     assert body["message"] == "Tham số đầu vào không hợp lệ!", f"Expected message 'Tham số đầu vào không hợp lệ!' for invalid page parameter, got {body['message']}"
-    assert body["data"]["type"] == type_text, f"Expected type '{type_text}' for invalid page parameter, got {body['data']['type']}"
+    assert body["data"][0]["type"] == type_text, f"Expected type '{type_text}' for invalid page parameter, got {body['data']['type']}"
 @pytest.mark.api
 def test_get_store_list_edge_case_page_exceeds_total(logged_in_client_partner):
     store_api = StoreAPI(client=logged_in_client_partner)
@@ -69,22 +69,40 @@ def test_get_store_list_edge_case_page_exceeds_total(logged_in_client_partner):
     assert response.status_code == 200, f"Expected status code 200, got {response.status_code}"
     assert body["code"] == 0, f"Expected code 0, got {body['code']}"
 @pytest.mark.api
-def test_get_store_list_edge_case_pageSize_too_big(logged_in_client_partner):
+@pytest.mark.parametrize("page,pageSize,expectedPageSize", [
+    (1, 1000,100),
+    (10, 0,10),
+],ids=["pageSize_too_big","pageSize_too_small"])
+def test_get_store_list_pageSize_edge_cases(logged_in_client_partner, page, pageSize, expectedPageSize):
     store_api = StoreAPI(client=logged_in_client_partner)
-    params = {"page": 1, "pageSize": 1000}
+    params = {"page": page, "pageSize": pageSize}
     response = store_api.get_store_list(params=params)
     # store_api.client.debug_response(response)
     body = response.json()
     assert response.status_code == 200, f"Expected status code 200, got {response.status_code}"
     assert body["code"] == 0, f"Expected code 0, got {body['code']}"
-    assert body["pageSize"] == 100, f"Expected pageSize 100, got {body['pageSize']}"
+    assert body["code"] == 0, f"Expected code 0, got {body['code']}"
+    assert body["pageSize"] == expectedPageSize, f"Expected pageSize {expectedPageSize}, got {body['pageSize']}"
+def test_get_store_list_exceeds_max_page(logged_in_client_partner):
+    store_api = StoreAPI(client=logged_in_client_partner)
+    params_prerequisite = {"page": 1, "pageSize": 10}
+    response_prerequisite = store_api.get_store_list(params=params_prerequisite)
+    body_prerequisite = response_prerequisite.json()
+    exceed_page = body_prerequisite["totalPages"] + 1
+    params = {"page": exceed_page, "pageSize": 10}
+    response = store_api.get_store_list(params=params)
+    # store_api.client.debug_response(response)
+    body = response.json()
+    assert response.status_code == 200, f"Expected status code 200, got {response.status_code}"
+    assert body["code"] == 0, f"Expected code 0, got {body['code']}"
+    assert isinstance(body["data"], list), f"Expected data to be a list, got {type(body['data'])}"
+    assert len(body["data"]) == 0, f"Expected data list to be empty for page exceeding totalPages, got {len(body['data'])}"
 @pytest.mark.api
-def test_get_store_list_edge_case_pageSize_zero(logged_in_client_partner):
+def test_post_store_list_not_allowed(logged_in_client_partner):
     store_api = StoreAPI(client=logged_in_client_partner)
-    params = {"page": 10, "pageSize": 0}
-    response = store_api.get_store_list(params=params)
+    response = store_api.post_store_list()
     # store_api.client.debug_response(response)
     body = response.json()
-    assert response.status_code == 200, f"Expected status code 200, got {response.status_code}"
-    assert body["code"] == 0, f"Expected code 0, got {body['code']}"
-    assert body["pageSize"] == 10, f"Expected pageSize 10, got {body['pageSize']}"
+    assert response.status_code == 404, f"Expected status code 404 for method not allowed, got {response.status_code}"
+    assert body["code"] == 404, f"Expected code 404 for method not allowed, got {body['code']}"
+    assert body["type"] == "SERVICE_NOT_FOUND", f"Expected type 'SERVICE_NOT_FOUND' for method not allowed, got {body['type']}"

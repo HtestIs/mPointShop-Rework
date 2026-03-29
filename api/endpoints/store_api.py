@@ -1,3 +1,4 @@
+import random
 class StoreAPI:
     STORE_LIST_ENDPOINT = "/api/v1/store/get-list-retail-stores"
     def __init__(self, client):
