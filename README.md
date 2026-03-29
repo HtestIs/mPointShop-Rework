@@ -20,7 +20,7 @@ Built as a **job-ready portfolio project** to demonstrate real-world automation 
 
 * UI automation with **Selenium + Page Object Model**
 * API testing with **Requests + structured endpoints**
-* Clean test separation: `UI (e2e)` vs `API`
+* Test separation: `UI (e2e)` vs `API`
 * Reusable fixtures for driver, API, and data
 * Environment handling via `.env`
 * Parametrized test cases (data-driven)
@@ -32,22 +32,77 @@ Built as a **job-ready portfolio project** to demonstrate real-world automation 
 
 ```text
 mPointShop-Rework/
-├── api/                 # API client + endpoints
-│   ├── client.py
-│   └── endpoints/
-├── config/              # env configs and paths
-├── data/                # test data + generators
-├── drivers/             # browser setup
-├── fixtures/            # pytest fixtures
-├── pages/               # page objects (UI)
+├── api/                         # API layer
+│   ├── client.py                # Base API client
+│   ├── endpoints/               # Endpoint classes (StoreAPI, AuthAPI)
+│   └── api_assertions/          # Reusable API assertions
+│       ├── menu_assertions.py
+│       └── store_assertions.py
+│
+├── assets/                      # Static assets (images, uploads)
+│   └── icon_auto.png
+│
+├── config/                      # Environment & config
+│   ├── env_config.py
+│   └── paths.py
+│
+├── data/                        # Test data & payload builders
+│   ├── builders.py
+│   ├── data_generator.py
+│   ├── fake_location.py
+│   ├── store_data.py
+│   └── test_data.py
+│
+├── drivers/                     # WebDriver setup
+│   ├── browser_options.py
+│   └── driver_manager.py
+│
+├── fixtures/                    # Pytest fixtures
+│   ├── api_fixture.py
+│   └── driver_fixture.py
+│
+├── pages/                       # Page Object Model (UI)
+│   ├── base_page.py
+│   ├── login_page.py
+│   ├── store_manage_page.py
+│   └── voucher_scan_page.py
+│
 ├── tests/
-│   ├── e2e/             # UI tests
-│   └── api/             # API tests
-├── utils/               # helpers, logger
+│   ├── api/
+│   │   ├── auth/                # Auth API tests
+│   │   │   ├── test_login_contract_api.py
+│   │   │   ├── test_login_negative_api.py
+│   │   │   └── test_login_positive_api.py
+│   │   │
+│   │   ├── menu/                # Menu-related API tests
+│   │   │   └── test_menu_api.py
+│   │   │
+│   │   └── store/               # Store-related API tests 
+│   │       └── test_stores_api.py
+│   │
+│   └── e2e/                     # UI (end-to-end tests)
+│       ├── test_login.py
+│       ├── test_store_location.py
+│       ├── test_store_registration.py
+│       ├── test_store_search.py
+│       ├── test_store_security.py
+│       └── test_voucher_scan.py
+│
+├── utils/                       # Utilities
+│   ├── data_helpers.py
+│   └── logger.py
+│
+├── reports/
+├── allure-results/
+├── allure-report/
+│
+├── .env
 ├── .env.example
+├── .gitignore
 ├── conftest.py
 ├── pytest.ini
-└── requirements.txt
+├── requirements.txt
+└── README.md
 ```
 
 ---
@@ -183,4 +238,4 @@ allure serve allure-results
 
 ## 👨‍💻 Author
 
-Built as a QA Automation portfolio project focused on becoming **job-ready in test automation**.
+A QA Automation project focused on building practical skills in UI and API testing.
