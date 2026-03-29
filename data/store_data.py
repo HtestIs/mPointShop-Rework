@@ -33,3 +33,32 @@ def storedata():
      "image_path": ICON_AUTO_PATH
      }
 #holy f, are you reading my mind, this is exactly the data I want to generate for store registration, you are a genius, I am amazed, I will use this for my test_register_new_store test case, thank you so much
+@pytest.fixture
+def store_api_data():
+    timestamp = datetime.now().strftime("%d%H%M%S%f")
+    return{
+        "address": f"{fake.building_number()} {fake.street_name()}, Phường {fake.first_name()}, {fake.city()}",
+        "bankAccount": fake.aba(),
+        "bankId": None,
+        "businessLicenseImage": "",
+        "district": "271",
+        "image": "https://s3.mpoint.vn/mpointshop/shioriNovellaHololiveAnd1MoreDrawnByDinoDinoartforameD4B708F6Ce27Caa33Fd7D568F81671Be_691d047c00609a3115b828f8b64752ab.jpg",
+        "lat": "25.123123123",
+        "lng": "105.123123123123",
+        "nameStore": fake.company(),
+        "newProvinceId": 1,
+        "newWardId": 2,
+        "password": "Abc@1234",
+        "percent": 50,
+        "phoneStore": fake.numerify(text='09########'),
+        "pointTransferLimit": 1000000,
+        "province": "1",
+        "saleCommissionOffline": 5,
+        "storeOwnerBusinessCompanySeId": None,
+        "storeOwnerName": fake.name(),
+        "storeOwnerPhone": fake.numerify(text='09########'),
+        "username": ("API"+timestamp)[:20],
+        "walletBalanceMin": 1000000,
+        "ward": "9619",
+        "whitelistSerials": []
+    }

@@ -1,6 +1,6 @@
 import pytest
 from api.endpoints.store_api import StoreAPI
-from api.api_assertions.store_assertions import assert_store_response
+from api.api_assertions.store_assertions import assert_code_response, assert_valid_post_response, assert_validation_error_type, assert_store_page_response, assert_store_response
 @pytest.mark.api
 @pytest.mark.parametrize("page,pageSize", [
     (1, 10),
@@ -14,31 +14,21 @@ def test_get_store_list_api(logged_in_client_partner, page, pageSize):
     params = {"page": page, "pageSize": pageSize}
     response = store_api.get_store_list(params=params)
     # store_api.client.debug_response(response)
-    data = response.json()
-    assert response.status_code == 200, f"Expected status code 200, got {response.status_code}"
-    assert data["code"] == 0, f"Expected code 0, got {data['code']}"
-    assert_store_response(page=page, pageSize=pageSize, body=data) 
+    assert_code_response(response, status_code=200, expected_code=0)
+    assert_store_response(page=page, pageSize=pageSize, data=response) 
 @pytest.mark.api
 def test_get_store_list_unauthorized(api_client):
     store_api = StoreAPI(client=api_client)
     response = store_api.get_store_list()
     # store_api.client.debug_response(response)
-    body = response.json()
-    assert response.status_code == 401, f"Expected status code 401 for unauthorized access, got {response.status_code}"
-    assert body["code"] == 401, f"Expected code 401 for unauthorized access, got {body['code']}"
-    assert body["message"] == "Token này đã hết hạn", f"Expected message 'Token này đã hết hạn' for unauthorized access, got {body['message']}"
-    assert body["type"] == "ERR_TOKEN_EXPIRED", f"Expected type 'ERR_TOKEN_EXPIRED' for unauthorized access, got {body['type']}"
+    assert_code_response(response=response, status_code=401, expected_code=401, expected_message="Token này đã hết hạn", expected_type="ERR_TOKEN_EXPIRED")
 @pytest.mark.api
 def test_get_store_list_invalid_token(api_client):
     store_api = StoreAPI(client=api_client)
     api_client.set_token("invalid_token")
     response = store_api.get_store_list()
     # store_api.client.debug_response(response)
-    body = response.json()
-    assert response.status_code == 401, f"Expected status code 401 for unauthorized access, got {response.status_code}"
-    assert body["code"] == 401, f"Expected code 401 for unauthorized access, got {body['code']}"
-    assert body["message"] == "Token này đã hết hạn", f"Expected message 'Token này đã hết hạn' for unauthorized access, got {body['message']}"
-    assert body["type"] == "ERR_TOKEN_EXPIRED", f"Expected type 'ERR_TOKEN_EXPIRED' for unauthorized access, got {body['type']}"
+    assert_code_response(response=response, status_code=401, expected_code=401, expected_message="Token này đã hết hạn", expected_type="ERR_TOKEN_EXPIRED")
 @pytest.mark.api
 @pytest.mark.parametrize("page,pageSize,type_text", [
     (-1, 10,"numberMin"),
@@ -47,27 +37,15 @@ def test_get_store_list_invalid_token(api_client):
     ("abc", 15,"number"),
     (1, "abc","number"),
     (1.5, 10,"numberInteger"),
-    (1, 10.5,"numberInteger")
+    (1, 10.5,"numberInteger"),
 ],ids=["negative_page", "negative_pageSize", "zero_page", "non_numeric_page", "non_numeric_pageSize", "float_page", "float_pageSize"])
 def test_get_store_list_invalid_page_params(logged_in_client_partner,page,pageSize,type_text):
     store_api = StoreAPI(client=logged_in_client_partner)
     params = {"page": page, "pageSize": pageSize}
     response = store_api.get_store_list(params=params)
     # store_api.client.debug_response(response)
-    body = response.json()
-    assert response.status_code == 422, f"Expected status code 422 for invalid page parameter, got {response.status_code}"
-    assert body["code"] == 422, f"Expected code 422 for invalid page parameter, got {body['code']}"
-    assert body["message"] == "Tham số đầu vào không hợp lệ!", f"Expected message 'Tham số đầu vào không hợp lệ!' for invalid page parameter, got {body['message']}"
-    assert body["data"][0]["type"] == type_text, f"Expected type '{type_text}' for invalid page parameter, got {body['data']['type']}"
-@pytest.mark.api
-def test_get_store_list_edge_case_page_exceeds_total(logged_in_client_partner):
-    store_api = StoreAPI(client=logged_in_client_partner)
-    params = {"page": 1000, "pageSize": 10}
-    response = store_api.get_store_list(params=params)
-    # store_api.client.debug_response(response)
-    body = response.json()
-    assert response.status_code == 200, f"Expected status code 200, got {response.status_code}"
-    assert body["code"] == 0, f"Expected code 0, got {body['code']}"
+    assert_code_response(response=response, status_code=422, expected_code=422, expected_message="Tham số đầu vào không hợp lệ!")
+    assert_validation_error_type(response=response, expected_type=type_text) 
 @pytest.mark.api
 @pytest.mark.parametrize("page,pageSize,expectedPageSize", [
     (1, 1000,100),
@@ -78,11 +56,9 @@ def test_get_store_list_pageSize_edge_cases(logged_in_client_partner, page, page
     params = {"page": page, "pageSize": pageSize}
     response = store_api.get_store_list(params=params)
     # store_api.client.debug_response(response)
-    body = response.json()
-    assert response.status_code == 200, f"Expected status code 200, got {response.status_code}"
-    assert body["code"] == 0, f"Expected code 0, got {body['code']}"
-    assert body["code"] == 0, f"Expected code 0, got {body['code']}"
-    assert body["pageSize"] == expectedPageSize, f"Expected pageSize {expectedPageSize}, got {body['pageSize']}"
+    assert_code_response(response=response, status_code=200, expected_code=0)
+    assert_store_page_response(data =response, expected_pageSize = expectedPageSize)
+@pytest.mark.api
 def test_get_store_list_exceeds_max_page(logged_in_client_partner):
     store_api = StoreAPI(client=logged_in_client_partner)
     params_prerequisite = {"page": 1, "pageSize": 10}
@@ -93,8 +69,7 @@ def test_get_store_list_exceeds_max_page(logged_in_client_partner):
     response = store_api.get_store_list(params=params)
     # store_api.client.debug_response(response)
     body = response.json()
-    assert response.status_code == 200, f"Expected status code 200, got {response.status_code}"
-    assert body["code"] == 0, f"Expected code 0, got {body['code']}"
+    assert_code_response(response=response, status_code=200, expected_code=0)
     assert isinstance(body["data"], list), f"Expected data to be a list, got {type(body['data'])}"
     assert len(body["data"]) == 0, f"Expected data list to be empty for page exceeding totalPages, got {len(body['data'])}"
 @pytest.mark.api
@@ -102,7 +77,49 @@ def test_post_store_list_not_allowed(logged_in_client_partner):
     store_api = StoreAPI(client=logged_in_client_partner)
     response = store_api.post_store_list()
     # store_api.client.debug_response(response)
-    body = response.json()
-    assert response.status_code == 404, f"Expected status code 404 for method not allowed, got {response.status_code}"
-    assert body["code"] == 404, f"Expected code 404 for method not allowed, got {body['code']}"
-    assert body["type"] == "SERVICE_NOT_FOUND", f"Expected type 'SERVICE_NOT_FOUND' for method not allowed, got {body['type']}"
+    assert_code_response(response=response, status_code=404, expected_code=404, expected_type="SERVICE_NOT_FOUND")
+
+@pytest.mark.api
+@pytest.mark.parametrize("params", [
+    {"page": 1},
+    {"pageSize": 10},
+    {"unexpectedParam": "value"},
+    {},
+    {"page": None, "pageSize": None}
+], ids=["no_pageSize", "no_page", "unexpected_param", "empty_dict", "null_params"])
+def test_missing_or_unexpected_params_get_store_list(logged_in_client_partner, params):
+    store_api = StoreAPI(client=logged_in_client_partner)
+    response = store_api.get_store_list(params=params)
+    # store_api.client.debug_response(response)
+    assert_code_response(response=response, status_code=200, expected_code=0)
+    assert_store_page_response(data=response, expected_page=params.get("page"), expected_pageSize=params.get("pageSize"))
+
+@pytest.mark.api
+def test_create_store_no_payload(logged_in_client_partner):
+    store_api = StoreAPI(client=logged_in_client_partner)
+    response = store_api.create_store(payload=None)
+    store_api.client.debug_response(response)
+    assert_code_response(response=response, status_code=422, expected_code=422, expected_type="VALIDATION_ERROR")
+
+@pytest.mark.ongoing
+def test_create_store_valid_payload(logged_in_client_partner,store_api_data):
+    store_api = StoreAPI(client=logged_in_client_partner)
+    
+    payload = store_api_data.copy()
+    response = store_api.create_store(payload=payload)
+    store_api.client.debug_response(response)
+    assert_code_response(response=response, status_code=200, expected_code=0)
+    assert_valid_post_response(response=response, payload=payload)
+# TODO: Add more test cases for create_store endpoint, such as invalid payload, missing required fields, etc.
+# yo mf, put a parametrize here for different invalid payloads to test the validation of the create_store endpoint
+@pytest.mark.api
+def test_create_store_invalid_payload(logged_in_client_partner,store_api_data):
+    store_api = StoreAPI(client=logged_in_client_partner)
+    # Create a copy of the valid payload and remove a required field to make it invalid
+    payload = store_api_data.copy()
+    payload["nameStore"] = ""  # Assuming 'name' is a required field, setting it to empty string to make it invalid
+    response = store_api.create_store(payload=payload)
+    store_api.client.debug_response(response)
+    assert_code_response(response=response, status_code=200, expected_code=1, expected_message="not_found_name")
+
+# TODO 2: yo mf, pop the payload to test the missing required field validation, and add more cases for other required fields and invalid values
