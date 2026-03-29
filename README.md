@@ -54,23 +54,31 @@ mPointShop-Rework/
 
 ## 🧪 Test Coverage
 
-### UI Tests (E2E)
+### UI (E2E)
+- Login
+- Store search
+- Store registration
+- Store location validation
+- Store security validation
 
-* Login flow
-* Store registration
-* Store search
-* Store location validation
-* Store security
-* Voucher scan
+### API
+#### Auth
+- Login API
 
-### API Tests
+#### Store List
+- Get store list with valid pagination
+- Unauthorized access
+- Invalid token
+- Invalid page / pageSize values
+- pageSize edge cases
+- Exceed max page
+- Missing or unexpected params
+- Wrong HTTP method on list endpoint
 
-* ✅ Valid login (partner & merchant)
-* ❌ Invalid credentials
-* ❌ Missing fields
-* ❌ Empty username/password
-* 🔐 Role-based validation
-
+#### Store Create
+- Create store with valid payload
+- Create store with no payload
+- Create store validation and business-error scenarios (ongoing)
 ---
 
 ## ⚙️ Setup
