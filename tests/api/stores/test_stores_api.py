@@ -101,7 +101,7 @@ def test_create_store_no_payload(logged_in_client_partner):
     store_api.client.debug_response(response)
     assert_code_response(response=response, status_code=422, expected_code=422, expected_type="VALIDATION_ERROR")
 
-@pytest.mark.ongoing
+@pytest.mark.api
 def test_create_store_valid_payload(logged_in_client_partner,store_api_data):
     store_api = StoreAPI(client=logged_in_client_partner)
     
@@ -123,3 +123,20 @@ def test_create_store_invalid_payload(logged_in_client_partner,store_api_data):
     assert_code_response(response=response, status_code=200, expected_code=1, expected_message="not_found_name")
 
 # TODO 2: yo mf, pop the payload to test the missing required field validation, and add more cases for other required fields and invalid values
+@pytest.mark.api
+@pytest.mark.parametrize("missing_field", [
+    "address", "district", "image", "lat", "lng", "nameStore", 
+    "password", "phoneStore", "province", 
+    "storeOwnerName", "storeOwnerPhone", "username","ward"
+    ], ids=[
+    "missing_address", "missing_district", "missing_image", "missing_lat", "missing_lng", "missing_nameStore", 
+    "missing_password", "missing_phoneStore", "missing_province", 
+    "missing_storeOwnerName", "missing_storeOwnerPhone", "missing_username", "missing_ward"
+    ])
+def test_create_store_missing_required_fields(logged_in_client_partner, store_api_data, missing_field):
+    store_api = StoreAPI(client=logged_in_client_partner)
+    payload = store_api_data.copy()
+    payload.pop(missing_field)  # Remove the required field to test missing field validation
+    response = store_api.create_store(payload=payload)
+    # store_api.client.debug_response(response)
+    assert_code_response(response=response, status_code=422, expected_code=422, expected_message="Tham số đầu vào không hợp lệ!")

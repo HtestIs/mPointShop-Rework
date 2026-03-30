@@ -1,8 +1,6 @@
-from wsgiref import headers
-
-
 class AuthAPI:
     LOGIN_ENDPOINT = "/api/v2/appuser/login"
+    LOGOUT_ENDPOINT = "/api/v1/appuser/logout"
     def __init__(self, client):
         self.client = client
 
@@ -14,6 +12,10 @@ class AuthAPI:
         method = method.lower()
         request_method = getattr(self.client, method)
         return request_method(self.LOGIN_ENDPOINT, json_data=payload, headers=headers)
+    def logout(self,headers=None,use_json=True,payload=None):
+        if use_json:
+            return self.client.post(self.LOGOUT_ENDPOINT, json_data=payload, headers=headers)
+        return self.client.post(self.LOGOUT_ENDPOINT, data=payload, headers=headers)
     def get_data(self, payload):
         response = self.login(payload)
         return response,response.json()
