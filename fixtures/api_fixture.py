@@ -56,3 +56,6 @@ def logged_in_partner_menu_api(logged_in_client_partner):
 @pytest.fixture
 def logged_in_merchant_menu_api(logged_in_client_merchant):
     return MenuAPI(client=logged_in_client_merchant)
+@pytest.fixture
+def fresh_api_client(api_url):
+    return APIClient(base_url=api_url)

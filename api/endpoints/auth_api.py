@@ -1,3 +1,6 @@
+from wsgiref import headers
+
+
 class AuthAPI:
     LOGIN_ENDPOINT = "/api/v2/appuser/login"
     LOGOUT_ENDPOINT = "/api/v1/appuser/logout"
