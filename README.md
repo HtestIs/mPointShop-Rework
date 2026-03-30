@@ -5,15 +5,14 @@
 ![Requests](https://img.shields.io/badge/Requests-API-FF6F00?style=for-the-badge)
 ![Allure](https://img.shields.io/badge/Allure-Reports-8A2BE2?style=for-the-badge)
 
-A QA automation framework combining **UI testing** and **API testing** using modern Python tools.
+A QA automation framework combining **UI testing** and **API testing** using Python tools.
 
-Built as a **job-ready portfolio project** to demonstrate real-world automation practices:
+Built to practice and explore real-world automation approaches:
 
-* Page Object Model (UI)
-* API abstraction layer
-* Data-driven testing
-* Environment-based configuration
-
+- Page Object Model (UI)
+- API abstraction layer
+- Data-driven testing
+- Environment-based configuration
 ---
 
 ## ✨ Features
