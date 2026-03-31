@@ -2,7 +2,7 @@ import pytest
 from api.endpoints.auth_api import AuthAPI
 from api.endpoints.store_api import StoreAPI
 
-@pytest.mark.ongoing
+@pytest.mark.api
 def test_logout_api(auth_api,env_config):
     creds = env_config["users"]["partner"]
     payload = {

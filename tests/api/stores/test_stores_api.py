@@ -140,3 +140,43 @@ def test_create_store_missing_required_fields(logged_in_client_partner, store_ap
     response = store_api.create_store(payload=payload)
     # store_api.client.debug_response(response)
     assert_code_response(response=response, status_code=422, expected_code=422, expected_message="Tham số đầu vào không hợp lệ!")
+
+@pytest.mark.api
+@pytest.mark.parametrize("payload", [
+    {"skip": 0, "limit": 10, "name": "Craft Store", "phone": "0393704472"},
+    {"skip": 0, "limit": 10, "name": "Craft Store"},
+    {"skip": 0, "limit": 10, "phone": "0393704472"},
+    {"skip": 0, "limit": 10}
+], ids=["full_payload", "name_only", "phone_only", "pagination_only"])
+def test_search_store_valid_payload(logged_in_client_partner, payload):
+    store_api = StoreAPI(client=logged_in_client_partner)
+    response = store_api.search_store(payload=payload)
+    assert_code_response(response=response, status_code=200, expected_code=0)
+
+@pytest.mark.api
+@pytest.mark.parametrize("payload", [
+    {"skip": 0, "limit": 10, "name": "", "phone": ""},
+    {"skip": 0, "limit": 10, "name": ""},
+    {"skip": 0, "limit": 10, "phone": ""}  
+], ids=["empty_field", "empty_name_no_phone", "empty_phone_no_name"])
+def test_search_store_empty_fields(logged_in_client_partner, payload):
+    store_api = StoreAPI(client=logged_in_client_partner)
+    response = store_api.search_store(payload=payload)
+    assert_code_response(response=response, status_code=422, expected_code=422, expected_message="Tham số đầu vào không hợp lệ!")
+
+@pytest.mark.ongoing
+@pytest.mark.parametrize("payload,response_code",[
+    ({"skip": -1, "limit": 10, "name": "Craft Store", "phone": "0393704472"}, 200),
+    ({"limit": 10, "name": "Craft Store", "phone": "0393704472"}, 422),
+    ({"skip": 0, "limit": -10, "name": "Craft Store", "phone": "0393704472"}, 200),
+    ({"skip": 0, "name": "Craft Store", "phone": "0393704472"}, 422),
+    ({"skip": 0, "limit": 10, "name": ["Craft Store"], "phone": "0393704472"}, 422),
+    ({"skip": 0, "limit": 10, "name": "Craft Store", "phone": ["0393704472"]}, 422),
+]
+, ids=["negative_skip", "missing_skip", "negative_limit", "missing_limit", "invalid_name_type", "invalid_phone_type"]
+)
+def test_search_store_invalid_payload(logged_in_client_partner, payload, response_code):
+    store_api = StoreAPI(client=logged_in_client_partner)
+    response = store_api.search_store(payload=payload)
+    # store_api.client.debug_response(response)
+    assert_code_response(response=response, status_code=response_code, expected_code=422)   
