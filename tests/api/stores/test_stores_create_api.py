@@ -12,7 +12,7 @@ from api.endpoints.store_api import StoreAPI
 def test_create_store_no_payload(logged_in_client_partner):
     store_api = StoreAPI(client=logged_in_client_partner)
     response = store_api.create_store(payload=None)
-    store_api.client.debug_response(response)
+    # store_api.client.debug_response(response)
     assert_code_response(response=response, status_code=422, expected_code=422, expected_type="VALIDATION_ERROR")
 
 
@@ -24,7 +24,7 @@ def test_create_store_valid_payload(logged_in_client_partner, store_api_data):
     store_api = StoreAPI(client=logged_in_client_partner)
     payload = store_api_data.copy()
     response = store_api.create_store(payload=payload)
-    store_api.client.debug_response(response)
+    # store_api.client.debug_response(response)
     assert_code_response(response=response, status_code=200, expected_code=0)
     assert_valid_post_response(response=response, payload=payload)
 
@@ -38,7 +38,7 @@ def test_create_store_invalid_payload(logged_in_client_partner, store_api_data):
     payload = store_api_data.copy()
     payload["nameStore"] = ""
     response = store_api.create_store(payload=payload)
-    store_api.client.debug_response(response)
+    # store_api.client.debug_response(response)
     assert_code_response(response=response, status_code=200, expected_code=1, expected_message="not_found_name")
 
 
