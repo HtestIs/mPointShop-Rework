@@ -5,6 +5,8 @@ from pages.login_page import LoginPage
 from selenium.webdriver.common.by import By
 from datetime import datetime
 import random
+
+from pages.voucher_partner_page import VoucherPartnerPage
 class StoreManage(BasePage):
     URL="/manager/store-manager"
     PAGE_NAME = (By.CLASS_NAME,"title")
@@ -60,18 +62,25 @@ class StoreManage(BasePage):
     TOAST_MESSAGE =(By.XPATH,"//div[@role='alert']/div[2]")
     BTN_LOG_OUT = (By.XPATH,"//span[text()='Đăng xuất']")
     USER_BLOCK = (By.CSS_SELECTOR,"#cheader > section > div > div.c-header__right > div > a > div")
+# MENU
+    @allure.step("Get page name")
     def get_page_name(self):
         return self.get_text(self.PAGE_NAME)
 # LIST HEAD INTERACT
+    @allure.step("Search store by name: {text}")
     def find_store_with_name(self,text):
         self.type_text(self.SEARCH_TEXT_FIND,text)
+    @allure.step("Click add new store")
     def click_add_new_store(self):
         self.click(self.ADD_STORE_BUTTON)
+    @allure.step("Search store by phone: {text}")
     def find_store_with_number(self,text):
         self.type_text(self.SEARCH_PHONE_SEARCH_INPUT,text)
 # LIST
+    @allure.step("Get store name")
     def get_store_name(self):
         return self.get_text(self.FIRST_STORE_NAME)
+    @allure.step("Get store phone")
     def get_store_phone(self):
         return self.get_text(self.FIRST_PHONE_NUMBER).replace("Số điện thoại:","").strip()
     def wait_store_info_loaded(self,keyword=None):
@@ -82,6 +91,7 @@ class StoreManage(BasePage):
                 return keyword in name or keyword in phone
             return bool(name) and bool(phone)
         self.wait_until(condition)
+    @allure.step("Toggle store status")
     def toggle_store(self):
         old = self.find(self.FIRST_SWITCH_BUTTON)
         current = self.get_lock_status()
@@ -89,36 +99,48 @@ class StoreManage(BasePage):
         self.wait_stale(old)
         self.wait_clickable(self.FIRST_SWITCH_BUTTON)
         self.wait_attribute_change(self.FIRST_SWITCH,"aria-checked",current)
+    @allure.step("Get store lock status")
     def get_lock_status(self):
         return self.get_attribute_status(self.FIRST_SWITCH,"aria-checked")
+    @allure.step("Ensure store is locked")
     def ensure_locked(self):
         if self.get_lock_status() == "false":
             self.toggle_store()
 # STORE PASSWORD
+    @allure.step("Click change password")
     def click_change_password(self):
         self.click(self.FIRST_STORE_BUTTON)
+    @allure.step("Enter new password")
     def enter_password_update(self,text):
         self.type_text(self.TEXT_PASSWORD_MODAL,text)
+    @allure.step("Confirm password change")
     def click_confirm_button_password_modal(self):
         self.click(self.CONFIRM_BUTTON)
+    @allure.step("Change store password")
     def change_password(self,new_password):
         self.click_change_password()
         self.enter_password_update(new_password)
         self.click_confirm_button_password_modal()
 # ETC
+    @allure.step("Get toast message")
     def get_toast_msg(self):
         return self.get_text(self.TOAST_MESSAGE)
+    @allure.step("Click logout")
     def click_logout(self):
         self.click(self.BTN_LOG_OUT)
         return LoginPage(self.driver)
+    @allure.step("Hover over user block")
     def hover_user(self):
         self.hover(self.USER_BLOCK)
 # USER MODAL INTERACT
+    @allure.step("Confirm user modal")
     def click_confirm_button_user_modal(self):
         self.click(self.MODAL_CONFIRM_BUTTON)
+    @allure.step("Upload store image")
     def upload_store_image(self, image_path):
         self.upload_image(self.MODAL_UPLOAD_INPUT, image_path)
 # USER MODAL INFO
+    @allure.step("Get first store username from edit modal")
     def get_first_store_username_from_edit_modal(self):
         self.click(self.FIRST_STORE_EDIT)
         username = self.get_attribute_status(self.FIRST_STORE_USERNAME,"value")
@@ -149,9 +171,11 @@ class StoreManage(BasePage):
         "city_new": MODAL_CITY_NEW_SELECT,
         "ward_new": MODAL_WARD_NEW_SELECT
     }
+    @allure.step("Fill field: {field_name}")
     def fill_field(self, field_name, value):
         locator = self.FORM_FIELDS[field_name]
         self.type_text(locator, value)
+    @allure.step("Choose option for {field_name}: {value}")
     def choose_option(self, field_name, value):
         dropdown = self.COMBO_FIELDS[field_name]
 
@@ -176,6 +200,7 @@ class StoreManage(BasePage):
         self.wait.until(
             lambda d: self.get_selected_text(field_name) == value
         )
+    @allure.step("Get selected text for {field_name}")
     def get_selected_text(self, field_name):
         dropdown = self.COMBO_FIELDS[field_name]
         return self.find(dropdown).text.strip()
@@ -197,6 +222,7 @@ class StoreManage(BasePage):
     # ADDITIONALLY, IF THE CITY IS NOT SELECTED, 
     # IT WILL NOT SELECT THE DISTRICT AND WARD,
     # IF THE DISTRICT IS NOT SELECTED, IT WILL NOT SELECT THE WARD.
+    @allure.step("Select location options")
     def select_option(self,data):
         city = data.get("city_old")
         district = data.get("district_old")
@@ -215,6 +241,7 @@ class StoreManage(BasePage):
                 self.choose_option("ward_new",ward_new)
     # THIS ONE IS FOR SELECTING INNER LOCATION OPTION,
     # CHECK IF USER CHOOSE BIGGER LOCATION YET
+    @allure.step("Setup location: {setup}")
     def setup_location(self,setup,storedata):
         if setup == "missing_city":
             return
@@ -222,6 +249,7 @@ class StoreManage(BasePage):
             self.choose_option("city_old",storedata["city_old"])
         elif setup == "missing_city_new":
             return
+    @allure.step("Check if selectable option exists")
     def has_selectable_option(self):
         self.wait.until(
         lambda d: (
@@ -232,6 +260,7 @@ class StoreManage(BasePage):
 
         return len(self.finds(self.MODAL_OPTION_LIST)) > 0
 # DATE CHOOSE
+    @allure.step("Choose date")
     def choose_date(self):
         self.click(self.MODAL_DATE_PICKER)
         months_to_add = random.randint(1, 48)
@@ -246,6 +275,7 @@ class StoreManage(BasePage):
     # IT KEPT GIVING ME THE SAME COMMENT FOR THIS METHOD, 
     # I HAD TO ASK IT TO STOP COMPLAINING AND JUST WRITE THE COMMENT, 
     # NOW IT'S WRITING A NORMAL COMMENT, I THINK IT'S FINE NOW
+    @allure.step("Fill store form fields")
     def fill_store_form_fields(self, storedata):
         for field in self.FORM_FIELDS:
             value = storedata.get(field)
@@ -254,11 +284,13 @@ class StoreManage(BasePage):
                     self.upload_store_image(value)
                 else:
                     self.fill_field(field, value)
+    @allure.step("Select store location fields")
     def select_store_location_fields(self, storedata):
         for field in self.COMBO_FIELDS:
             value = storedata.get(field)
             if value:
                 self.choose_option(field, value)
+    @allure.step("Register new store")
     def register_new_store(self, storedata):
         self.click_add_new_store()
         self.fill_store_form_fields(storedata)
@@ -269,6 +301,7 @@ class StoreManage(BasePage):
 # ERROR HANDLING
     # THIS ONE FOR FIELDS ERROR
     # SELECTBOX MIGHT F THIS ONE UP
+    @allure.step("Get field error for: {field_name}")
     def get_field_error(self,field_name):
         locator = (By.XPATH,f"//b[contains(text(),'{field_name}')]/following-sibling::span")
         return self.find(locator).text

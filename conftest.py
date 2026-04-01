@@ -1,15 +1,15 @@
 import pytest
 from config.env_config import ENV_CONFIG
 from pages.login_page import LoginPage
-from pages.voucher_scan_page import VoucherScan
-from pages.store_manage_page import StoreManage
+from pages.menu_page import MenuPage
 import os
 from datetime import datetime
 import allure
 pytest_plugins = [
     "fixtures.driver_fixture",
     "data.store_data",
-    "fixtures.api_fixture"
+    "fixtures.api_fixture",
+    "data.voucher_data"
 ]
 def pytest_addoption(parser):
     parser.addoption("--browser", action="store", default="chrome")
@@ -30,7 +30,7 @@ def login_merchant_success(driver,base_url,env_config):
     with allure.step("Logging in as merchant"):
         login.open_url(base_url)
         login.fill_login(creds["username"], creds["password"])
-    page = VoucherScan(driver)
+    page = MenuPage(driver)
     yield page
     with allure.step("Logging out merchant"):
         driver.delete_all_cookies()
@@ -41,7 +41,7 @@ def login_partner_success(driver,base_url,env_config):
     with allure.step("Logging in as partner"):
         login.open_url(base_url)
         login.fill_login(creds["username"], creds["password"])
-    page = StoreManage(driver)
+    page = MenuPage(driver)
     yield page
     with allure.step("Logging out partner"):
         driver.delete_all_cookies()

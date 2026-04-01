@@ -1,9 +1,14 @@
 import pytest
+import allure
+
 @pytest.mark.api
 @pytest.mark.parametrize("role,expected_role_descriptions", [
     ("partner", "Cửa hàng của đối tác"),
     ("merchant", "Cửa hàng")
 ] ,ids=["Login as partner", "Login as merchant"])
+@allure.story("Authentication")
+@allure.title("Login API returns token for valid credentials")
+@allure.severity(allure.severity_level.CRITICAL)
 def test_valid_login(auth_api, role, expected_role_descriptions,env_config):
     creds = env_config["users"][role]
     payload = {

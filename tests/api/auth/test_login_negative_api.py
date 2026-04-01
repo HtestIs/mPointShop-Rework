@@ -1,4 +1,6 @@
 import pytest
+import allure
+
 @pytest.mark.api
 @pytest.mark.parametrize("payload,expected_status,expected_code,expected_error_message", [
     (
@@ -44,6 +46,9 @@ import pytest
     "Missing both fields in body",
     "Incorrect password"
 ])
+@allure.story("Authentication")
+@allure.title("Login API validates invalid credentials and malformed payloads")
+@allure.severity(allure.severity_level.CRITICAL)
 def test_invalid_login(auth_api, payload, expected_status, expected_code, expected_error_message):
     
     response = auth_api.login(payload)

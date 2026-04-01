@@ -1,14 +1,22 @@
+import json
+from time import sleep
+
+from pages.base_page import BasePage
 from pages.login_page import LoginPage
 from pages.voucher_scan_page import VoucherScan
 from pages.store_manage_page import StoreManage
 import allure
 import pytest
+
+from pages.warehouse_page import WarehousePage
+
 @allure.feature("Login authentication")
-class TestLogin:
+@pytest.mark.smoke
+class TestsLogin:
     @allure.story("Successful login")
     @allure.title("Test successful login for merchant")
     @allure.severity(allure.severity_level.CRITICAL)
-    def test_login_success_merchant(driver,base_url):
+    def test_login_success_merchant(self, driver, base_url):
         login = LoginPage(driver)
         login.open_url(base_url)
         login.fill_login("craftmbeer_1","123456789")
@@ -20,7 +28,7 @@ class TestLogin:
     @allure.story("Successful login")
     @allure.title("Test successful login for partner")
     @allure.severity(allure.severity_level.CRITICAL)
-    def test_login_success_partner(driver,base_url):
+    def test_login_success_partner(self, driver, base_url):
         login = LoginPage(driver)
         login.open_url(base_url)
         login.fill_login("mbeer_partner","123456789")
@@ -46,7 +54,7 @@ class TestLogin:
             "Locked account"
         ]
     )
-    def test_login_invalid(driver,base_url,username,password,message):
+    def test_login_invalid(self, driver, base_url, username, password, message):
         login = LoginPage(driver)
         login.open_url(base_url)
         login.fill_login(username,password)
@@ -54,3 +62,22 @@ class TestLogin:
             "Toast message is not correct"
         assert "/login" in login.get_current_url(), \
             "User is not on login page after failed login attempt"
+  
+    def test_login_with_api_then_ui(self, driver, auth_api, env_config, base_url):
+        creds = env_config["users"]["partner"]
+        payload = {
+            "username": creds["username"],
+            "password": creds["password"]
+        }
+        response, data = auth_api.get_data(payload)
+        auth_store = {
+            "token": data["data"]["token"]
+            }
+        # Set token in local storage to simulate logged-in state
+        auth = BasePage(driver)
+        auth.open(base_url)
+        auth.dump_token(auth_store)
+        auth.refresh_page()
+        warehouse_page = WarehousePage(driver)
+        assert warehouse_page.get_page_name() == "Quản lý sản phẩm", \
+            "Expected 'Quản lý sản phẩm' page to be loaded after setting token, but got '{}'".format(warehouse_page.get_page_name())

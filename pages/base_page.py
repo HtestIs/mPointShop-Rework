@@ -1,4 +1,6 @@
+import json
 import os
+import allure
 
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
@@ -9,6 +11,7 @@ class BasePage:
         self.driver = driver
         self.wait = WebDriverWait(driver,10)
         self.actions = ActionChains(driver)
+    @allure.step("Open URL: {base_url}")
     def open(self,base_url):
         self.driver.get(base_url)
     def wait_visible(self, locator):
@@ -42,6 +45,7 @@ class BasePage:
         return self.driver.find_element(*locator)
     def finds(self,locator):
         return self.driver.find_elements(*locator)
+    @allure.step("Click element")
     def click(self,locator,step_desc="", retries=3):
         for attempts in range(retries):
             try:
@@ -62,26 +66,33 @@ class BasePage:
             "arguments[0].scrollIntoView({block:'center'});",
             element
         )
+    @allure.step("Type text: {text}")
     def type_text(self,locator,text):
         self.wait_visible(locator)
         self.find(locator).send_keys(text)
+    @allure.step("Clear field")
     def clear(self,locator):
         self.find(locator).clear()
+    @allure.step("Get current URL")
     def get_current_url(self):
         return self.driver.current_url
     def wait_url_contains(self,text):
         return self.wait.until(EC.url_contains(text))
+    @allure.step("Get text")
     def get_text(self,locator):
         location = self.wait_visible(locator)
         return location.text
+    @allure.step("Refresh page")
     def refresh_page(self):
         self.driver.get(self.driver.current_url)
     def get_attribute_status(self,location,attribute):
         element = self.wait_presence(location)
         return element.get_attribute(attribute)
+    @allure.step("Hover over element")
     def hover(self,location):
         element = self.wait_clickable(location)
         self.actions.move_to_element(element).perform()
+    @allure.step("Upload image: {file_path}")
     def upload_image(self, locator, file_path):
         import os
         absolute_path = os.path.abspath(file_path)
@@ -93,3 +104,8 @@ class BasePage:
             return True
         except:
             return False
+    
+    @allure.step("Inject auth token")
+    def dump_token(self,token):
+        self.driver.execute_script("window.localStorage.setItem(arguments[0], arguments[1]);", "authStore",
+                              json.dumps(token))
