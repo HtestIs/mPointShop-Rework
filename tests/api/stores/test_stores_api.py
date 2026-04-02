@@ -164,7 +164,7 @@ def test_search_store_empty_fields(logged_in_client_partner, payload):
     response = store_api.search_store(payload=payload)
     assert_code_response(response=response, status_code=422, expected_code=422, expected_message="Tham số đầu vào không hợp lệ!")
 
-@pytest.mark.ongoing
+@pytest.mark.api
 @pytest.mark.parametrize("payload,response_code",[
     ({"skip": -1, "limit": 10, "name": "Craft Store", "phone": "0393704472"}, 200),
     ({"limit": 10, "name": "Craft Store", "phone": "0393704472"}, 422),

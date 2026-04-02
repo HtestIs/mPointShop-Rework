@@ -4,18 +4,12 @@ from selenium.webdriver.common.by import By
 
 
 class MenuPage(BasePage):
-    URL = "/manager/store-manager"
-
     MENU_STORE_MANAGE = (By.CSS_SELECTOR, "div.dashboard-container > div:nth-child(1)")
     MENU_VOUCHER_MANAGE = (By.CSS_SELECTOR, "div.dashboard-container > div:nth-child(4)")
     MENU_WAREHOUSE = (By.CSS_SELECTOR, "div.dashboard-container > div:nth-child(3)")
 
     BTN_LOG_OUT = (By.XPATH, "//span[text()='Đăng xuất']")
     USER_BLOCK = (By.CSS_SELECTOR, "#cheader > section > div > div.c-header__right > div > a > div")
-
-    @allure.step("Open menu page")
-    def open_url(self, base_url):
-        self.open(base_url + self.URL)
 
     @allure.step("Navigate to Store Manager")
     def navigate_to_store_manage(self):
