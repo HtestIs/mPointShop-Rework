@@ -1,14 +1,16 @@
 import pytest
 import allure
 from api.api_assertions.menu_assertions import assert_menu_response
+from api.endpoints.menu_api import MenuAPI
 
 @pytest.mark.api
 @allure.story("Menu access")
 @allure.title("Partner can get menu")
 @allure.severity(allure.severity_level.NORMAL)
-def test_menu_partner_api(logged_in_partner_menu_api):
-    response = logged_in_partner_menu_api.get_menu()
-    logged_in_partner_menu_api.client.debug_response(response)
+def test_menu_partner_api(logged_in_client_partner):
+    menu_api = MenuAPI(client=logged_in_client_partner)
+    response = menu_api.get_menu()
+    menu_api.client.debug_response(response)
     body = response.json()
     assert_menu_response(body)
 
@@ -16,9 +18,10 @@ def test_menu_partner_api(logged_in_partner_menu_api):
 @allure.story("Menu access")
 @allure.title("Merchant can get menu")
 @allure.severity(allure.severity_level.NORMAL)
-def test_menu_merchant_api(logged_in_merchant_menu_api):
-    response = logged_in_merchant_menu_api.get_menu()
-    logged_in_merchant_menu_api.client.debug_response(response)
+def test_menu_merchant_api(logged_in_client_merchant):
+    menu_api = MenuAPI(client=logged_in_client_merchant)
+    response = menu_api.get_menu()
+    menu_api.client.debug_response(response)
     body = response.json()
     assert_menu_response(body)
 
@@ -26,7 +29,8 @@ def test_menu_merchant_api(logged_in_merchant_menu_api):
 @allure.story("Menu access")
 @allure.title("Unauthorized menu request returns token error")
 @allure.severity(allure.severity_level.NORMAL)
-def test_menu_unauthorized(menu_api):
+def test_menu_unauthorized(api_client):
+    menu_api = MenuAPI(client=api_client)
     response = menu_api.get_menu()
     # menu_api.client.debug_response(response)
     body = response.json()
@@ -39,7 +43,8 @@ def test_menu_unauthorized(menu_api):
 @allure.story("Menu access")
 @allure.title("Invalid token menu request returns token error")
 @allure.severity(allure.severity_level.NORMAL)
-def test_menu_invalid_token(menu_api):
+def test_menu_invalid_token(api_client):
+    menu_api = MenuAPI(client=api_client)
     menu_api.client.set_token("invalid_token")
     response = menu_api.get_menu()
     menu_api.client.debug_response(response)

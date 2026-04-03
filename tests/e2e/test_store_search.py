@@ -2,6 +2,7 @@ import pytest
 import allure
 
 @pytest.mark.search
+@pytest.mark.fixthisdumdum
 @allure.story("Finding stores")
 @allure.title("Find store with name")
 @allure.severity(allure.severity_level.NORMAL)
@@ -14,6 +15,7 @@ def test_find_store_with_name(login_partner_success):
 
 
 @pytest.mark.search
+@pytest.mark.fixthisdumdum
 @allure.story("Finding stores")
 @allure.title("Find store with phone number")
 @allure.severity(allure.severity_level.NORMAL)
