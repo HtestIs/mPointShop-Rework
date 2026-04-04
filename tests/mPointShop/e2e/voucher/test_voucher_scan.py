@@ -1,4 +1,4 @@
-from pages.voucher_scan_page import VoucherScan
+from pages.mPointShop.voucher_scan_page import VoucherScan
 import pytest
 import allure
 

@@ -1,7 +1,7 @@
 import pytest
 import allure
-from api.endpoints.auth_api import AuthAPI
-from api.endpoints.store_api import StoreAPI
+from api.mPointShop.endpoints.auth_api import AuthAPI
+from api.mPointShop.endpoints.store_api import StoreAPI
 
 @pytest.mark.api
 @allure.story("Authentication")

@@ -1,7 +1,7 @@
 import pytest
 import allure
-from api.api_assertions.menu_assertions import assert_menu_response
-from api.endpoints.menu_api import MenuAPI
+from api.mPointShop.api_assertions.menu_assertions import assert_menu_response
+from api.mPointShop.endpoints.menu_api import MenuAPI
 
 @pytest.mark.api
 @allure.story("Menu access")

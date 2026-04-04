@@ -1,6 +1,11 @@
 import allure
-from pages.base_page import BasePage
 from selenium.webdriver.common.by import By
+
+from pages.mPointShop.base_page import BasePage
+from pages.mPointShop.login_page import LoginPage
+from pages.mPointShop.store_manage_page import StoreManage
+from pages.mPointShop.voucher_partner_page import VoucherPartnerPage
+from pages.mPointShop.warehouse_page import WarehousePage
 
 
 class MenuPage(BasePage):
@@ -13,25 +18,21 @@ class MenuPage(BasePage):
 
     @allure.step("Navigate to Store Manager")
     def navigate_to_store_manage(self):
-        from pages.store_manage_page import StoreManage
         self.click(self.MENU_STORE_MANAGE)
         return StoreManage(self.driver)
 
     @allure.step("Navigate to Voucher Manager")
     def navigate_to_voucher_manage(self):
-        from pages.voucher_partner_page import VoucherPartnerPage
         self.click(self.MENU_VOUCHER_MANAGE)
         return VoucherPartnerPage(self.driver)
 
     @allure.step("Navigate to Warehouse")
     def navigate_to_warehouse(self):
-        from pages.warehouse_page import WarehousePage
         self.click(self.MENU_WAREHOUSE)
         return WarehousePage(self.driver)
 
     @allure.step("Log out")
     def log_out(self):
-        from pages.login_page import LoginPage
         self.click(self.USER_BLOCK)
         self.click(self.BTN_LOG_OUT)
         return LoginPage(self.driver)

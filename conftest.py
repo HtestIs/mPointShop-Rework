@@ -1,7 +1,7 @@
 import pytest
 from config.env_config import ENV_CONFIG
-from pages.login_page import LoginPage
-from pages.menu_page import MenuPage
+from pages.mPointShop.login_page import LoginPage
+from pages.mPointShop.menu_page import MenuPage
 import os
 from datetime import datetime
 import allure

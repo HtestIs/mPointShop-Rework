@@ -3,9 +3,9 @@ from time import sleep
 import pytest
 import allure
 
-from api.endpoints.store_api import StoreAPI
-from api.endpoints.voucher_api import VoucherAPI
-from api.helpers.store_helpers import add_store_to_voucher_payload, get_stores_names
+from api.mPointShop.endpoints.store_api import StoreAPI
+from api.mPointShop.endpoints.voucher_api import VoucherAPI
+from api.mPointShop.helpers.store_helpers import add_store_to_voucher_payload, get_stores_names
 
 
 @pytest.mark.e2e
@@ -53,5 +53,7 @@ def test_sync_voucher_to_mExchange(logged_in_client_partner,create_cash_multiple
 # E2E Lame thingy
     menu = login_partner_success
     voucher_ui = menu.navigate_to_voucher_manage()
-    voucher_ui.get_store_names()
-    # print(get_stores_names(store_response.json(),payload))
+    # voucher_ui.hover_store_span()
+    tooltip_names = voucher_ui.get_tooltip_stores_names()
+    assert tooltip_names == get_stores_names(store_response.json(),payload), "Store names in tooltip do not match the store names added to voucher"
+    assert voucher_ui.get_status_store_text() == "Đã được đồng bộ", "Voucher status is not Active after syncing to mExchange"

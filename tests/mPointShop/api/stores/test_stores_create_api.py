@@ -1,8 +1,8 @@
 import allure
 import pytest
 
-from api.api_assertions.store_assertions import assert_code_response, assert_valid_post_response
-from api.endpoints.store_api import StoreAPI
+from api.mPointShop.api_assertions.store_assertions import assert_code_response, assert_valid_post_response
+from api.mPointShop.endpoints.store_api import StoreAPI
 
 
 @pytest.mark.api

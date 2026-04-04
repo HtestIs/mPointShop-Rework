@@ -1,7 +1,7 @@
 ##This file is used to define fixtures and setup/teardown functions for the end-to-end tests. It can include things like creating test data, setting up test environments, and providing common utilities for the tests.
 import pytest
 
-from api.endpoints.voucher_api import VoucherAPI
+from api.mPointShop.endpoints.voucher_api import VoucherAPI
 
 @pytest.fixture
 def create_voucher_discount_percentage(logged_in_client_partner, voucher_data):

@@ -1,6 +1,6 @@
 import pytest
-from api.client import APIClient
-from api.endpoints.auth_api import AuthAPI
+from api.mPointShop.client import APIClient
+from api.mPointShop.endpoints.auth_api import AuthAPI
 @pytest.fixture
 def api_url(env_config):
     return env_config["api_url"]

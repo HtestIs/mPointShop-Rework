@@ -1,12 +1,12 @@
 import allure
 
-from pages.base_page import BasePage
-from pages.login_page import LoginPage
+from pages.mPointShop.base_page import BasePage
+from pages.mPointShop.login_page import LoginPage
 from selenium.webdriver.common.by import By
 from datetime import datetime
 import random
 
-from pages.voucher_partner_page import VoucherPartnerPage
+from pages.mPointShop.voucher_partner_page import VoucherPartnerPage
 class StoreManage(BasePage):
     URL="/manager/store-manager"
     PAGE_NAME = (By.CLASS_NAME,"title")

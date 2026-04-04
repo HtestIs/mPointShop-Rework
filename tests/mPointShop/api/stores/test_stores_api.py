@@ -1,6 +1,6 @@
 import pytest
-from api.endpoints.store_api import StoreAPI
-from api.api_assertions.store_assertions import assert_code_response, assert_valid_post_response, assert_validation_error_type, assert_store_page_response, assert_store_response
+from api.mPointShop.endpoints.store_api import StoreAPI
+from api.mPointShop.api_assertions.store_assertions import assert_code_response, assert_valid_post_response, assert_validation_error_type, assert_store_page_response, assert_store_response
 @pytest.mark.api
 @pytest.mark.parametrize("page,pageSize", [
     (1, 10),

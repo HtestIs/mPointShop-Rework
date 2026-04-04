@@ -1,14 +1,14 @@
 import json
 from time import sleep
 
-from pages.base_page import BasePage
-from pages.login_page import LoginPage
-from pages.voucher_scan_page import VoucherScan
-from pages.store_manage_page import StoreManage
+from pages.mPointShop.base_page import BasePage
+from pages.mPointShop.login_page import LoginPage
+from pages.mPointShop.voucher_scan_page import VoucherScan
+from pages.mPointShop.store_manage_page import StoreManage
 import allure
 import pytest
 
-from pages.warehouse_page import WarehousePage
+from pages.mPointShop.warehouse_page import WarehousePage
 
 @allure.feature("Login authentication")
 @pytest.mark.smoke

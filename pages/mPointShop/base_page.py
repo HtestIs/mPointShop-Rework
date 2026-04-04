@@ -94,7 +94,6 @@ class BasePage:
         self.actions.move_to_element(element).perform()
     @allure.step("Upload image: {file_path}")
     def upload_image(self, locator, file_path):
-        import os
         absolute_path = os.path.abspath(file_path)
         element = self.find(locator)
         element.send_keys(absolute_path)
