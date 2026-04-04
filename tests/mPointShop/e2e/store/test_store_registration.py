@@ -10,9 +10,10 @@ import allure
 @allure.title("Register store")
 @allure.severity(allure.severity_level.CRITICAL)
 def test_new_store_registration(login_partner_success,storedata):
-    page = login_partner_success
+    menu = login_partner_success
+    page = menu.navigate_to_store_manage()
     page.register_new_store(storedata)
-    assert "Thành công" in login_partner_success.get_toast_msg()
+    assert "Thành công" in page.get_toast_msg()
 
 
 
@@ -33,11 +34,12 @@ def test_new_store_registration(login_partner_success,storedata):
     ("confirm_password", "Nhập lại mật khẩu")
 ])
 def test_missing_field_store_registration(login_partner_success,storedata,field,field_name):
-    page = login_partner_success
+    menu = login_partner_success
+    page = menu.navigate_to_store_manage()
     data = storedata.copy()
     data[field] = ""
     page.register_new_store(data)
-    assert "bắt buộc" in login_partner_success.get_field_error(field_name)
+    assert "bắt buộc" in page.get_field_error(field_name)
 
 @pytest.mark.registration
 @allure.story("Registering stores")
@@ -51,7 +53,8 @@ def test_missing_field_store_registration(login_partner_success,storedata,field,
     ("ward_new", "Xã/Phường (mới theo 2025)")
 ])
 def test_missing_dropdown_store_registration(login_partner_success,storedata,field,field_name):
-    page = login_partner_success
+    menu = login_partner_success
+    page = menu.navigate_to_store_manage()
     data = storedata.copy()
     data[field] = ""
     page.click_add_new_store()
@@ -71,7 +74,8 @@ def test_missing_dropdown_store_registration(login_partner_success,storedata,fie
     ("min_wallet","1000","Số dư tối thiểu của ví điểm","lớn hơn hoặc bằng 1,000,000"),
 ])
 def test_invalid_field_span_error(login_partner_success,storedata,field,invalid_value,location,error_msg):
-    page = login_partner_success
+    menu = login_partner_success
+    page = menu.navigate_to_store_manage()
     data = storedata.copy()
     data[field] = invalid_value
     page.register_new_store(data)
@@ -88,8 +92,9 @@ def test_invalid_field_span_error(login_partner_success,storedata,field,invalid_
     ("manager_phone","Tham số đầu vào không hợp lệ!"),
     ("customer_service_phone","Tham số đầu vào không hợp lệ!")
 ])
-def test_register_store_shows_toast_for_oversized_input(login_partner_success,storedata,field,error_msg,get_dup_username):
-    page = login_partner_success
+def test_register_store_shows_toast_for_oversized_input(login_partner_success,storedata,field,error_msg):
+    menu = login_partner_success
+    page = menu.navigate_to_store_manage()
     data = storedata.copy()
     data[field] = DATA_CASES["max_255"]()
     page.register_new_store(data)
@@ -108,7 +113,8 @@ def test_register_store_shows_toast_for_oversized_input(login_partner_success,st
     ("password", "no_special", "Mật khẩu từ 6-20 ký tự, ít nhất 1 chữ viết hoa, 1 kí tự đặc biệt.")
 ])
 def test_invalid_field_toast_error(login_partner_success,storedata,field,invalid_value,error_msg,get_dup_username):
-    page = login_partner_success
+    menu = login_partner_success
+    page = menu.navigate_to_store_manage()
     data = storedata.copy()
     if invalid_value == "duplicate_user":
         value = get_dup_username

@@ -7,6 +7,14 @@ class StoreAPI:
         self.client = client
     def get_store_list(self, params=None):
         return self.client.get(self.STORE_LIST_ENDPOINT, params=params)
+    def post_store_list(self, payload=None, headers=None, use_json=True):
+        if use_json:
+            return self.client.post(self.STORE_LIST_ENDPOINT, json_data=payload, headers=headers)
+        return self.client.post(self.STORE_LIST_ENDPOINT, data=payload, headers=headers)
+    def post_store(self, payload=None, headers=None, use_json=True):
+        if use_json:
+            return self.client.post(self.STORE_LIST_ENDPOINT, json_data=payload, headers=headers)
+        return self.client.post(self.STORE_LIST_ENDPOINT, data=payload, headers=headers)
     def create_store(self, payload, headers=None, use_json=True):
         if use_json:
             return self.client.post(self.STORE_CREATE_ENDPOINT, json_data=payload, headers=headers)

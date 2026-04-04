@@ -1,7 +1,8 @@
+import time
+
 import allure
 from pages.mPointShop.base_page import BasePage
 from selenium.webdriver.common.by import By
-from datetime import datetime
 
 class VoucherPartnerPage(BasePage):
     URL = "/manager/voucher-manager"
@@ -12,9 +13,10 @@ class VoucherPartnerPage(BasePage):
     ROW_STORE_SPAN = (By.XPATH, ".//td[8]//div//span")
     TOOLTIP_STORES_NAMES = (By.XPATH, "//div[@role='tooltip' and contains(@class,'rs-tooltip')]")
     STATUS_STORE = (By.XPATH, ".//td[9]")
+
     @allure.step("Open voucher manager page")
-    def open_url(self, base_url):
-        self.open(base_url + self.URL)
+    def open_url(self):
+        self.open(self.URL)
     @allure.step("Search voucher: {name}")
     def search_voucher(self, name):
         self.wait_clickable(self.SEARCH_INPUT)
@@ -36,7 +38,10 @@ class VoucherPartnerPage(BasePage):
                 return False
         self.wait_until(condition)
 
-
+    def get_first_voucher_name(self):
+        voucher_name = self.finds(self.ROW)[0].find_element(*self.ROW_VOUCHER_NAME).text
+        return voucher_name
+    @allure.step("Search voucher: {name} and wait for results to load")
     def search_voucher_and_wait(self,name):
         self.search_voucher(name)
         self.wait_voucher_info_loaded(keyword=name)
@@ -88,3 +93,14 @@ class VoucherPartnerPage(BasePage):
     def get_tooltip_stores_names(self):
         self.hover_store_span()
         return self.get_text_from_tooltips()
+    
+##DEVIL'S WORK, RE-READ BEFORE USE, THIS GONNA TAKE HALF OF YOUR LIFE AWAY, MAYBE MORE, PROCEED WITH CAUTION
+    def wait_until_synced(self, timeout=120, interval=5):
+        end_time = time.time() + timeout
+
+        while time.time() < end_time:
+            self.refresh_page()
+            if self.get_status_store_text() == "Đã được đồng bộ":
+                return True
+            time.sleep(interval)
+        raise TimeoutError("Voucher did not sync")

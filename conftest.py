@@ -24,23 +24,23 @@ def env_config(env):
 def base_url(request,env_config):
     return env_config["base_url"]
 @pytest.fixture
-def login_merchant_success(driver,base_url,env_config):
+def login_merchant_success(driver,env_config):
     login = LoginPage(driver)
     creds = env_config["users"]["merchant"]
     with allure.step("Logging in as merchant"):
-        login.open_url(base_url)
-        login.fill_login(creds["username"], creds["password"])
+        login.open_url()
+        login.fill_login_success(creds["username"], creds["password"])
     page = MenuPage(driver)
     yield page
     with allure.step("Logging out merchant"):
         driver.delete_all_cookies()
 @pytest.fixture
-def login_partner_success(driver,base_url,env_config):
+def login_partner_success(driver,env_config):
     login = LoginPage(driver)
     creds = env_config["users"]["partner"]
     with allure.step("Logging in as partner"):
-        login.open_url(base_url)
-        login.fill_login(creds["username"], creds["password"])
+        login.open_url()
+        login.fill_login_success(creds["username"], creds["password"])
     page = MenuPage(driver)
     yield page
     with allure.step("Logging out partner"):

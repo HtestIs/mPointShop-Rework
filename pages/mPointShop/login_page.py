@@ -6,10 +6,11 @@ class LoginPage(BasePage):
     TEXT_PASSWORD = (By.XPATH,"//input[@placeholder='Mật khẩu']")
     BUTTON_LOGIN = (By.XPATH,"//button[.//span[normalize-space()='Đăng nhập']]")
     TOAST_MESSAGE =(By.XPATH,"//div[@role='alert']//div[last()]")
+    NAV_BAR = (By.ID,"cheader")
     URL = '/login'
     @allure.step("Open login page")
-    def open_url(self,base_url):
-        self.open(base_url + self.URL)
+    def open_url(self):
+        self.open(self.URL)
     @allure.step("Enter username: {username}")
     def enter_username(self,username):
         self.type_text(self.TEXT_USERNAME,username)
@@ -24,4 +25,9 @@ class LoginPage(BasePage):
     @allure.step("Get toast message")
     def get_toast_message(self):
         return self.get_text(self.TOAST_MESSAGE)
+    def fill_login_success(self,username,password):
+        self.fill_login(username,password)
+        self.wait_login_page_loaded()
+    def wait_login_page_loaded(self):
+        self.wait_visible(self.NAV_BAR)
  

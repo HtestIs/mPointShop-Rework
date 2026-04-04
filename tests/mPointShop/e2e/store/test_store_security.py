@@ -9,8 +9,10 @@ import allure
     ("","Vui lòng nhập"),
     ])
 def test_change_store_password(login_partner_success,password,toast):
-    login_partner_success.change_password(password)
-    assert toast in login_partner_success.get_toast_msg()
+    menu = login_partner_success
+    page = menu.navigate_to_store_manage()
+    page.change_password(password)
+    assert toast in page.get_toast_msg()
 
 
 @pytest.mark.security
@@ -18,10 +20,12 @@ def test_change_store_password(login_partner_success,password,toast):
 @allure.title("Lock store")
 @allure.severity(allure.severity_level.CRITICAL)
 def test_lock_store(login_partner_success):
-    login_partner_success.ensure_locked()
-    locked_username = login_partner_success.get_first_store_username_from_edit_modal()
-    login_partner_success.hover_user()
-    login = login_partner_success.click_logout()
+    menu = login_partner_success
+    page = menu.navigate_to_store_manage()
+    page.ensure_locked()
+    locked_username = page.get_first_store_username_from_edit_modal()
+    page.hover_user()
+    login = page.click_logout()
     login.fill_login(locked_username,"1")
     assert "Tài khoản đang bị khóa!" in login.get_toast_message()
     assert "/login" in login.get_current_url()

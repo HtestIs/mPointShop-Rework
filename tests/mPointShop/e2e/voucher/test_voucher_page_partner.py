@@ -30,7 +30,9 @@ def test_partner_create_voucher_page(voucher_data, logged_in_client_partner,logi
     first_voucher_name = voucher_ui.get_first_voucher_name()
     assert payload["name"] == first_voucher_name, "Voucher name on UI does not match created voucher name"
 
-@pytest.mark.ongoing
+@pytest.mark.e2e
+@pytest.mark.api
+@pytest.mark.slow
 def test_sync_voucher_to_mExchange(logged_in_client_partner,create_cash_multiple_voucher,login_partner_success):
 # API Magic
 # 1. Create voucher via api
@@ -56,4 +58,5 @@ def test_sync_voucher_to_mExchange(logged_in_client_partner,create_cash_multiple
     # voucher_ui.hover_store_span()
     tooltip_names = voucher_ui.get_tooltip_stores_names()
     assert tooltip_names == get_stores_names(store_response.json(),payload), "Store names in tooltip do not match the store names added to voucher"
+    voucher_ui.wait_until_synced()
     assert voucher_ui.get_status_store_text() == "Đã được đồng bộ", "Voucher status is not Active after syncing to mExchange"

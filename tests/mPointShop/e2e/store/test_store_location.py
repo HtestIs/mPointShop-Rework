@@ -13,10 +13,11 @@ import allure
     ("missing_city_new", "ward_new")
 ])
 def test_dropdown_options_should_be_empty_when_required_location_missing(login_partner_success,storedata,location_setup,target_field):
-    page = login_partner_success
+    menu = login_partner_success
+    page = menu.navigate_to_store_manage()
     page.click_add_new_store()
     page.setup_location(location_setup,storedata)
-    page.click(page.FORM_FIELDS[target_field])
+    page.click(page.COMBO_FIELDS[target_field])
     options = page.has_selectable_option()
     assert options is False, f"Dropdown options for {target_field} should be empty when required location is missing"
 
@@ -25,11 +26,10 @@ def test_dropdown_options_should_be_empty_when_required_location_missing(login_p
 @allure.title("Dropdown options update")
 @allure.severity(allure.severity_level.MINOR)
 def test_update_dropdown_options(login_partner_success,storedata):
-    
-    page = login_partner_success
+    menu = login_partner_success
+    page = menu.navigate_to_store_manage()
     data1 = storedata.copy()
     data2_old = fake_old_location(exclude_city=data1["city_old"])
-    
     data2_new = fake_new_location(exclude_city=data1["city_new"])
     data2 = build_store_data(storedata, **data2_old, **data2_new)
     page.click_add_new_store()
@@ -52,7 +52,8 @@ def test_update_dropdown_options(login_partner_success,storedata):
     ("city_new", "ward_new","missing_city","Chọn Xã/Phường")
 ])
 def test_dependent_dropdown_behavior(login_partner_success,storedata,superior_field,target_field,dataset,expected):
-    page = login_partner_success
+    menu = login_partner_success
+    page = menu.navigate_to_store_manage()
     data1 = storedata.copy()
     data2 = build_location_data(data1, dataset)
     page.click_add_new_store()

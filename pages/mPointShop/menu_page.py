@@ -9,26 +9,29 @@ from pages.mPointShop.warehouse_page import WarehousePage
 
 
 class MenuPage(BasePage):
+# URL (this one is required, admin can change the default menu, but the URL should remain the same for each page)
+    STORE_URL = "/manager/store-manager"
+    VOUCHER_URL = "/manager/voucher-manager"
+    WAREHOUSE_URL = "/manager/warehouse-manager"
+# LOCATORS
     MENU_STORE_MANAGE = (By.CSS_SELECTOR, "div.dashboard-container > div:nth-child(1)")
     MENU_VOUCHER_MANAGE = (By.CSS_SELECTOR, "div.dashboard-container > div:nth-child(4)")
     MENU_WAREHOUSE = (By.CSS_SELECTOR, "div.dashboard-container > div:nth-child(3)")
-
     BTN_LOG_OUT = (By.XPATH, "//span[text()='Đăng xuất']")
     USER_BLOCK = (By.CSS_SELECTOR, "#cheader > section > div > div.c-header__right > div > a > div")
-
     @allure.step("Navigate to Store Manager")
     def navigate_to_store_manage(self):
-        self.click(self.MENU_STORE_MANAGE)
+        self.open(self.STORE_URL)
         return StoreManage(self.driver)
 
     @allure.step("Navigate to Voucher Manager")
     def navigate_to_voucher_manage(self):
-        self.click(self.MENU_VOUCHER_MANAGE)
+        self.open(self.VOUCHER_URL)
         return VoucherPartnerPage(self.driver)
 
     @allure.step("Navigate to Warehouse")
     def navigate_to_warehouse(self):
-        self.click(self.MENU_WAREHOUSE)
+        self.open(self.WAREHOUSE_URL)
         return WarehousePage(self.driver)
 
     @allure.step("Log out")

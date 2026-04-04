@@ -11,9 +11,12 @@ class BasePage:
         self.driver = driver
         self.wait = WebDriverWait(driver,10)
         self.actions = ActionChains(driver)
-    @allure.step("Open URL: {base_url}")
-    def open(self,base_url):
-        self.driver.get(base_url)
+        self.base_url = driver.base_url
+    def open(self,path=None):
+        if path is None:
+            self.driver.get(self.base_url)
+        else:
+            self.driver.get(f'{self.base_url}{path}')
     def wait_visible(self, locator):
         return self.wait.until(EC.visibility_of_element_located(locator))
     def wait_invisible(self,locator):

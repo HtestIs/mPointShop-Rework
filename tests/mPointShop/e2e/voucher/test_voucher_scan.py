@@ -6,5 +6,7 @@ import allure
 @allure.story("Voucher scanning")
 @allure.title("Merchant can enter voucher code")
 @allure.severity(allure.severity_level.NORMAL)
-def test_enter_voucher(login_merchant_success):
-    login_merchant_success.enter_voucher("abc")
+def t_enter_voucher(login_merchant_success):
+    menu = login_merchant_success
+    voucher_scan = menu.navigate_to_voucher_scan()
+    voucher_scan.enter_voucher("abc")

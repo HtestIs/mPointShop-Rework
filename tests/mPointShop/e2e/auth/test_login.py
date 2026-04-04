@@ -16,9 +16,9 @@ class TestsLogin:
     @allure.story("Successful login")
     @allure.title("Test successful login for merchant")
     @allure.severity(allure.severity_level.CRITICAL)
-    def test_login_success_merchant(self, driver, base_url):
+    def test_login_success_merchant(self, driver):
         login = LoginPage(driver)
-        login.open_url(base_url)
+        login.open_url()
         login.fill_login("craftmbeer_1","123456789")
         voucher_scan = VoucherScan(driver)
         assert voucher_scan.is_loaded(), \
@@ -28,9 +28,9 @@ class TestsLogin:
     @allure.story("Successful login")
     @allure.title("Test successful login for partner")
     @allure.severity(allure.severity_level.CRITICAL)
-    def test_login_success_partner(self, driver, base_url):
+    def test_login_success_partner(self, driver):
         login = LoginPage(driver)
-        login.open_url(base_url)
+        login.open_url()
         login.fill_login("mbeer_partner","123456789")
         storeman = StoreManage(driver)
         assert "Quản lý cửa hàng" in storeman.get_page_name(), \
@@ -54,16 +54,16 @@ class TestsLogin:
             "Locked account"
         ]
     )
-    def test_login_invalid(self, driver, base_url, username, password, message):
+    def test_login_invalid(self, driver, username, password, message):
         login = LoginPage(driver)
-        login.open_url(base_url)
+        login.open_url()
         login.fill_login(username,password)
         assert message in login.get_toast_message(),\
             "Toast message is not correct"
         assert "/login" in login.get_current_url(), \
             "User is not on login page after failed login attempt"
-  
-    def test_login_with_api_then_ui(self, driver, auth_api, env_config, base_url):
+        
+    def test_login_with_api_then_ui(self, driver, auth_api, env_config):
         creds = env_config["users"]["partner"]
         payload = {
             "username": creds["username"],
@@ -75,7 +75,7 @@ class TestsLogin:
             }
         # Set token in local storage to simulate logged-in state
         auth = BasePage(driver)
-        auth.open(base_url)
+        auth.open()
         auth.dump_token(auth_store)
         auth.refresh_page()
         warehouse_page = WarehousePage(driver)

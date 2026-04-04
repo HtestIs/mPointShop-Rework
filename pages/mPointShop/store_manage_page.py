@@ -77,6 +77,7 @@ class StoreManage(BasePage):
     def find_store_with_number(self,text):
         self.type_text(self.SEARCH_PHONE_SEARCH_INPUT,text)
 # LIST
+# TODO: FIX THIS ONE LATER, IT'S KINDA MESSY AND NOT WELL STRUCTURED, BUT I WANNA FINISH THE TESTS FIRST
     @allure.step("Get store name")
     def get_store_name(self):
         return self.get_text(self.FIRST_STORE_NAME)
@@ -204,17 +205,7 @@ class StoreManage(BasePage):
     def get_selected_text(self, field_name):
         dropdown = self.COMBO_FIELDS[field_name]
         return self.find(dropdown).text.strip()
-#
-#
-#
-# 
-# 
-#  add validate selection
-# 
-# 
-# 
-# 
-#  
+
         # DROPDOWN INTERACTION
     # THIS ONE IS FOR SELECTING THE LOCATION OPTION,
     # IT'S CALLED BY select_option METHOD, 
