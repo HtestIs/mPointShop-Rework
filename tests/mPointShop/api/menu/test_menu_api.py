@@ -10,7 +10,7 @@ from api.mPointShop.endpoints.menu_api import MenuAPI
 def test_menu_partner_api(logged_in_client_partner):
     menu_api = MenuAPI(client=logged_in_client_partner)
     response = menu_api.get_menu()
-    menu_api.client.debug_response(response)
+    # menu_api.client.debug_response(response)
     body = response.json()
     assert_menu_response(body)
 
@@ -21,7 +21,7 @@ def test_menu_partner_api(logged_in_client_partner):
 def test_menu_merchant_api(logged_in_client_merchant):
     menu_api = MenuAPI(client=logged_in_client_merchant)
     response = menu_api.get_menu()
-    menu_api.client.debug_response(response)
+    # menu_api.client.debug_response(response)
     body = response.json()
     assert_menu_response(body)
 
@@ -47,7 +47,7 @@ def test_menu_invalid_token(api_client):
     menu_api = MenuAPI(client=api_client)
     menu_api.client.set_token("invalid_token")
     response = menu_api.get_menu()
-    menu_api.client.debug_response(response)
+    # menu_api.client.debug_response(response)
     body = response.json()
     assert response.status_code == 401, f"Expected status code 401 for unauthorized access, got {response.status_code}"
     assert body["code"] == 401, f"Expected code 401 for unauthorized access, got {body['code']}"

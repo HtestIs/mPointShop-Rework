@@ -2,7 +2,6 @@ import pytest
 from config.env_config import ENV_CONFIG
 from pages.mPointShop.login_page import LoginPage
 from pages.mPointShop.menu_page import MenuPage
-import os
 from datetime import datetime
 import allure
 pytest_plugins = [
@@ -14,10 +13,10 @@ pytest_plugins = [
 def pytest_addoption(parser):
     parser.addoption("--browser", action="store", default="chrome")
     parser.addoption("--env", action="store",default="dev")
-@pytest.fixture
+@pytest.fixture(scope="session")
 def env(request):
     return request.config.getoption("--env")
-@pytest.fixture
+@pytest.fixture(scope="session")
 def env_config(env):
     return ENV_CONFIG[env]
 @pytest.fixture

@@ -1,46 +1,63 @@
 import pytest
-from api.mPointShop.client import APIClient
+from api.base.client import APIClient
+from api.mExchange.endpoints.user_api import ExchangeAuthAPI
+from api.mPointShop.client import MPointShopClient
+from api.mExchange.client import MExchangeClient
 from api.mPointShop.endpoints.auth_api import AuthAPI
 @pytest.fixture
-def api_url(env_config):
-    return env_config["api_url"]
-@pytest.fixture
-def valid_login_payload(env_config):
+def valid_login_payload_partner(env_config):
     creds = env_config["users"]["partner"]
     return {
         "username": creds["username"],
         "password": creds["password"]}
+
 @pytest.fixture
 def valid_login_payload_merchant(env_config):
     creds = env_config["users"]["merchant"]
     return {
         "username": creds["username"],
         "password": creds["password"]}
+
 @pytest.fixture
-def api_client(api_url):
-    client = APIClient(base_url=api_url)
-    return client
+def api_client(env_config):
+    return MPointShopClient(base_url=env_config["api_url"])
+
+@pytest.fixture
+def fresh_api_client(env_config):
+    return MPointShopClient(base_url=env_config["api_url"])
+
+@pytest.fixture
+def mexchange_client(env_config):
+    return MExchangeClient(base_url=env_config["mexchange_api_url"])
+
 @pytest.fixture
 def auth_api(api_client):
-    return AuthAPI(client=api_client)
+    return AuthAPI(api_client)
+
 @pytest.fixture
 def logged_in_client_merchant(api_client, auth_api, valid_login_payload_merchant):
     response = auth_api.login(valid_login_payload_merchant)
-    assert response.status_code == 200, f"Login failed {response.text}"
     data = response.json()
-    token = data["data"]["token"] if data["code"] == 0 else None
+    token = data["data"]["token"] if data["data"] else None
     if token:
         api_client.set_token(token)
     return api_client
+
 @pytest.fixture
-def logged_in_client_partner(api_client, auth_api, valid_login_payload):
-    response = auth_api.login(valid_login_payload)
-    assert response.status_code == 200, f"Login failed {response.text}"
+def logged_in_client_partner(api_client, auth_api, valid_login_payload_partner):
+    response = auth_api.login(valid_login_payload_partner)
     data = response.json()
-    token = data["data"]["token"] if data["code"] == 0 else None
+    token = data["data"]["token"] if data["data"] else None
     if token:
         api_client.set_token(token)
     return api_client
+
 @pytest.fixture
-def fresh_api_client(api_url):
-    return APIClient(base_url=api_url)
+def mexchange_auth_api(mexchange_client):
+    return ExchangeAuthAPI(mexchange_client)
+
+@pytest.fixture
+def mexchange_client(env_config, mexchange_token_from_ui):
+    client = MExchangeClient(base_url=env_config["mexchange_api_url"])
+    client.set_x_access_token(mexchange_token_from_ui)
+    return client

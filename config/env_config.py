@@ -5,6 +5,7 @@ load_dotenv()
 ENV_CONFIG = {
     "dev" : {
         "base_url" : os.getenv("DEV_WEB_BASE_URL"),
+        "mexchange_web_url" : os.getenv("DEV_MEXCHANGE_WEB_URL"),
         "api_url" : os.getenv("DEV_API_BASE_URL"),
         "users": {
             "partner": {
@@ -16,11 +17,15 @@ ENV_CONFIG = {
                 "password": os.getenv("DEV_MERCHANT_PASSWORD")
             }
         },
-        "dup_username" : os.getenv("DEV_DUP_USERNAME")
+        "dup_username" : os.getenv("DEV_DUP_USERNAME"),
+        "mexchange_api_url": os.getenv("DEV_MEXCHANGE_API_URL"),
+        "mexchange_username": os.getenv("DEV_MEXCHANGE_USERNAME"),
+        "mexchange_password": os.getenv("DEV_MEXCHANGE_PASSWORD")
     },
 
     "prod" :{
         "base_url" : os.getenv("PROD_WEB_BASE_URL"),
+        "mexchange_web_url" : os.getenv("PROD_MEXCHANGE_WEB_URL"),
         "api_url" : os.getenv("PROD_API_BASE_URL"),
         "users": {
             "partner": {
@@ -32,6 +37,9 @@ ENV_CONFIG = {
                 "password": os.getenv("PROD_MERCHANT_PASSWORD")
             }
         },
-        "dup_username" : os.getenv("PROD_DUP_USERNAME")
+        "dup_username" : os.getenv("PROD_DUP_USERNAME"),
+        "mexchange_api_url": os.getenv("PROD_MEXCHANGE_API_URL"),
+        "mexchange_username": os.getenv("PROD_MEXCHANGE_USERNAME"),
+        "mexchange_password": os.getenv("PROD_MEXCHANGE_PASSWORD")
     }    
 }
