@@ -1,23 +1,23 @@
 # mPointShop Rework 🚀
 
 ![Python](https://img.shields.io/badge/Python-3.12-3776AB?style=for-the-badge&logo=python&logoColor=white)
-![Pytest](https://img.shields.io/badge/Pytest-Framework-0A9EDC?style=for-the-badge&logo=pytest&logoColor=white)
-![Selenium](https://img.shields.io/badge/Selenium-Automation-43B02A?style=for-the-badge&logo=selenium&logoColor=white)
-![Requests](https://img.shields.io/badge/Requests-API-FF6F00?style=for-the-badge)
-![Allure](https://img.shields.io/badge/Allure-Reports-8A2BE2?style=for-the-badge)
+![Pytest](https://img.shields.io/badge/Pytest-Automation-0A9EDC?style=for-the-badge&logo=pytest&logoColor=white)
+![Selenium](https://img.shields.io/badge/Selenium-UI_Testing-43B02A?style=for-the-badge&logo=selenium&logoColor=white)
+![Requests](https://img.shields.io/badge/Requests-API_Testing-FF6F00?style=for-the-badge)
+![Allure](https://img.shields.io/badge/Allure-Reporting-8A2BE2?style=for-the-badge)
 
-A QA automation project built to practice and improve structured **UI**, **API**, and **hybrid** testing using Python tools on the `mPointShop` system, with room to expand into `mExchange` later.
+A Python QA automation framework for **mPointShop** and **mExchange** covering **UI**, **API**, and **hybrid** test flows with `pytest`, `selenium`, and `requests`.
 
 ---
 
-## ✨ Highlights
+## ✨ What This Project Covers
 
-- **UI automation** with Selenium using the **Page Object Model (POM)**
-- **API testing** with Requests and reusable endpoint/client layers
-- **Hybrid test flows** using API setup + UI verification
-- **Data-driven tests** with reusable fixtures and test data modules
-- **Environment-based configuration** via `.env`
-- **Allure reporting** for test evidence and debugging artifacts
+- **UI automation** using the **Page Object Model (POM)**
+- **API testing** with reusable client and endpoint layers
+- **Flow-based helpers** for chaining business actions across systems
+- **Hybrid scenarios** where setup is done by API and validated through UI
+- **Evidence-rich reporting** with HTML and Allure artifacts
+- **Environment-based execution** via `.env` and `--env` options
 
 ---
 
@@ -25,50 +25,40 @@ A QA automation project built to practice and improve structured **UI**, **API**
 
 | Area | Tools |
 |---|---|
-| Language | Python 3.12 |
+| Language | `Python 3.12` |
 | Test runner | `pytest` |
-| UI automation | `selenium` |
-| API testing | `requests` |
+| UI | `selenium` |
+| API | `requests` |
+| Mobile (planned) | `Appium` for voucher retrieval coverage |
 | Reporting | `allure-pytest`, `pytest-html` |
-| Test utilities | `Faker`, `pytest-xdist`, `pytest-repeat` |
+| Utilities | `Faker`, `pytest-xdist`, `pytest-repeat` |
 
 ---
 
-## 📁 Project Structure
+## 📁 Repository Layout
 
 ```text
 mPointShop_rework/
 ├─ api/
 │  ├─ mPointShop/
-│  │  ├─ api_assertions/
 │  │  ├─ endpoints/
 │  │  ├─ helpers/
-│  │  └─ client.py
+│  │  ├─ flows/
+│  │  └─ api_assertions/
 │  └─ mExchange/
+│     ├─ endpoints/
+│     ├─ flows/
+│     └─ helpers/
 ├─ pages/
 │  ├─ mPointShop/
-│  │  ├─ base_page.py
-│  │  ├─ login_page.py
-│  │  ├─ menu_page.py
-│  │  ├─ store_manage_page.py
-│  │  ├─ voucher_partner_page.py
-│  │  ├─ voucher_scan_page.py
-│  │  └─ warehouse_page.py
 │  └─ mExchange/
 ├─ tests/
 │  ├─ mPointShop/
 │  │  ├─ api/
-│  │  │  ├─ auth/
-│  │  │  ├─ menu/
-│  │  │  └─ stores/
 │  │  └─ e2e/
-│  │     ├─ auth/
-│  │     ├─ store/
-│  │     ├─ voucher/
-│  │     └─ conftest.py
 │  └─ mExchange/
-├─ data/
 ├─ fixtures/
+├─ data/
 ├─ config/
 ├─ reports/
 ├─ allure-results/
@@ -80,28 +70,26 @@ mPointShop_rework/
 
 ---
 
-## 🧪 Current Coverage
+## 🧪 Test Coverage Snapshot
 
-### E2E (`tests/mPointShop/e2e`)
-- **Auth**: login scenarios
-- **Store**: registration, search, location behavior, security flows
-- **Voucher**: voucher creation/sync and voucher scan flows
+### `mPointShop`
+- **API**: auth, menu, store, voucher-related coverage
+- **E2E**: login, store flows, voucher flows, scan flows
 
-### API (`tests/mPointShop/api`)
-- **Auth** endpoints
-- **Menu** endpoints
-- **Store** endpoints and assertions
+### `mExchange`
+- **API / integration flows** for synced voucher validation and commit scenarios
 
-### Hybrid scenarios
-- API used for fast setup
-- UI used for user-facing verification
-- Example: create/sync voucher by API, then validate behavior in UI
+### Hybrid approach
+Typical pattern used in this repo:
+1. Create or prepare data through the API
+2. Sync or pass data between systems
+3. Verify the final result through API or UI
 
 ---
 
 ## ⚙️ Setup
 
-### 1) Create and activate a virtual environment
+### 1) Create a virtual environment
 
 **Windows PowerShell**
 
@@ -112,114 +100,163 @@ python -m venv .venv
 
 ### 2) Install dependencies
 
-```bash
+```powershell
 pip install -r requirements.txt
 ```
 
-### 3) Configure environment variables
+### 3) Configure `.env`
 
-Create a `.env` file from `.env.example` and fill in your real values:
+Copy `.env.example` to `.env` and provide real values.
+
+Core variables used by the framework:
 
 ```env
-DEV_WEB_BASE_URL=...
-DEV_API_BASE_URL=...
-DEV_PARTNER_USERNAME=...
-DEV_PARTNER_PASSWORD=...
-DEV_MERCHANT_USERNAME=...
-DEV_MERCHANT_PASSWORD=...
-DEV_DUP_USERNAME=...
+DEV_WEB_BASE_URL=
+DEV_API_BASE_URL=
+DEV_PARTNER_USERNAME=
+DEV_PARTNER_PASSWORD=
+DEV_MERCHANT_USERNAME=
+DEV_MERCHANT_PASSWORD=
+DEV_DUP_USERNAME=
 
-PROD_WEB_BASE_URL=...
-PROD_API_BASE_URL=...
-PROD_PARTNER_USERNAME=...
-PROD_PARTNER_PASSWORD=...
-PROD_MERCHANT_USERNAME=...
-PROD_MERCHANT_PASSWORD=...
-PROD_DUP_USERNAME=...
+PROD_WEB_BASE_URL=
+PROD_API_BASE_URL=
+PROD_PARTNER_USERNAME=
+PROD_PARTNER_PASSWORD=
+PROD_MERCHANT_USERNAME=
+PROD_MERCHANT_PASSWORD=
+PROD_DUP_USERNAME=
 ```
 
-> The active environments are defined in `config/env_config.py`.
+If you run `mExchange` coverage, also add the values referenced by `config/env_config.py`:
+
+```env
+DEV_MEXCHANGE_WEB_URL=
+DEV_MEXCHANGE_API_URL=
+DEV_MEXCHANGE_USERNAME=
+DEV_MEXCHANGE_PASSWORD=
+
+PROD_MEXCHANGE_WEB_URL=
+PROD_MEXCHANGE_API_URL=
+PROD_MEXCHANGE_USERNAME=
+PROD_MEXCHANGE_PASSWORD=
+```
 
 ---
 
 ## ▶️ Running Tests
 
-### Run everything
+### Run the full suite
 
-```bash
+```powershell
 pytest
 ```
 
-### Run only E2E tests
+### Run by area
 
-```bash
-pytest tests/mPointShop/e2e
-```
-
-### Run only API tests
-
-```bash
+```powershell
 pytest tests/mPointShop/api
+pytest tests/mPointShop/e2e
+pytest tests/mExchange/api
 ```
 
-### Run by feature group
+### Run by feature folder
 
-```bash
+```powershell
 pytest tests/mPointShop/e2e/auth
 pytest tests/mPointShop/e2e/store
 pytest tests/mPointShop/e2e/voucher
+pytest tests/mExchange/api/voucher
 ```
 
 ### Run with markers
 
-```bash
+```powershell
 pytest -m api
 pytest -m e2e
-pytest -m search
-pytest -m registration
-pytest -m security
+pytest -m smoke
+pytest -m regression
+pytest -m ongoing
 ```
 
-### Run with options
+### Run with custom options
 
-```bash
+```powershell
 pytest --env=dev --browser=chrome
 ```
 
-Available options from `conftest.py`:
-- `--env` → environment key such as `dev` or `prod`
-- `--browser` → browser name, default is `chrome`
+Available CLI options from `conftest.py`:
+- `--env` → selects the target environment, e.g. `dev` or `prod`
+- `--browser` → browser for UI execution, default: `chrome`
 
 ---
 
-## 📊 Reporting
+## 📊 Reports
 
-### Allure
+### HTML report
+After every run, the report is generated at:
 
-```bash
+```text
+reports/report.html
+```
+
+### Allure report
+
+```powershell
 pytest --alluredir=allure-results
 allure serve allure-results
 ```
 
-On failures, the framework attaches useful evidence such as:
+On failures, the framework captures useful artifacts such as:
 - screenshots
 - page source
 - current URL
-- browser logs when available
+- browser logs (when available)
 
 ---
 
-## 🧠 Framework Design Notes
+## 🧠 Framework Conventions
 
-- Keep **tests readable**, with logic pushed into `pages/`, `api/`, and fixtures
-- Prefer **reusable helpers and assertions** over duplicated code
-- Use **data-driven** patterns for validation-heavy scenarios
-- Separate coverage by **system** (`mPointShop`, `mExchange`) and by **test type** (`api`, `e2e`)
+- Keep test files focused on **assertions and intent**
+- Move reusable logic into `pages/`, `api/`, `helpers/`, and `flows/`
+- Prefer **fixtures and test data modules** over duplicated setup code
+- Separate coverage by **system** and **test type** for easier maintenance
 
 ---
 
-## 🔒 Notes
+## 📸 Test Report Snapshot
 
-- Do not commit real credentials or sensitive URLs
-- Use `.env.example` as the source template
-- `mExchange` folders are already scaffolded for future expansion
+Examples from my Allure report:
+
+### Overview
+<p align="center">
+  <img src="./assets/readme/overview.png" alt="Allure overview screenshot" width="900" />
+</p>
+
+### Behaviors
+<p align="center">
+  <img src="./assets/readme/behavior.png" alt="Allure behaviors screenshot" width="900" />
+</p>
+
+### Packages
+<p align="center">
+  <img src="./assets/readme/packages.png" alt="Allure packages screenshot" width="900" />
+</p>
+
+These screenshots are stored in `assets/readme/`.
+
+
+---
+
+## 🗺️ Next Plan
+
+### 1) Add one more system
+- Extend the same framework pattern to a **third system** using `api/`, `pages/`, and `tests/` layers
+- Add cross-system voucher validation so the same voucher can be tracked across all integrated platforms
+- Reuse the existing `client -> endpoints -> flows -> tests` structure for consistency
+
+### 2) Add Appium for voucher retrieval testing
+- Introduce **Appium** for mobile coverage focused on the **getting voucher** flow
+- Automate the steps: login → open voucher screen → get/claim voucher → verify success state
+- Cross-check the result in API / admin systems after the mobile action
+- Attach mobile screenshots and evidence into Allure for the full end-to-end story

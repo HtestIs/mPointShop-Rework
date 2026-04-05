@@ -11,22 +11,21 @@ def driver(request,base_url):
     driver.quit()
 
 @pytest.fixture(scope="session")
-def mexchange_bootstrap_driver(request):
+def mexchange_token_from_ui(request, env_config):
     browser = request.config.getoption("--browser")
     driver = DriverManager.get_driver(browser)
-    yield driver
-    driver.quit()
-@pytest.fixture(scope="session")
-def mexchange_token_from_ui(mexchange_bootstrap_driver, env_config):
-    login_page = LoginPage(mexchange_bootstrap_driver)
+    try:
+        login_page = LoginPage(driver)
+        login_page.open(env_config["mexchange_web_url"])
+        login_page.login(
+            env_config["mexchange_username"],
+            env_config["mexchange_password"]
+        )
 
-    login_page.open(env_config["mexchange_web_url"])
-    login_page.login(
-        env_config["mexchange_username"],
-        env_config["mexchange_password"]
-    )
-    token = get_local_storage_token(mexchange_bootstrap_driver, key="token")
-    if not token:
-        raise AssertionError("Failed to get mExchange token from localStorage")
+        token = get_local_storage_token(driver, key="token")
+        if not token:
+            raise AssertionError("Failed to get mExchange token from localStorage")
 
-    return token
+        return token
+    finally:
+        driver.quit()

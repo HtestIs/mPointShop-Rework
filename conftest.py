@@ -8,7 +8,8 @@ pytest_plugins = [
     "fixtures.driver_fixture",
     "data.store_data",
     "fixtures.api_fixture",
-    "data.voucher_data"
+    "data.voucher_data",
+    "fixtures.voucher_fixture"
 ]
 def pytest_addoption(parser):
     parser.addoption("--browser", action="store", default="chrome")
