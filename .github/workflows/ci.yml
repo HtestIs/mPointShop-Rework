@@ -47,8 +47,8 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
-      - name: Run API smoke tests
-        run: pytest -m api --env=dev -q
+      - name: Run API tests
+        run: run: pytest -m "api and not e2e" --env=dev -q
 
       - name: Upload pytest / html / allure artifacts
         if: always()
