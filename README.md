@@ -6,7 +6,7 @@
 ![Requests](https://img.shields.io/badge/Requests-API_Testing-FF6F00?style=for-the-badge)
 ![Allure](https://img.shields.io/badge/Allure-Reporting-8A2BE2?style=for-the-badge)
 
-A Python QA automation framework for **mPointShop** and **mExchange** covering **UI**, **API**, and **hybrid** test flows with `pytest`, `selenium`, and `requests`.
+A Python QA automation framework for **mPointShop** and **mExchange** covering **UI**, **API**, and **hybrid** test flows with `pytest`, `selenium`, and `requests`, plus a prepared `mShop Admin` scaffold for future expansion.
 
 ---
 
@@ -39,24 +39,35 @@ A Python QA automation framework for **mPointShop** and **mExchange** covering *
 
 ```text
 mPointShop_rework/
-├─ api/
-│  ├─ mPointShop/
+├─ mPointShop/
+│  ├─ api/
 │  │  ├─ endpoints/
 │  │  ├─ helpers/
 │  │  ├─ flows/
 │  │  └─ api_assertions/
-│  └─ mExchange/
-│     ├─ endpoints/
-│     ├─ flows/
-│     └─ helpers/
-├─ pages/
-│  ├─ mPointShop/
-│  └─ mExchange/
-├─ tests/
-│  ├─ mPointShop/
+│  ├─ pages/
+│  │  └─ components/
+│  ├─ tests/
 │  │  ├─ api/
 │  │  └─ e2e/
-│  └─ mExchange/
+│  └─ conftest.py
+├─ mExchange/
+│  ├─ api/
+│  │  ├─ endpoints/
+│  │  ├─ flows/
+│  │  └─ helpers/
+│  ├─ pages/
+│  ├─ tests/
+│  │  └─ api/
+│  └─ conftest.py
+├─ mShop Admin/
+│  ├─ api/
+│  ├─ pages/
+│  └─ tests/
+├─ core/
+│  ├─ base/
+│  ├─ drivers/
+│  └─ utils/
 ├─ fixtures/
 ├─ data/
 ├─ config/
@@ -155,18 +166,18 @@ pytest
 ### Run by area
 
 ```powershell
-pytest tests/mPointShop/api
-pytest tests/mPointShop/e2e
-pytest tests/mExchange/api
+pytest mPointShop/tests/api
+pytest mPointShop/tests/e2e
+pytest mExchange/tests/api
 ```
 
 ### Run by feature folder
 
 ```powershell
-pytest tests/mPointShop/e2e/auth
-pytest tests/mPointShop/e2e/store
-pytest tests/mPointShop/e2e/voucher
-pytest tests/mExchange/api/voucher
+pytest mPointShop/tests/e2e/auth
+pytest mPointShop/tests/e2e/store
+pytest mPointShop/tests/e2e/voucher
+pytest mExchange/tests/api/voucher
 ```
 
 ### Run with markers
@@ -218,7 +229,8 @@ On failures, the framework captures useful artifacts such as:
 ## 🧠 Framework Conventions
 
 - Keep test files focused on **assertions and intent**
-- Move reusable logic into `pages/`, `api/`, `helpers/`, and `flows/`
+- Keep **shared infrastructure** in `core/` (`base`, `drivers`, `utils`)
+- Keep **system-specific logic** inside `mPointShop/`, `mExchange/`, and future systems like `mShop Admin/`
 - Prefer **fixtures and test data modules** over duplicated setup code
 - Separate coverage by **system** and **test type** for easier maintenance
 
@@ -250,8 +262,8 @@ These screenshots are stored in `assets/readme/`.
 
 ## 🗺️ Next Plan
 
-### 1) Add one more system
-- Extend the same framework pattern to a **third system** using `api/`, `pages/`, and `tests/` layers
+### 1) Continue building the third system
+- Expand the prepared **`mShop Admin/`** structure using the same `api/`, `pages/`, and `tests/` layers
 - Add cross-system voucher validation so the same voucher can be tracked across all integrated platforms
 - Reuse the existing `client -> endpoints -> flows -> tests` structure for consistency
 

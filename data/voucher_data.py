@@ -8,19 +8,20 @@ def base_voucher_data(voucher_type=None):
     return {
         "name": f"Novelite{timestamp}",
         "images": [
-            "https://images.steamusercontent.com/ugc/5985917399670227255/DBD1A43CEE20A022527DCE769B5706746F006355/?imw=637&imh=358&ima=fit&impolicy=Letterbox&imcolor=%23000000&letterbox=true"
+            "https://s3.mpoint.vn/mpointshop/bdefec6Eb72B98Ac5F0D88Ab2E29C07D_7e094c35c8035be74b836ff8df02bdda.jpg"
         ],
-        "thumbnail": "https://img.itch.zone/aW1nLzE1MDI4MjM2LnBuZw==/original/qh2GMh.png",
+        "thumbnail": "https://s3.mpoint.vn/mpointshop/bdefec6Eb72B98Ac5F0D88Ab2E29C07D_84b1a6ae6f92f4d52d11e682232178f8.jpg",
+        ##TODO: work on the image uploading part later, for now just use a placeholder image
         "category": "travel",
         "title": fake.word(),
         "startDate": 1774976400000,
         "endDate": 1780333199999,
-        "pointExchange": 1000,
+        "pointExchange": 0,
         "apply": "all",
         "description": fake.sentence(nb_words=20),
         "hashtag": fake.word(),
         "codePrefix": "",
-        "originPrice": 1000,
+        "originPrice": 0,
         "point": None,
         "percentAccumulate": None,
         "getCodeMethod": "random",
@@ -28,7 +29,7 @@ def base_voucher_data(voucher_type=None):
         "applytoProductIds": [],
         "applytoCategoryIds": [],
         "lockApplyStores": False,
-        "discountBillMin": 1000,
+        "discountBillMin": 0,
         "showOutHomePage": False,
         "applySaleTypes": "all",
         "forSale": False,

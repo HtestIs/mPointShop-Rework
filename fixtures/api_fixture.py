@@ -1,9 +1,9 @@
 import pytest
-from api.base.client import APIClient
-from api.mExchange.endpoints.user_api import ExchangeAuthAPI
-from api.mPointShop.client import MPointShopClient
-from api.mExchange.client import MExchangeClient
-from api.mPointShop.endpoints.auth_api import AuthAPI
+from core.base.client import APIClient
+from mExchange.api.endpoints.user_api import ExchangeAuthAPI
+from mPointShop.api.client import MPointShopClient
+from mExchange.api.client import MExchangeClient
+from mPointShop.api.endpoints.auth_api import AuthAPI
 @pytest.fixture
 def valid_login_payload_partner(env_config):
     creds = env_config["users"]["partner"]

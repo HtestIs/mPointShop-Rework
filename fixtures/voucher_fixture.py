@@ -1,6 +1,6 @@
 import pytest
 
-from api.mPointShop.endpoints.voucher_api import VoucherAPI
+from mPointShop.api.endpoints.voucher_api import VoucherAPI
 
 @pytest.fixture
 def create_voucher_discount_percentage(logged_in_client_partner, voucher_data):
@@ -14,6 +14,7 @@ def create_voucher_discount_constant(logged_in_client_partner, voucher_data):
     voucher_page = VoucherAPI(client = logged_in_client_partner)
     payload = voucher_data(vouchertype="discount_constant")
     response = voucher_page.create_voucher(payload=payload)
+    # voucher_page.client.debug_response(response)
     return response
 
 @pytest.fixture

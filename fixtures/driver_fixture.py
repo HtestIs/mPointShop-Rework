@@ -1,11 +1,20 @@
 import pytest
-from drivers.driver_manager import DriverManager
-from pages.mExchange.login_page import LoginPage
-from utils.token_helpers import get_local_storage_token
+
+from core.drivers.driver_manager import DriverManager
+from core.utils.token_helpers import get_local_storage_token
+from mExchange.pages.login_page import LoginPage
+
+
 @pytest.fixture()
-def driver(request,base_url):
+def driver(request):
     browser = request.config.getoption("--browser")
     driver = DriverManager.get_driver(browser)
+
+    if request.node.get_closest_marker("mexchange"):
+        base_url = request.getfixturevalue("mexchange_base_url")
+    else:
+        base_url = request.getfixturevalue("mpointshop_base_url")
+
     driver.base_url = base_url
     yield driver
     driver.quit()
