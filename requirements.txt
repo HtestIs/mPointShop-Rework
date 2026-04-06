@@ -1,10 +1,15 @@
+# Core test stack
 pytest
 selenium
 requests
 python-dotenv
 allure-pytest
+
+# Test data and reporting
 Faker
 pytest-html
 pytest-metadata
+
+# Pytest plugins
 pytest-repeat
 pytest-xdist

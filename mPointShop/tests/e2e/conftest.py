@@ -1,2 +1,0 @@
-##This file is used to define fixtures and setup/teardown functions for the end-to-end tests. It can include things like creating test data, setting up test environments, and providing common utilities for the tests.
-## REMOVE THIS FILE
