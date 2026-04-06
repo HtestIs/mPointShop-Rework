@@ -48,7 +48,7 @@ jobs:
           pip install -r requirements.txt
 
       - name: Run API tests
-        run: run: pytest -m "api and not e2e" --env=dev -q
+        run: pytest -m "api and not e2e" --env=dev -q
 
       - name: Upload pytest / html / allure artifacts
         if: always()
