@@ -7,6 +7,7 @@ from mPointShop.api.flows.voucher_flow import create_and_sync_voucher_to_mexchan
 
 
 @pytest.mark.api
+@pytest.mark.e2e
 def test_pending_voucher(logged_in_client_partner,create_voucher_discount_constant,mexchange_client_ui):
     response = create_voucher_discount_constant
     result = create_and_sync_voucher_to_mexchange(logged_in_client_partner, response)
@@ -17,6 +18,7 @@ def test_pending_voucher(logged_in_client_partner,create_voucher_discount_consta
     assert voucher_result["data"]["total"] == 1, "Voucher pool not found in mExchange"
 
 @pytest.mark.api
+@pytest.mark.e2e
 def test_commit_voucher(logged_in_client_partner,create_cash_multiple_voucher,mexchange_client_ui):
     response = create_cash_multiple_voucher
     result = create_and_sync_voucher_to_mexchange(logged_in_client_partner, response)
