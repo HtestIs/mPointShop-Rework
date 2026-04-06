@@ -4,6 +4,7 @@ from mExchange.api.endpoints.user_api import ExchangeAuthAPI
 
 
 @pytest.mark.api
+@pytest.mark.e2e
 def test_mexchange_me(mexchange_client_ui):
     login = ExchangeAuthAPI(client = mexchange_client_ui)
     response = login.get_info()
