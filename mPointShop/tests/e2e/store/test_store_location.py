@@ -2,6 +2,8 @@ from data.builders import build_location_data, build_store_data
 from data.fake_location import fake_new_location, fake_old_location
 import pytest
 import allure
+
+@pytest.mark.e2e
 @pytest.mark.registration
 @allure.story("User choosing inferior location")
 @allure.title("Options management")
@@ -21,6 +23,7 @@ def test_dropdown_options_should_be_empty_when_required_location_missing(login_p
     options = page.has_selectable_option()
     assert options is False, f"Dropdown options for {target_field} should be empty when required location is missing"
 
+@pytest.mark.e2e
 @pytest.mark.registration
 @allure.story("User changing location")
 @allure.title("Dropdown options update")
@@ -41,6 +44,7 @@ def test_update_dropdown_options(login_partner_success,storedata):
     assert page.get_selected_text("city_new") == data2["city_new"], "New city dropdown did not update to new selection"
     assert page.get_selected_text("ward_new") == data2["ward_new"], "New ward dropdown did not update based on new city selection"
 
+@pytest.mark.e2e
 @pytest.mark.registration
 @allure.story("User choosing superior location")
 @allure.title("Dropdown superior options reset")

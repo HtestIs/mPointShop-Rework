@@ -1,4 +1,3 @@
-import json
 import os
 
 import allure
@@ -150,11 +149,3 @@ class BasePage:
             return True
         except Exception:
             return False
-
-    @allure.step("Inject auth token")
-    def dump_token(self, token):
-        self.driver.execute_script(
-            "window.localStorage.setItem(arguments[0], arguments[1]);",
-            "authStore",
-            json.dumps(token),
-        )

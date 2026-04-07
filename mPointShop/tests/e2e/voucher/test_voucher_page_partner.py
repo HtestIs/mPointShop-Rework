@@ -33,6 +33,7 @@ def test_partner_create_voucher_page(voucher_data, logged_in_client_partner,logi
 @pytest.mark.e2e
 @pytest.mark.api
 @pytest.mark.slow
+@pytest.mark.defect
 def test_sync_voucher_to_mExchange(logged_in_client_partner,create_cash_multiple_voucher,login_partner_success):
 # API Magic
 # 1. Create voucher via api
@@ -41,7 +42,7 @@ def test_sync_voucher_to_mExchange(logged_in_client_partner,create_cash_multiple
     voucher_id = response.json()["data"]["id"]
 # 3. Get list of stores
     store_api = StoreAPI(client=logged_in_client_partner)
-    store_response = store_api.get_store_list(params={"page": 1, "pageSize": 100})
+    store_response = store_api.get_store_list(params={"page": 1, "pageSize": 10})
     assert store_response.status_code == 200, f"Failed to get store list"
 # 4. Create payload to add store(s) to voucher
     payload = add_store_to_voucher_payload(store_response.json(),voucher_id)

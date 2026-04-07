@@ -29,7 +29,7 @@ def storedata():
      "commission": fake.random_int(min=1, max=100),
      "min_wallet": "1000000", 
      "transfer_limit": fake.random_int(min=1000000, max=10000000),
-     "point_rate": fake.random_number(digits=2),
+     "point_rate": fake.random_int(min=10, max=100),
      "image_path": ICON_AUTO_PATH
      }
 #holy f, are you reading my mind, this is exactly the data I want to generate for store registration, you are a genius, I am amazed, I will use this for my test_register_new_store test case, thank you so much

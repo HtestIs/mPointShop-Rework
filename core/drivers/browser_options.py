@@ -1,7 +1,7 @@
 from selenium import webdriver
 
 
-def get_chrome_options():
+def get_chrome_options(headless=False):
     options = webdriver.ChromeOptions()
 
     options.add_argument("--start-maximized")
@@ -9,6 +9,12 @@ def get_chrome_options():
     options.add_argument("--disable-save-password-bubble")
     options.add_argument("--disable-infobars")
     options.add_argument("--guest")
+    if headless:
+        options.add_argument("--headless=new")
+        options.add_argument("--window-size=1920,1080")
+        options.add_argument("--no-sandbox")
+        options.add_argument("--disable-dev-shm-usage")
+
     prefs = {
         "translate_enabled": False,
         "credentials_enable_service": False,

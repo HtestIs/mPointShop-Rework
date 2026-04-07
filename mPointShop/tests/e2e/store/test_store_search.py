@@ -3,6 +3,7 @@ import allure
 
 from mPointShop.api.endpoints.store_api import StoreAPI
 
+@pytest.mark.e2e
 @pytest.mark.search
 @allure.story("Finding stores")
 @allure.title("Find store with name")
@@ -25,6 +26,7 @@ def test_find_store_with_name(login_partner_success,store_api_data,logged_in_cli
 
 
 
+@pytest.mark.e2e
 @pytest.mark.search
 @allure.story("Finding stores")
 @allure.title("Find store with phone number")

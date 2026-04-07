@@ -5,6 +5,8 @@ from selenium.webdriver.common.by import By
 
 
 class StoreRegistrationMixin:
+    OPTIONAL_FORM_FIELDS = {"commission"}
+
     @allure.step("Confirm user modal")
     def click_confirm_button_user_modal(self):
         self.click(self.MODAL_CONFIRM_BUTTON)
@@ -23,6 +25,10 @@ class StoreRegistrationMixin:
     @allure.step("Fill field: {field_name}")
     def fill_field(self, field_name, value):
         locator = self.FORM_FIELDS[field_name]
+
+        if field_name in self.OPTIONAL_FORM_FIELDS and not self.finds(locator):
+            return
+
         self.type_text(locator, value)
 
     @allure.step("Choose option for {field_name}: {value}")

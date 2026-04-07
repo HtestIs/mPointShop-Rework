@@ -5,6 +5,7 @@ import allure
 
 
 
+@pytest.mark.e2e
 @pytest.mark.registration
 @allure.story("Registering stores")
 @allure.title("Register store")
@@ -17,6 +18,7 @@ def test_new_store_registration(login_partner_success,storedata):
 
 
 
+@pytest.mark.e2e
 @pytest.mark.registration
 @allure.story("Registering stores")
 @allure.title("Register store with missing required fields")
@@ -41,6 +43,7 @@ def test_missing_field_store_registration(login_partner_success,storedata,field,
     page.register_new_store(data)
     assert "bắt buộc" in page.get_field_error(field_name)
 
+@pytest.mark.e2e
 @pytest.mark.registration
 @allure.story("Registering stores")
 @allure.title("Register store with missing dropdown fields")
@@ -64,6 +67,7 @@ def test_missing_dropdown_store_registration(login_partner_success,storedata,fie
     page.click_confirm_button_user_modal()
     assert "bắt buộc" in page.get_field_error(field_name)
 
+@pytest.mark.e2e
 @pytest.mark.registration
 @allure.story("Registering stores")
 @allure.title("Register store with invalid input fields shows field error")
@@ -81,7 +85,9 @@ def test_invalid_field_span_error(login_partner_success,storedata,field,invalid_
     page.register_new_store(data)
     assert error_msg in page.get_field_error(location), f"Expected error message for {field} was not displayed"
 
+@pytest.mark.e2e
 @pytest.mark.registration
+@pytest.mark.defect
 @allure.story("Registering stores")
 @allure.title("Register store with oversized input fields")
 @allure.severity(allure.severity_level.CRITICAL)
@@ -100,6 +106,7 @@ def test_register_store_shows_toast_for_oversized_input(login_partner_success,st
     page.register_new_store(data)
     assert error_msg in page.get_toast_msg(), f"Expected toast error message for {field} was not displayed"
 
+@pytest.mark.e2e
 @pytest.mark.registration
 @allure.story("Registering stores")
 @allure.title("Register store with invalid input fields shows toast error")

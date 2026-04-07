@@ -9,7 +9,7 @@ def add_store_to_voucher_payload(data,voucher_id):
 # Get the total number of stores available
     max_store = len(data["data"]) 
 # Randomly select how many stores to add to the voucher
-    number_of_stores_to_add = random.randint(1, 1)
+    number_of_stores_to_add = random.randint(1, max_store)
 # Randomly select the store IDs to add to the voucher
     ids_to_add = random.sample(store_ids, number_of_stores_to_add)
 # Get the remaining store IDs

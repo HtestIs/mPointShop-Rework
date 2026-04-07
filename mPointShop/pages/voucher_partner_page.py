@@ -1,6 +1,7 @@
 import time
 
 import allure
+from selenium.common import TimeoutException
 from mPointShop.pages.base_page import BasePage
 from selenium.webdriver.common.by import By
 
@@ -21,7 +22,20 @@ class VoucherPartnerPage(BasePage):
     def search_voucher(self, name):
         self.wait_clickable(self.SEARCH_INPUT)
         self.type_text(self.SEARCH_INPUT, name)
+    def get_first_row_store_span(self):
+        def condition():
+            rows = self.finds(self.ROW)
+            if not rows:
+                return False
+            try:
+                span = rows[0].find_element(*self.ROW_STORE_SPAN)
+                return span.is_displayed()
+            except Exception:
+                return False
 
+        self.wait_until(condition)
+        rows = self.finds(self.ROW)
+        return rows[0].find_element(*self.ROW_STORE_SPAN)
     @allure.step("Wait for voucher info to load with keyword: {keyword}")
     def wait_voucher_info_loaded(self, keyword=None):
         def condition():
@@ -91,8 +105,19 @@ class VoucherPartnerPage(BasePage):
         return rows[0].find_element(*self.STATUS_STORE).text.strip()
     
     def get_tooltip_stores_names(self):
-        self.hover_store_span()
-        return self.get_text_from_tooltips()
+        span = self.get_first_row_store_span()
+        self.hover(span)
+
+        try:
+            tooltip = self.wait_visible(self.TOOLTIP_STORES_NAMES)
+            tooltip_text = tooltip.get_attribute("textContent").strip()
+            if tooltip_text:
+                return [name.strip() for name in tooltip_text.split(",") if name.strip()]
+        except TimeoutException:
+            pass
+
+        span_text = span.get_attribute("textContent").strip()
+        return [name.strip() for name in span_text.split(",") if name.strip()]
     
 ##DEVIL'S WORK, RE-READ BEFORE USE, THIS GONNA TAKE HALF OF YOUR LIFE AWAY, MAYBE MORE, PROCEED WITH CAUTION
     def wait_until_synced(self, timeout=120, interval=5):

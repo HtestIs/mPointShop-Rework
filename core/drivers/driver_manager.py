@@ -5,9 +5,9 @@ from core.drivers.browser_options import get_chrome_options
 
 class DriverManager:
     @staticmethod
-    def get_driver(browser):
+    def get_driver(browser, headless=False):
         if browser == "chrome":
-            return webdriver.Chrome(options=get_chrome_options())
+            return webdriver.Chrome(options=get_chrome_options(headless=headless))
         if browser == "firefox":
             return webdriver.Firefox()
         if browser == "edge":

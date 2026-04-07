@@ -4,23 +4,15 @@ from mPointShop.pages.login_page import LoginPage
 
 
 class StoreSecurityMixin:
-    @allure.step("Toggle store status")
-    def toggle_store(self):
-        old = self.find(self.FIRST_SWITCH_BUTTON)
-        current = self.get_lock_status()
-        self.click(self.FIRST_SWITCH_BUTTON)
-        self.wait_stale(old)
-        self.wait_clickable(self.FIRST_SWITCH_BUTTON)
-        self.wait_attribute_change(self.FIRST_SWITCH, "aria-checked", current)
-
     @allure.step("Get store lock status")
     def get_lock_status(self):
         return self.get_attribute_status(self.FIRST_SWITCH, "aria-checked")
 
-    @allure.step("Ensure store is locked")
-    def ensure_locked(self):
-        if self.get_lock_status() == "false":
-            self.toggle_store()
+    @allure.step("Toggle store status")
+    def toggle_store(self):
+        current = self.get_lock_status()
+        self.click(self.FIRST_SWITCH_BUTTON)
+        self.wait_attribute_change(self.FIRST_SWITCH, "aria-checked", current)
 
     @allure.step("Click change password")
     def click_change_password(self):

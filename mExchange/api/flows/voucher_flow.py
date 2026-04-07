@@ -37,3 +37,13 @@ def find_and_commit_voucher_pool_in_mexchange(client, alt_voucher_id, state="acc
         "commit_response": commit_response,
         "voucher_api": voucher_api
     }
+
+def sync_voucher_to_partner(client, id_voucher):
+    
+    payload = {
+        "type": "SYNC_ONE_PARTNER",
+        "ids": [id_voucher],
+        "partner_id": "$mpoint",
+        "includes": "partner,voucher,total,stores"
+    }
+    client.post_sync_voucher_to_partner(payload=payload)
