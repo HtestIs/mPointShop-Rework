@@ -9,6 +9,7 @@ from mPointShop.api.flows.voucher_flow import create_and_sync_voucher_to_mexchan
 
 @pytest.mark.api
 @pytest.mark.e2e
+@pytest.mark.defect
 def test_pending_voucher(logged_in_client_partner,create_voucher_discount_constant,mexchange_client_ui):
     response = create_voucher_discount_constant
     result = create_and_sync_voucher_to_mexchange(logged_in_client_partner, response)
@@ -20,6 +21,7 @@ def test_pending_voucher(logged_in_client_partner,create_voucher_discount_consta
 
 @pytest.mark.api
 @pytest.mark.e2e
+@pytest.mark.defect
 def test_commit_voucher(logged_in_client_partner,create_cash_multiple_voucher,mexchange_client_ui):
     response = create_cash_multiple_voucher
     result = create_and_sync_voucher_to_mexchange(logged_in_client_partner, response)
@@ -30,6 +32,7 @@ def test_commit_voucher(logged_in_client_partner,create_cash_multiple_voucher,me
 
 @pytest.mark.api
 @pytest.mark.e2e
+@pytest.mark.defect
 def test_sync_voucher_to_partner(logged_in_client_partner,create_voucher_discount_constant,mexchange_client_ui):
     response = create_voucher_discount_constant
     result = create_and_sync_voucher_to_mexchange(logged_in_client_partner, response)

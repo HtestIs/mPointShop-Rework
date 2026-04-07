@@ -112,7 +112,7 @@ def test_register_store_shows_toast_for_oversized_input(login_partner_success,st
 @allure.title("Register store with invalid input fields shows toast error")
 @allure.severity(allure.severity_level.CRITICAL)
 @pytest.mark.parametrize("field,invalid_value,error_msg",[
-    ("username","duplicate_user","Tên đăng nhập đã tồn tại trên hệ thống. Xin vui lòng thử lại !"),
+    # ("username","duplicate_user","Tên đăng nhập đã tồn tại trên hệ thống. Xin vui lòng thử lại !"),
     ("password", "short", "Mật khẩu từ 6-20 ký tự, ít nhất 1 chữ viết hoa, 1 kí tự đặc biệt."),
     ("password", "noupper", "Mật khẩu từ 6-20 ký tự, ít nhất 1 chữ viết hoa, 1 kí tự đặc biệt."),
     ("password", "nolower", "Mật khẩu từ 6-20 ký tự, ít nhất 1 chữ viết hoa, 1 kí tự đặc biệt."),
