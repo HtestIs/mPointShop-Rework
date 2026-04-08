@@ -5,29 +5,28 @@
 ![Selenium](https://img.shields.io/badge/Selenium-UI_Testing-43B02A?style=for-the-badge&logo=selenium&logoColor=white)
 ![Allure](https://img.shields.io/badge/Allure-Reporting-8A2BE2?style=for-the-badge)
 
-Python test automation framework for **mPointShop**, **mExchange**, and **mShopAdmin**.
-It supports **UI**, **API**, and **cross-system hybrid** validation using `pytest`, `selenium`, and reusable client/fixture layers.
+Automation framework for the **mPointShop ecosystem**, covering **UI**, **API**, and **cross-system hybrid** validation across `mPointShop`, `mExchange`, and `mShopAdmin`.
 
 ---
 
 ## ✨ Highlights
 
+- `pytest` + `selenium` + `allure` test stack
 - Page Object Model for UI automation
-- Shared Selenium base layer in `core/`
-- API client + endpoint abstraction for backend checks
-- Environment-driven execution with `.env` and `--env`
-- Built-in HTML and Allure reporting
-- Known failing cases can be tagged with `@pytest.mark.defect`
+- Shared base classes, drivers, and helpers in `core/`
+- Shared fixture plugins for cross-system API setup
+- Environment-based execution using `.env` and `--env`
+- HTML and Allure reporting built in
 
 ---
 
 ## 🧱 Systems Covered
 
-| System | Purpose | Current focus |
-|---|---|---|
-| `mPointShop` | Main merchant/partner flows | UI + API + E2E |
-| `mExchange` | Exchange-side integration flows | API + E2E |
-| `mShopAdmin` | Admin system | early structure / extension point |
+| System | Scope | Coverage | Notes |
+|---|---|---|---|
+| `mPointShop` | Merchant / partner product | API + E2E | Main system under active coverage |
+| `mExchange` | Voucher exchange integration | API + E2E | Reuses shared voucher sync helpers |
+| `mShopAdmin` | Admin / AAP portal | E2E in progress | ⚠️ Login can be unstable because some environments show **captcha** |
 
 ---
 
@@ -35,19 +34,63 @@ It supports **UI**, **API**, and **cross-system hybrid** validation using `pytes
 
 ```text
 mPointShop_rework/
-├─ core/                 # shared base classes, drivers, utilities
-├─ config/               # environment config loading
-├─ fixtures/             # shared pytest fixtures
-├─ data/                 # test data factories and helpers
-├─ mPointShop/           # app-specific pages, API, tests
-├─ mExchange/            # app-specific pages, API, tests
-├─ mShopAdmin/           # third system pages, API, tests
-├─ reports/              # pytest-html output
-├─ allure-results/       # raw Allure results
-├─ allure-report/        # generated Allure report
-├─ conftest.py           # global pytest config/options
-├─ pytest.ini            # markers and runner settings
-└─ requirements.txt
+├─ core/
+│  ├─ base/                      # shared BasePage / API client layers
+│  ├─ drivers/                   # browser driver manager
+│  └─ utils/                     # token helpers, data helpers, shared flows
+├─ config/                       # env config loading and shared settings
+├─ data/                         # factories and static test data
+│  ├─ store_data.py
+│  └─ voucher_data.py
+├─ fixtures/
+│  ├─ driver_fixture.py          # shared Selenium driver fixture
+│  ├─ shared_api_fixtures.py     # shared login/API fixtures
+│  └─ shared_voucher_fixtures.py # shared voucher fixtures
+├─ mPointShop/
+│  ├─ api/
+│  │  ├─ api_assertions/
+│  │  ├─ endpoints/
+│  │  ├─ flows/
+│  │  └─ helpers/
+│  ├─ pages/
+│  │  ├─ components/
+│  │  ├─ login_page.py
+│  │  ├─ menu_page.py
+│  │  ├─ store_manage_page.py
+│  │  └─ voucher_partner_page.py
+│  ├─ tests/
+│  │  ├─ api/
+│  │  └─ e2e/
+│  └─ conftest.py
+├─ mExchange/
+│  ├─ api/
+│  │  ├─ endpoints/
+│  │  ├─ flows/
+│  │  └─ helpers/
+│  ├─ pages/
+│  │  ├─ login_page.py
+│  │  └─ menu_page.py
+│  ├─ tests/
+│  │  ├─ api/
+│  │  └─ e2e/
+│  └─ conftest.py
+├─ mShopAdmin/
+│  ├─ pages/
+│  │  ├─ basepage.py
+│  │  ├─ dashboard_page.py
+│  │  ├─ login_page.py
+│  │  └─ voucher_list_page.py
+│  ├─ tests/
+│  │  ├─ api/
+│  │  └─ e2e/
+│  └─ conftest.py
+├─ reports/                      # pytest-html output
+├─ allure-results/               # raw Allure results
+├─ allure-report/                # generated Allure report
+├─ conftest.py                   # root pytest options + shared plugins
+├─ pytest.ini                    # markers and runner settings
+├─ requirements.txt
+└─ README.md
 ```
 
 ---
@@ -69,59 +112,17 @@ pip install -r requirements.txt
 
 ### 3. Configure environment variables
 
-Copy `.env.example` to `.env`, then fill in your real values.
+Copy `.env.example` to `.env` and fill in the required values for:
 
-#### Core `mPointShop` values
-
-```env
-DEV_WEB_BASE_URL=
-DEV_API_BASE_URL=
-DEV_PARTNER_USERNAME=
-DEV_PARTNER_PASSWORD=
-DEV_MERCHANT_USERNAME=
-DEV_MERCHANT_PASSWORD=
-DEV_DUP_USERNAME=
-
-PROD_WEB_BASE_URL=
-PROD_API_BASE_URL=
-PROD_PARTNER_USERNAME=
-PROD_PARTNER_PASSWORD=
-PROD_MERCHANT_USERNAME=
-PROD_MERCHANT_PASSWORD=
-PROD_DUP_USERNAME=
-```
-
-#### `mExchange` values
-
-```env
-DEV_MEXCHANGE_WEB_URL=
-DEV_MEXCHANGE_API_URL=
-DEV_MEXCHANGE_USERNAME=
-DEV_MEXCHANGE_PASSWORD=
-
-PROD_MEXCHANGE_WEB_URL=
-PROD_MEXCHANGE_API_URL=
-PROD_MEXCHANGE_USERNAME=
-PROD_MEXCHANGE_PASSWORD=
-```
-
-#### `mShopAdmin` / AAP values
-
-```env
-DEV_AAP_BASE_URL=
-DEV_AAP_USERNAME=
-DEV_AAP_PASSWORD=
-
-PROD_AAP_BASE_URL=
-PROD_AAP_USERNAME=
-PROD_AAP_PASSWORD=
-```
+- `mPointShop` web URL, API URL, partner/merchant credentials
+- `mExchange` web URL, API URL, exchange credentials
+- `mShopAdmin` / AAP URL and admin credentials
 
 ---
 
 ## ▶️ Running Tests
 
-### Run the full suite
+### Run all tests
 
 ```powershell
 pytest
@@ -135,23 +136,15 @@ pytest mExchange/tests
 pytest mShopAdmin/tests
 ```
 
-### Run by feature area
-
-```powershell
-pytest mPointShop/tests/e2e/auth
-pytest mPointShop/tests/e2e/store
-pytest mPointShop/tests/e2e/voucher
-pytest mExchange/tests/api
-pytest mExchange/tests/e2e
-```
-
 ### Run by marker
 
 ```powershell
-pytest -m smoke
+pytest -m mpointshop
+pytest -m mexchange
+pytest -m mshopadmin
 pytest -m api
 pytest -m e2e
-pytest -m regression
+pytest -m smoke
 pytest -m ongoing
 pytest -m defect
 ```
@@ -162,33 +155,32 @@ pytest -m defect
 pytest --env=dev --browser=chrome
 ```
 
-> If `CI=true` is set, the browser driver runs headless automatically.
+> If `CI=true` is set, browser sessions run in headless mode automatically.
 
 ---
 
-## 🏷️ Available Pytest Markers
+## 🏷️ Pytest Markers
 
-Defined in `pytest.ini`:
+Common markers defined in `pytest.ini` include:
 
-- `smoke`
-- `regression`
-- `slow`
-- `search`
-- `registration`
-- `security`
-- `e2e`
+- `mpointshop`
+- `mexchange`
+- `mshopadmin`
 - `api`
+- `e2e`
+- `smoke`
+- `slow`
+- `registration`
+- `search`
+- `security`
 - `ongoing`
 - `defect`
-- `fixthisdumdum`
 
 ---
 
 ## 📊 Reports
 
 ### HTML report
-
-Generated automatically at:
 
 ```text
 reports/report.html
@@ -201,21 +193,20 @@ pytest --alluredir=allure-results
 allure serve allure-results
 ```
 
-On failures, the framework attaches:
-- screenshot
+On failures, the framework can attach:
+
+- screenshots
 - page source
 - current URL
 - browser logs (when available)
 
 ---
 
-## 🧠 Framework Notes
+## ⚠️ Known Notes / Limitations
 
-- Keep shared logic in `core/`
-- Keep system-specific behavior inside each product folder
-- Prefer fixtures and data factories over repeated setup code
-- Use API setup + UI verification for faster hybrid coverage
-- Mark unstable known issues with `@pytest.mark.defect`
+- `mShopAdmin` may show a **captcha** on the login page in some environments.
+- Because of that, AAP login-related E2E tests can be **blocked or unstable** until a test-safe bypass or captcha-free QA environment is available.
+- Cross-system voucher helpers are shared through `core/utils/shared_voucher_flows.py`.
 
 ---
 

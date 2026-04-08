@@ -4,6 +4,13 @@ import pytest
 from mExchange.pages.base_page import BasePage
 from mExchange.pages.menu_page import MenuPage
 
+pytestmark = [
+    pytest.mark.mexchange,
+    allure.parent_suite("mExchange"),
+    allure.suite("E2E"),
+    allure.sub_suite("Authentication"),
+]
+
 
 @allure.feature("Login authentication")
 @pytest.mark.smoke

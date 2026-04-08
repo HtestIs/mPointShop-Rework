@@ -3,6 +3,13 @@ import allure
 from time import sleep
 from mPointShop.api.endpoints.store_api import StoreAPI
 
+pytestmark = [
+    pytest.mark.mpointshop,
+    allure.parent_suite("mPointShop"),
+    allure.suite("E2E"),
+    allure.sub_suite("Store Security"),
+]
+
 @pytest.mark.e2e
 @pytest.mark.security
 @allure.story("Changing store password")

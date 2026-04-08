@@ -3,6 +3,13 @@ import allure
 from mPointShop.api.endpoints.auth_api import AuthAPI
 from mPointShop.api.endpoints.store_api import StoreAPI
 
+pytestmark = [
+    pytest.mark.mpointshop,
+    allure.parent_suite("mPointShop"),
+    allure.suite("API"),
+    allure.sub_suite("Authentication"),
+]
+
 @pytest.mark.api
 @allure.story("Authentication")
 @allure.title("Logout API invalidates active session")

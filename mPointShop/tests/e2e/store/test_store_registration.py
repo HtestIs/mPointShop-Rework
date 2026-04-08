@@ -3,6 +3,12 @@ from data.test_data import DATA_CASES
 import pytest
 import allure
 
+pytestmark = [
+    pytest.mark.mpointshop,
+    allure.parent_suite("mPointShop"),
+    allure.suite("E2E"),
+    allure.sub_suite("Store Registration"),
+]
 
 
 @pytest.mark.e2e

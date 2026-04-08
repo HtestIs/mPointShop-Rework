@@ -3,6 +3,13 @@ from data.fake_location import fake_new_location, fake_old_location
 import pytest
 import allure
 
+pytestmark = [
+    pytest.mark.mpointshop,
+    allure.parent_suite("mPointShop"),
+    allure.suite("E2E"),
+    allure.sub_suite("Store Location"),
+]
+
 @pytest.mark.e2e
 @pytest.mark.registration
 @allure.story("User choosing inferior location")

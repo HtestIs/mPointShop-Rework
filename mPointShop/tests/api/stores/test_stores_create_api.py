@@ -1,6 +1,13 @@
 import allure
 import pytest
 
+pytestmark = [
+    pytest.mark.mpointshop,
+    allure.parent_suite("mPointShop"),
+    allure.suite("API"),
+    allure.sub_suite("Store Creation"),
+]
+
 from mPointShop.api.api_assertions.store_assertions import assert_code_response, assert_valid_post_response
 from mPointShop.api.endpoints.store_api import StoreAPI
 

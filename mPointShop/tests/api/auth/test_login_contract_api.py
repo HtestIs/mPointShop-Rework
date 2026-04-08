@@ -1,6 +1,13 @@
 import pytest
 import allure
 
+pytestmark = [
+    pytest.mark.mpointshop,
+    allure.parent_suite("mPointShop"),
+    allure.suite("API"),
+    allure.sub_suite("Authentication"),
+]
+
 @pytest.mark.api
 @pytest.mark.parametrize("method,send_payload, status_code, code, message", [
     ("post",True,200, 0, "Thành công"),

@@ -1,22 +1,5 @@
-from mPointShop.api.endpoints.store_api import StoreAPI
-from mPointShop.api.endpoints.voucher_api import VoucherAPI
-from mPointShop.api.helpers.store_helpers import add_store_to_voucher_payload
+"""Backward-compatible wrapper around the shared voucher flow helpers."""
 
-def create_and_sync_voucher_to_mexchange(client, voucher_response):
-    voucher_id = voucher_response.json()["data"]["id"]
+from core.utils.shared_voucher_flows import create_and_sync_voucher_to_mexchange
 
-    store_api = StoreAPI(client)
-    store_response = store_api.search_store(payload={"skip": 0, "limit": 10}) # get list of stores
-    # store_api.client.debug_response(store_response)
-    payload = add_store_to_voucher_payload(store_response.json(), voucher_id)
-    voucher_api = VoucherAPI(client)
-    add_store_response = voucher_api.add_store_to_voucher(payload=payload)
-    # voucher_api.client.debug_response(add_store_response)
-    response = voucher_api.sync_voucher_to_mexchange(payload={"id": voucher_id})
-    return {
-        "voucher_id": voucher_id,
-        "store_response": store_response,
-        "payload": payload,
-        "add_store_response": add_store_response,
-        "sync_response": response,
-    }
+__all__ = ["create_and_sync_voucher_to_mexchange"]

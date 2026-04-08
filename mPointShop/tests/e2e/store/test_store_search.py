@@ -3,6 +3,13 @@ import allure
 
 from mPointShop.api.endpoints.store_api import StoreAPI
 
+pytestmark = [
+    pytest.mark.mpointshop,
+    allure.parent_suite("mPointShop"),
+    allure.suite("E2E"),
+    allure.sub_suite("Store Search"),
+]
+
 @pytest.mark.e2e
 @pytest.mark.search
 @allure.story("Finding stores")

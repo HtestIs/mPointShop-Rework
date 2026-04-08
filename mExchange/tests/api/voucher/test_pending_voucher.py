@@ -1,15 +1,26 @@
+import allure
 import pytest
 from mExchange.api.flows.voucher_flow import (
     find_and_commit_voucher_pool_in_mexchange,
     find_voucher_pool_in_mexchange,
     sync_voucher_to_partner,
 )
-from mPointShop.api.flows.voucher_flow import create_and_sync_voucher_to_mexchange
+from core.utils.shared_voucher_flows import create_and_sync_voucher_to_mexchange
+
+pytestmark = [
+    pytest.mark.mexchange,
+    allure.parent_suite("mExchange"),
+    allure.suite("API"),
+    allure.sub_suite("Voucher"),
+]
 
 
 @pytest.mark.api
 @pytest.mark.e2e
 @pytest.mark.defect
+@allure.story("Voucher synchronization")
+@allure.title("Pending voucher appears in mExchange after sync")
+@allure.severity(allure.severity_level.CRITICAL)
 def test_pending_voucher(logged_in_client_partner,create_voucher_discount_constant,mexchange_client_ui):
     response = create_voucher_discount_constant
     result = create_and_sync_voucher_to_mexchange(logged_in_client_partner, response)
@@ -22,6 +33,9 @@ def test_pending_voucher(logged_in_client_partner,create_voucher_discount_consta
 @pytest.mark.api
 @pytest.mark.e2e
 @pytest.mark.defect
+@allure.story("Voucher synchronization")
+@allure.title("Committed voucher can be approved in mExchange")
+@allure.severity(allure.severity_level.CRITICAL)
 def test_commit_voucher(logged_in_client_partner,create_cash_multiple_voucher,mexchange_client_ui):
     response = create_cash_multiple_voucher
     result = create_and_sync_voucher_to_mexchange(logged_in_client_partner, response)
@@ -33,6 +47,9 @@ def test_commit_voucher(logged_in_client_partner,create_cash_multiple_voucher,me
 @pytest.mark.api
 @pytest.mark.e2e
 @pytest.mark.defect
+@allure.story("Voucher synchronization")
+@allure.title("Approved voucher syncs from mExchange to partner")
+@allure.severity(allure.severity_level.CRITICAL)
 def test_sync_voucher_to_partner(logged_in_client_partner,create_voucher_discount_constant,mexchange_client_ui):
     response = create_voucher_discount_constant
     result = create_and_sync_voucher_to_mexchange(logged_in_client_partner, response)

@@ -3,13 +3,24 @@ import pytest
 
 from core.drivers.driver_manager import DriverManager
 from core.utils.token_helpers import get_local_storage_token
+from mExchange.api.client import MExchangeClient
+from mExchange.api.endpoints.user_api import ExchangeAuthAPI
 from mExchange.pages.login_page import LoginPage
 from mExchange.pages.menu_page import MenuPage
-
 
 @pytest.fixture
 def mexchange_base_url(env_config):
     return env_config["mexchange_web_url"]
+
+
+@pytest.fixture
+def mexchange_client(env_config):
+    return MExchangeClient(base_url=env_config["mexchange_api_url"])
+
+
+@pytest.fixture
+def mexchange_auth_api(mexchange_client_ui):
+    return ExchangeAuthAPI(mexchange_client_ui)
 
 
 @pytest.fixture(scope="session")
@@ -31,6 +42,13 @@ def mexchange_token_from_ui(request, env_config):
         return token
     finally:
         driver.quit()
+
+
+@pytest.fixture
+def mexchange_client_ui(env_config, mexchange_token_from_ui):
+    client = MExchangeClient(base_url=env_config["mexchange_api_url"])
+    client.set_x_access_token(mexchange_token_from_ui)
+    return client
 
 
 @pytest.fixture

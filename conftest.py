@@ -6,11 +6,11 @@ import pytest
 from config.env_config import ENV_CONFIG
 
 pytest_plugins = [
-    "fixtures.driver_fixture",
     "data.store_data",
-    "fixtures.api_fixture",
     "data.voucher_data",
-    "fixtures.voucher_fixture",
+    "fixtures.driver_fixture",
+    "fixtures.shared_api_fixtures",
+    "fixtures.shared_voucher_fixtures",
 ]
 
 

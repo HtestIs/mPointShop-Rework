@@ -7,6 +7,13 @@ from mPointShop.api.endpoints.store_api import StoreAPI
 from mPointShop.api.endpoints.voucher_api import VoucherAPI
 from mPointShop.api.helpers.store_helpers import add_store_to_voucher_payload, get_stores_names
 
+pytestmark = [
+    pytest.mark.mpointshop,
+    allure.parent_suite("mPointShop"),
+    allure.suite("E2E"),
+    allure.sub_suite("Voucher"),
+]
+
 
 @pytest.mark.e2e
 @pytest.mark.api
@@ -34,6 +41,9 @@ def test_partner_create_voucher_page(voucher_data, logged_in_client_partner,logi
 @pytest.mark.api
 @pytest.mark.slow
 @pytest.mark.defect
+@allure.story("Voucher page")
+@allure.title("Partner can sync voucher to mExchange")
+@allure.severity(allure.severity_level.CRITICAL)
 def test_sync_voucher_to_mExchange(logged_in_client_partner,create_cash_multiple_voucher,login_partner_success):
 # API Magic
 # 1. Create voucher via api

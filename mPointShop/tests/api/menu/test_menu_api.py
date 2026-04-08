@@ -3,6 +3,13 @@ import allure
 from mPointShop.api.api_assertions.menu_assertions import assert_menu_response
 from mPointShop.api.endpoints.menu_api import MenuAPI
 
+pytestmark = [
+    pytest.mark.mpointshop,
+    allure.parent_suite("mPointShop"),
+    allure.suite("API"),
+    allure.sub_suite("Menu"),
+]
+
 @pytest.mark.api
 @allure.story("Menu access")
 @allure.title("Partner can get menu")

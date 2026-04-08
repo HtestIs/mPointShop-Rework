@@ -4,6 +4,13 @@ from mPointShop.pages.store_manage_page import StoreManage
 import allure
 import pytest
 
+pytestmark = [
+    pytest.mark.mpointshop,
+    allure.parent_suite("mPointShop"),
+    allure.suite("E2E"),
+    allure.sub_suite("Authentication"),
+]
+
 @allure.feature("Login authentication")
 @pytest.mark.smoke
 class TestsLogin:
