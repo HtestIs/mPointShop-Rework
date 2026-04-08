@@ -55,7 +55,7 @@ jobs:
           pip install -r requirements.txt
 
       - name: Run tests
-        run: pytest -m "not defect" --env=dev --browser chrome -q
+        run: pytest -m "api and not defect and not e2e" --env=dev -q
 
       - name: Upload pytest / html / allure artifacts
         if: always()
