@@ -9,8 +9,11 @@ from core.drivers.driver_manager import DriverManager
 def driver(request):
     browser = request.config.getoption("--browser")
     is_ci = os.getenv("CI", "").lower() == "true"
-    driver = DriverManager.get_driver(browser, headless=is_ci)
-
+    cli_headless = request.config.getoption("--headless")
+    driver = DriverManager.get_driver(
+        browser,
+        headless=cli_headless or is_ci
+    )
     if request.node.get_closest_marker("mexchange"):
         base_url = request.getfixturevalue("mexchange_base_url")
     elif request.node.get_closest_marker("mshopadmin"):

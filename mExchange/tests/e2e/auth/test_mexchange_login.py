@@ -14,7 +14,7 @@ pytestmark = [
 
 @allure.feature("Login authentication")
 @pytest.mark.smoke
-@pytest.mark.defect
+@pytest.mark.oopsie
 @pytest.mark.e2e
 @allure.story("Login with token")
 @allure.title("Test mExchange login with injected token")

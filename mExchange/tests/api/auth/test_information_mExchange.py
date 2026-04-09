@@ -13,7 +13,6 @@ pytestmark = [
 
 @pytest.mark.api
 @pytest.mark.e2e
-@pytest.mark.defect
 @allure.story("Authentication")
 @allure.title("Get current mExchange user information")
 @allure.severity(allure.severity_level.NORMAL)

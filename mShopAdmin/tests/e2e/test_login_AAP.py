@@ -10,7 +10,6 @@ pytestmark = [
     allure.sub_suite("Authentication"),
 ]
 
-
 @pytest.mark.defect
 @allure.story("AAP login")
 @allure.title("Login with valid AAP credentials")

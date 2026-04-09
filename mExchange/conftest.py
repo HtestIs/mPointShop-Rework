@@ -1,3 +1,5 @@
+import os
+
 import allure
 import pytest
 
@@ -26,7 +28,13 @@ def mexchange_auth_api(mexchange_client_ui):
 @pytest.fixture(scope="session")
 def mexchange_token_from_ui(request, env_config):
     browser = request.config.getoption("--browser")
-    driver = DriverManager.get_driver(browser)
+    cli_headless = request.config.getoption("--headless")
+    is_ci = os.getenv("CI", "").lower() == "true"
+
+    driver = DriverManager.get_driver(
+        browser,
+        headless=cli_headless or is_ci
+    )
     try:
         login_page = LoginPage(driver)
         login_page.open(env_config["mexchange_web_url"])

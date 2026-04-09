@@ -26,6 +26,7 @@ def test_new_store_registration(login_partner_success,storedata):
 
 @pytest.mark.e2e
 @pytest.mark.registration
+@pytest.mark.oopsie
 @allure.story("Registering stores")
 @allure.title("Register store with missing required fields")
 @allure.severity(allure.severity_level.CRITICAL)
@@ -51,6 +52,7 @@ def test_missing_field_store_registration(login_partner_success,storedata,field,
 
 @pytest.mark.e2e
 @pytest.mark.registration
+@pytest.mark.oopsie
 @allure.story("Registering stores")
 @allure.title("Register store with missing dropdown fields")
 @allure.severity(allure.severity_level.CRITICAL)
@@ -75,6 +77,7 @@ def test_missing_dropdown_store_registration(login_partner_success,storedata,fie
 
 @pytest.mark.e2e
 @pytest.mark.registration
+@pytest.mark.defect
 @allure.story("Registering stores")
 @allure.title("Register store with invalid input fields shows field error")
 @allure.severity(allure.severity_level.CRITICAL)
@@ -114,11 +117,12 @@ def test_register_store_shows_toast_for_oversized_input(login_partner_success,st
 
 @pytest.mark.e2e
 @pytest.mark.registration
+@pytest.mark.defect
 @allure.story("Registering stores")
 @allure.title("Register store with invalid input fields shows toast error")
 @allure.severity(allure.severity_level.CRITICAL)
 @pytest.mark.parametrize("field,invalid_value,error_msg",[
-    # ("username","duplicate_user","Tên đăng nhập đã tồn tại trên hệ thống. Xin vui lòng thử lại !"),
+    ("username","duplicate_user","Tên đăng nhập đã tồn tại trên hệ thống. Xin vui lòng thử lại !"),
     ("password", "short", "Mật khẩu từ 6-20 ký tự, ít nhất 1 chữ viết hoa, 1 kí tự đặc biệt."),
     ("password", "noupper", "Mật khẩu từ 6-20 ký tự, ít nhất 1 chữ viết hoa, 1 kí tự đặc biệt."),
     ("password", "nolower", "Mật khẩu từ 6-20 ký tự, ít nhất 1 chữ viết hoa, 1 kí tự đặc biệt."),

@@ -5,7 +5,7 @@ from mExchange.api.flows.voucher_flow import (
     find_voucher_pool_in_mexchange,
     sync_voucher_to_partner,
 )
-from core.utils.shared_voucher_flows import create_and_sync_voucher_to_mexchange
+from mPointShop.api.flows.voucher_flow import create_and_sync_voucher_to_mexchange
 
 pytestmark = [
     pytest.mark.mexchange,
@@ -17,7 +17,6 @@ pytestmark = [
 
 @pytest.mark.api
 @pytest.mark.e2e
-@pytest.mark.defect
 @allure.story("Voucher synchronization")
 @allure.title("Pending voucher appears in mExchange after sync")
 @allure.severity(allure.severity_level.CRITICAL)
@@ -32,7 +31,6 @@ def test_pending_voucher(logged_in_client_partner,create_voucher_discount_consta
 
 @pytest.mark.api
 @pytest.mark.e2e
-@pytest.mark.defect
 @allure.story("Voucher synchronization")
 @allure.title("Committed voucher can be approved in mExchange")
 @allure.severity(allure.severity_level.CRITICAL)
@@ -46,7 +44,6 @@ def test_commit_voucher(logged_in_client_partner,create_cash_multiple_voucher,me
 
 @pytest.mark.api
 @pytest.mark.e2e
-@pytest.mark.defect
 @allure.story("Voucher synchronization")
 @allure.title("Approved voucher syncs from mExchange to partner")
 @allure.severity(allure.severity_level.CRITICAL)

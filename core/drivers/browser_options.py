@@ -8,7 +8,6 @@ def get_chrome_options(headless=False):
     options.add_argument("--disable-notifications")
     options.add_argument("--disable-save-password-bubble")
     options.add_argument("--disable-infobars")
-    options.add_argument("--guest")
     if headless:
         options.add_argument("--headless=new")
         options.add_argument("--window-size=1920,1080")
