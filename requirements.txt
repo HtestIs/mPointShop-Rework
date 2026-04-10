@@ -10,6 +10,9 @@ Faker
 pytest-html
 pytest-metadata
 
+# Mobile automation
+Appium-Python-Client
+
 # Pytest plugins
 pytest-repeat
 pytest-xdist

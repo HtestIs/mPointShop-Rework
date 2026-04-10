@@ -1,0 +1,1 @@
+"""mPointApp mobile automation package."""

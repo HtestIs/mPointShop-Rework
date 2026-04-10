@@ -5,7 +5,7 @@
 ![Selenium](https://img.shields.io/badge/Selenium-UI_Testing-43B02A?style=for-the-badge&logo=selenium&logoColor=white)
 ![Allure](https://img.shields.io/badge/Allure-Reporting-8A2BE2?style=for-the-badge)
 
-Automation framework for the **mPointShop ecosystem**, covering **UI**, **API**, and **cross-system hybrid** validation across `mPointShop`, `mExchange`, and `mShopAdmin`.
+Automation framework for the **mPointShop ecosystem**, covering **UI**, **API**, **mobile**, and **cross-system hybrid** validation across `mPointShop`, `mExchange`, `mShopAdmin`, and `mPointApp`.
 
 ---
 
@@ -27,6 +27,7 @@ Automation framework for the **mPointShop ecosystem**, covering **UI**, **API**,
 | `mPointShop` | Merchant / partner product | API + E2E | Main system under active coverage |
 | `mExchange` | Voucher exchange integration | API + E2E | Reuses shared voucher sync helpers |
 | `mShopAdmin` | Admin / AAP portal | E2E in progress | ⚠️ Login can be unstable because some environments show **captcha** |
+| `mPointApp` | Mobile app | Appium-ready scaffold | Placeholder structure ready for future device automation |
 
 ---
 
@@ -84,6 +85,13 @@ mPointShop_rework/
 │  │  ├─ api/
 │  │  └─ e2e/
 │  └─ conftest.py
+├─ mPointApp/
+│  ├─ pages/
+│  │  ├─ base_screen.py
+│  │  └─ login_screen.py
+│  ├─ tests/
+│  │  └─ e2e/
+│  └─ conftest.py
 ├─ reports/                      # pytest-html output
 ├─ allure-results/               # raw Allure results
 ├─ allure-report/                # generated Allure report
@@ -120,6 +128,23 @@ Copy `.env.example` to `.env` and fill in the required values for:
 
 ---
 
+## 📱 mPointApp / Mobile Scaffold
+
+The mobile area is a **starter Appium scaffold** for future app automation.
+
+### Included
+
+- `mPointApp/conftest.py` with an Appium-ready `mobile_driver` fixture
+- `mPointApp/pages/base_screen.py` for shared mobile screen actions
+- `mPointApp/pages/login_screen.py` as a starter login page object
+- `mPointApp/tests/e2e/test_app_smoke.py` as a placeholder smoke test
+
+> The project uses `Appium-Python-Client`, so install dependencies from `requirements.txt` before running mobile tests.
+
+Update the placeholder locators in `mPointApp/pages/login_screen.py` to match the real app under test.
+
+---
+
 ## ▶️ Running Tests
 
 ### Run all tests
@@ -134,6 +159,7 @@ pytest
 pytest mPointShop/tests
 pytest mExchange/tests
 pytest mShopAdmin/tests
+pytest mPointApp/tests
 ```
 
 ### Run by marker
@@ -142,6 +168,7 @@ pytest mShopAdmin/tests
 pytest -m mpointshop
 pytest -m mexchange
 pytest -m mshopadmin
+pytest -m mpointapp
 pytest -m api
 pytest -m e2e
 pytest -m smoke
@@ -166,6 +193,7 @@ Common markers defined in `pytest.ini` include:
 - `mpointshop`
 - `mexchange`
 - `mshopadmin`
+- `mpointapp`
 - `api`
 - `e2e`
 - `smoke`
