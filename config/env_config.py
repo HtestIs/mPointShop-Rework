@@ -23,7 +23,9 @@ ENV_CONFIG = {
         "mexchange_password": os.getenv("DEV_MEXCHANGE_PASSWORD"),
         "aap_base_url": os.getenv("DEV_AAP_BASE_URL"),
         "aap_username": os.getenv("DEV_AAP_USERNAME"),
-        "aap_password": os.getenv("DEV_AAP_PASSWORD")
+        "aap_password": os.getenv("DEV_AAP_PASSWORD"),
+        "app_username": os.getenv("DEV_APP_USERNAME"),
+        "app_password": os.getenv("DEV_APP_PASSWORD")
     },
 
     "prod" :{
@@ -46,6 +48,8 @@ ENV_CONFIG = {
         "mexchange_password": os.getenv("PROD_MEXCHANGE_PASSWORD"),
         "aap_base_url": os.getenv("PROD_AAP_BASE_URL"),
         "aap_username": os.getenv("PROD_AAP_USERNAME"),
-        "aap_password": os.getenv("PROD_AAP_PASSWORD")
+        "aap_password": os.getenv("PROD_AAP_PASSWORD"),
+        "app_username": os.getenv("PROD_APP_USERNAME"),
+        "app_password": os.getenv("PROD_APP_PASSWORD")
     }    
 }
