@@ -7,6 +7,6 @@ from mPointApp.pages.base_screen import BaseScreen
 
 class RegisterScreen(BaseScreen):
     # Define locators for registration screen elements here
-    REGISTER_PHONE_NUMBER= (AppiumBy.UIAutomator, 'new UiSelector().text("Số điện thoại")')
-    TOS_CHECKBOX = (AppiumBy.UIAutomator, 'new UiSelector().className("android.view.ViewGroup").instance(16)')
+    REGISTER_PHONE_NUMBER= (AppiumBy.ANDROID_UIAUTOMATOR, 'new UiSelector().text("Số điện thoại")')
+    TOS_CHECKBOX = (AppiumBy.ANDROID_UIAUTOMATOR, 'new UiSelector().className("android.view.ViewGroup").instance(16)')
     ##DO LATER
