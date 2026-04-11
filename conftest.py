@@ -11,6 +11,7 @@ pytest_plugins = [
     "fixtures.driver_fixture",
     "fixtures.shared_api_fixtures",
     "fixtures.shared_voucher_fixtures",
+    "data.end_user_data",
 ]
 
 

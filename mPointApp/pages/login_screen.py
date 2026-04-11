@@ -23,13 +23,6 @@ class LoginScreen(BaseScreen):
         self.tap(self.LOGIN_BUTTON)
     def close_alert(self):
         self.tap(self.CLOSE_ALERT_BUTTON)
-    def has_error_message(self, expected_message: str) -> bool:
-        try:
-            return bool(
-                self.wait_until(lambda : expected_message in self.driver.page_source)
-            )
-        except Exception:
-            return False
     def is_forgot_password_visible(self):
         return self.is_visible(self.FORGOT_PASSWORD_BUTTON)
     def multiple_attempt_login(self, username, password, attempts=None):

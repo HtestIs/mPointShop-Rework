@@ -25,3 +25,10 @@ class BaseScreen(BasePage):
             return self.wait_for_visible(locator).is_displayed()
         except Exception:
             return False
+    def has_error_message(self, expected_message: str) -> bool:
+        try:
+            return bool(
+                self.wait_until(lambda : expected_message in self.driver.page_source)
+            )
+        except Exception:
+            return False

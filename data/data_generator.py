@@ -59,3 +59,10 @@ def generate_random_string_no_digits(length=255):
 
     random.shuffle(data)
     return ''.join(data)
+
+def generate_random_phone_number():
+    prefixes = ["09", "03", "07", "08", "05"]
+    prefix = random.choice(prefixes)
+    unique = datetime.now().strftime("%H%M%S%f")[-8:]
+    phone_number = prefix + unique
+    return phone_number

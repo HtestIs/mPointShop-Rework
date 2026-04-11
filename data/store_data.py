@@ -3,6 +3,7 @@ from datetime import datetime
 import pytest
 from faker import Faker
 from config.paths import ICON_AUTO_PATH
+from data.data_generator import generate_random_phone_number
 from data.fake_location import fake_old_location, fake_new_location
 fake = Faker('vi_VN')
 @pytest.fixture
@@ -21,8 +22,8 @@ def storedata():
      "address": fake.address(),
      "gps": "9.814872168201843/105.61238136803532", 
      "manager_name": fake.name(), 
-     "manager_phone": fake.phone_number(), 
-     "customer_service_phone": fake.phone_number(), 
+     "manager_phone": generate_random_phone_number(), 
+     "customer_service_phone": generate_random_phone_number(), 
      "sale_code": "1", 
      "password": password, 
      "confirm_password": password, 
@@ -50,13 +51,13 @@ def store_api_data():
         "newWardId": 2,
         "password": "Abc@1234",
         "percent": 50,
-        "phoneStore": fake.numerify(text='09########'),
+        "phoneStore": generate_random_phone_number(),
         "pointTransferLimit": 1000000,
         "province": "1",
         "saleCommissionOffline": 5,
         "storeOwnerBusinessCompanySeId": None,
         "storeOwnerName": fake.name(),
-        "storeOwnerPhone": fake.numerify(text='09########'),
+        "storeOwnerPhone": generate_random_phone_number(),
         "username": ("API"+timestamp)[:20],
         "walletBalanceMin": 1000000,
         "ward": "9619",
