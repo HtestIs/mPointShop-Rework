@@ -1,7 +1,7 @@
 from selenium.webdriver.common.by import By
 from appium.webdriver.common.appiumby import AppiumBy
 from mPointApp.pages.base_screen import BaseScreen
-from mPointApp.pages.home_page import AppHomePage
+from mPointApp.pages.home_screen import AppHomePage
 
 
 class PasswordScreen(BaseScreen):

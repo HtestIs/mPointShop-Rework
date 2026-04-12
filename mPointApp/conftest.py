@@ -24,4 +24,5 @@ def login_valid_user(mobile_driver, env_config):
     mobile_driver.implicitly_wait(10)
     login_screen = LoginScreen(mobile_driver)
     login_screen.skip_intro()
-    login_screen.login(creds["app_username"], creds["app_password"])
+    dialog = login_screen.login(creds["app_username"], creds["app_password"])
+    return dialog.allow_permission()

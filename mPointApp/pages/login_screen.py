@@ -3,6 +3,7 @@ from selenium.webdriver.common.by import By
 from appium.webdriver.common.appiumby import AppiumBy
 from mPointApp.pages.base_screen import BaseScreen
 from mPointApp.pages.register_screen import RegisterScreen
+from mPointApp.pages.system.phone_dialog_page import AndroidPermissionDialog
 
 
 class LoginScreen(BaseScreen):
@@ -21,6 +22,7 @@ class LoginScreen(BaseScreen):
         self.type_text(self.USERNAME_INPUT, username)
         self.type_text(self.PASSWORD_INPUT, password)
         self.tap(self.LOGIN_BUTTON)
+        return AndroidPermissionDialog(self.driver)
     def close_alert(self):
         self.tap(self.CLOSE_ALERT_BUTTON)
     def is_forgot_password_visible(self):
