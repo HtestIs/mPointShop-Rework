@@ -2,6 +2,8 @@ from mPointApp.pages.base_screen import BaseScreen
 from appium.webdriver.common.appiumby import AppiumBy
 from selenium.webdriver.common.by import By
 
+from mPointApp.pages.voucher_common_screen import AppVoucherCommonPage
+
 class AppHomePage(BaseScreen):
     HOMEPAGE_NAV_BAR = (AppiumBy.ACCESSIBILITY_ID,"Trang Chủ")
     SEE_MORE_VOUCHER_BUTTON = (AppiumBy.ANDROID_UIAUTOMATOR,'new UiSelector().text("Xem thêm").instance(0)')
@@ -12,3 +14,4 @@ class AppHomePage(BaseScreen):
         return home_page_icon.get_attribute("selected") == "true"
     def click_see_more_voucher(self):
         self.tap(self.SEE_MORE_VOUCHER_BUTTON)
+        return AppVoucherCommonPage(self.driver)

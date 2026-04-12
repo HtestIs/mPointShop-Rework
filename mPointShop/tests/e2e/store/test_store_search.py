@@ -15,10 +15,10 @@ pytestmark = [
 @allure.story("Finding stores")
 @allure.title("Find store with name")
 @allure.severity(allure.severity_level.NORMAL)
-def test_find_store_with_name(login_partner_success,store_api_data,logged_in_client_partner):
+def test_find_store_with_name(login_partner_success,store_api_data,mpointshop_logged_in_client_partner):
 #API Magic
 #1 : Create store via API
-    store_api = StoreAPI(client=logged_in_client_partner)
+    store_api = StoreAPI(client=mpointshop_logged_in_client_partner)
     store_api.create_store(payload=store_api_data)
 #2: Get store name from created store response
     keyword = store_api_data["nameStore"]
@@ -38,10 +38,10 @@ def test_find_store_with_name(login_partner_success,store_api_data,logged_in_cli
 @allure.story("Finding stores")
 @allure.title("Find store with phone number")
 @allure.severity(allure.severity_level.NORMAL)
-def test_find_store_with_phone(login_partner_success,store_api_data,logged_in_client_partner):
+def test_find_store_with_phone(login_partner_success,store_api_data,mpointshop_logged_in_client_partner):
 #API Magic
 #1 : Create store via API
-    store_api = StoreAPI(client=logged_in_client_partner)
+    store_api = StoreAPI(client=mpointshop_logged_in_client_partner)
     store_api.create_store(payload=store_api_data)
 #2: Get store phone number from created store response
     keyword = store_api_data["phoneStore"]

@@ -14,8 +14,8 @@ pytestmark = [
 @allure.story("Menu access")
 @allure.title("Partner can get menu")
 @allure.severity(allure.severity_level.NORMAL)
-def test_menu_partner_api(logged_in_client_partner):
-    menu_api = MenuAPI(client=logged_in_client_partner)
+def test_menu_partner_api(mpointshop_logged_in_client_partner):
+    menu_api = MenuAPI(client=mpointshop_logged_in_client_partner)
     response = menu_api.get_menu()
     # menu_api.client.debug_response(response)
     body = response.json()
@@ -25,8 +25,8 @@ def test_menu_partner_api(logged_in_client_partner):
 @allure.story("Menu access")
 @allure.title("Merchant can get menu")
 @allure.severity(allure.severity_level.NORMAL)
-def test_menu_merchant_api(logged_in_client_merchant):
-    menu_api = MenuAPI(client=logged_in_client_merchant)
+def test_menu_merchant_api(mpointshop_logged_in_client_merchant):
+    menu_api = MenuAPI(client=mpointshop_logged_in_client_merchant)
     response = menu_api.get_menu()
     # menu_api.client.debug_response(response)
     body = response.json()
@@ -36,8 +36,8 @@ def test_menu_merchant_api(logged_in_client_merchant):
 @allure.story("Menu access")
 @allure.title("Unauthorized menu request returns token error")
 @allure.severity(allure.severity_level.NORMAL)
-def test_menu_unauthorized(api_client):
-    menu_api = MenuAPI(client=api_client)
+def test_menu_unauthorized(mpointshop_api_client):
+    menu_api = MenuAPI(client=mpointshop_api_client)
     response = menu_api.get_menu()
     # menu_api.client.debug_response(response)
     body = response.json()
@@ -50,8 +50,8 @@ def test_menu_unauthorized(api_client):
 @allure.story("Menu access")
 @allure.title("Invalid token menu request returns token error")
 @allure.severity(allure.severity_level.NORMAL)
-def test_menu_invalid_token(api_client):
-    menu_api = MenuAPI(client=api_client)
+def test_menu_invalid_token(mpointshop_api_client):
+    menu_api = MenuAPI(client=mpointshop_api_client)
     menu_api.client.set_token("invalid_token")
     response = menu_api.get_menu()
     # menu_api.client.debug_response(response)

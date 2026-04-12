@@ -10,12 +10,12 @@ from mExchange.conftest import mexchange_client_ui, mexchange_token_from_ui  # n
 @pytest.mark.defect
 def test_voucher_list_expand_search(
     login_aap_success,
-    logged_in_client_partner,
+    mpointshop_logged_in_client_partner,
     create_voucher_discount_constant,
     mexchange_client_ui,
 ):
     synced_partner_voucher_alt_id = get_synced_partner_voucher_alt_id(
-        logged_in_client_partner,
+        mpointshop_logged_in_client_partner,
         create_voucher_discount_constant,
         mexchange_client_ui,
     )
@@ -41,12 +41,12 @@ def test_voucher_list_expand_search(
 @pytest.mark.defect
 def test_voucher_list_approve(
     login_aap_success,
-    logged_in_client_partner,
+    mpointshop_logged_in_client_partner,
     create_voucher_discount_constant,
     mexchange_client_ui,
 ):
     synced_partner_voucher_alt_id = get_synced_partner_voucher_alt_id(
-        logged_in_client_partner,
+        mpointshop_logged_in_client_partner,
         create_voucher_discount_constant,
         mexchange_client_ui,
     )

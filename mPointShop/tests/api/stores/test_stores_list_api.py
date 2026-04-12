@@ -31,8 +31,8 @@ from mPointShop.api.endpoints.store_api import StoreAPI
 @allure.story("Store listing")
 @allure.title("Get store list with valid pagination")
 @allure.severity(allure.severity_level.CRITICAL)
-def test_get_store_list_api(logged_in_client_partner, page, pageSize):
-    store_api = StoreAPI(client=logged_in_client_partner)
+def test_get_store_list_api(mpointshop_logged_in_client_partner, page, pageSize):
+    store_api = StoreAPI(client=mpointshop_logged_in_client_partner)
     params = {"page": page, "pageSize": pageSize}
     response = store_api.get_store_list(params=params)
     assert_code_response(response, status_code=200, expected_code=0)
@@ -43,8 +43,8 @@ def test_get_store_list_api(logged_in_client_partner, page, pageSize):
 @allure.story("Store listing")
 @allure.title("Get store list without token returns unauthorized")
 @allure.severity(allure.severity_level.NORMAL)
-def test_get_store_list_unauthorized(api_client):
-    store_api = StoreAPI(client=api_client)
+def test_get_store_list_unauthorized(mpointshop_api_client):
+    store_api = StoreAPI(client=mpointshop_api_client)
     response = store_api.get_store_list()
     assert_code_response(
         response=response,
@@ -59,9 +59,9 @@ def test_get_store_list_unauthorized(api_client):
 @allure.story("Store listing")
 @allure.title("Get store list with invalid token returns unauthorized")
 @allure.severity(allure.severity_level.NORMAL)
-def test_get_store_list_invalid_token(api_client):
-    store_api = StoreAPI(client=api_client)
-    api_client.set_token("invalid_token")
+def test_get_store_list_invalid_token(mpointshop_api_client):
+    store_api = StoreAPI(client=mpointshop_api_client)
+    mpointshop_api_client.set_token("invalid_token")
     response = store_api.get_store_list()
     assert_code_response(
         response=response,
@@ -97,8 +97,8 @@ def test_get_store_list_invalid_token(api_client):
 @allure.story("Store listing")
 @allure.title("Get store list validates invalid page and pageSize values")
 @allure.severity(allure.severity_level.NORMAL)
-def test_get_store_list_invalid_page_params(logged_in_client_partner, page, pageSize, type_text):
-    store_api = StoreAPI(client=logged_in_client_partner)
+def test_get_store_list_invalid_page_params(mpointshop_logged_in_client_partner, page, pageSize, type_text):
+    store_api = StoreAPI(client=mpointshop_logged_in_client_partner)
     params = {"page": page, "pageSize": pageSize}
     response = store_api.get_store_list(params=params)
     assert_code_response(
@@ -122,8 +122,8 @@ def test_get_store_list_invalid_page_params(logged_in_client_partner, page, page
 @allure.story("Store listing")
 @allure.title("Get store list handles pageSize edge cases")
 @allure.severity(allure.severity_level.NORMAL)
-def test_get_store_list_pageSize_edge_cases(logged_in_client_partner, page, pageSize, expectedPageSize):
-    store_api = StoreAPI(client=logged_in_client_partner)
+def test_get_store_list_pageSize_edge_cases(mpointshop_logged_in_client_partner, page, pageSize, expectedPageSize):
+    store_api = StoreAPI(client=mpointshop_logged_in_client_partner)
     params = {"page": page, "pageSize": pageSize}
     response = store_api.get_store_list(params=params)
     assert_code_response(response=response, status_code=200, expected_code=0)
@@ -134,8 +134,8 @@ def test_get_store_list_pageSize_edge_cases(logged_in_client_partner, page, page
 @allure.story("Store listing")
 @allure.title("Get store list returns empty data when page exceeds max")
 @allure.severity(allure.severity_level.NORMAL)
-def test_get_store_list_exceeds_max_page(logged_in_client_partner):
-    store_api = StoreAPI(client=logged_in_client_partner)
+def test_get_store_list_exceeds_max_page(mpointshop_logged_in_client_partner):
+    store_api = StoreAPI(client=mpointshop_logged_in_client_partner)
     params_prerequisite = {"page": 1, "pageSize": 10}
     response_prerequisite = store_api.get_store_list(params=params_prerequisite)
     body_prerequisite = response_prerequisite.json()
@@ -156,8 +156,8 @@ def test_get_store_list_exceeds_max_page(logged_in_client_partner):
 @allure.story("Store listing")
 @allure.title("POST on store list endpoint is not allowed")
 @allure.severity(allure.severity_level.MINOR)
-def test_post_store_list_not_allowed(logged_in_client_partner):
-    store_api = StoreAPI(client=logged_in_client_partner)
+def test_post_store_list_not_allowed(mpointshop_logged_in_client_partner):
+    store_api = StoreAPI(client=mpointshop_logged_in_client_partner)
     response = store_api.post_store_list()
     assert_code_response(
         response=response,
@@ -182,8 +182,8 @@ def test_post_store_list_not_allowed(logged_in_client_partner):
 @allure.story("Store listing")
 @allure.title("Get store list handles missing and unexpected params")
 @allure.severity(allure.severity_level.NORMAL)
-def test_missing_or_unexpected_params_get_store_list(logged_in_client_partner, params):
-    store_api = StoreAPI(client=logged_in_client_partner)
+def test_missing_or_unexpected_params_get_store_list(mpointshop_logged_in_client_partner, params):
+    store_api = StoreAPI(client=mpointshop_logged_in_client_partner)
     response = store_api.get_store_list(params=params)
     assert_code_response(response=response, status_code=200, expected_code=0)
     assert_store_page_response(

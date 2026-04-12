@@ -56,9 +56,9 @@ pytestmark = [
 @allure.story("Authentication")
 @allure.title("Login API validates invalid credentials and malformed payloads")
 @allure.severity(allure.severity_level.CRITICAL)
-def test_invalid_login(auth_api, payload, expected_status, expected_code, expected_error_message):
+def test_invalid_login(mpointshop_auth_api, payload, expected_status, expected_code, expected_error_message):
     
-    response = auth_api.login(payload)
+    response = mpointshop_auth_api.login(payload)
     assert response.status_code == expected_status
     data = response.json()
     assert data["code"] == expected_code

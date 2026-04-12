@@ -13,6 +13,7 @@ def mobile_driver():
     options.automation_name = "UiAutomator2"
     options.app_package = "com.mediaone.mKafe"
     options.app_activity = "com.mediaone.mKafe.MainActivity"
+    options.udid = "emulator-5554"
 
     driver = webdriver.Remote("http://127.0.0.1:4723", options=options)
     yield driver

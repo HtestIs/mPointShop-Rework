@@ -20,9 +20,9 @@ pytestmark = [
 @allure.story("Voucher synchronization")
 @allure.title("Pending voucher appears in mExchange after sync")
 @allure.severity(allure.severity_level.CRITICAL)
-def test_pending_voucher(logged_in_client_partner,create_voucher_discount_constant,mexchange_client_ui):
+def test_pending_voucher(mpointshop_logged_in_client_partner,create_voucher_discount_constant,mexchange_client_ui):
     response = create_voucher_discount_constant
-    result = create_and_sync_voucher_to_mexchange(logged_in_client_partner, response)
+    result = create_and_sync_voucher_to_mexchange(mpointshop_logged_in_client_partner, response)
     voucher_result = find_voucher_pool_in_mexchange(mexchange_client_ui, result["voucher_id"])
 
     mexchange_client_ui.debug_response(voucher_result["find_response"])
@@ -34,9 +34,9 @@ def test_pending_voucher(logged_in_client_partner,create_voucher_discount_consta
 @allure.story("Voucher synchronization")
 @allure.title("Committed voucher can be approved in mExchange")
 @allure.severity(allure.severity_level.CRITICAL)
-def test_commit_voucher(logged_in_client_partner,create_cash_multiple_voucher,mexchange_client_ui):
+def test_commit_voucher(mpointshop_logged_in_client_partner,create_cash_multiple_voucher,mexchange_client_ui):
     response = create_cash_multiple_voucher
-    result = create_and_sync_voucher_to_mexchange(logged_in_client_partner, response)
+    result = create_and_sync_voucher_to_mexchange(mpointshop_logged_in_client_partner, response)
     commit_result = find_and_commit_voucher_pool_in_mexchange(mexchange_client_ui, result["voucher_id"])
 
     assert commit_result["find_response"].status_code == 200
@@ -47,9 +47,9 @@ def test_commit_voucher(logged_in_client_partner,create_cash_multiple_voucher,me
 @allure.story("Voucher synchronization")
 @allure.title("Approved voucher syncs from mExchange to partner")
 @allure.severity(allure.severity_level.CRITICAL)
-def test_sync_voucher_to_partner(logged_in_client_partner,create_voucher_discount_constant,mexchange_client_ui):
+def test_sync_voucher_to_partner(mpointshop_logged_in_client_partner,create_voucher_discount_constant,mexchange_client_ui):
     response = create_voucher_discount_constant
-    result = create_and_sync_voucher_to_mexchange(logged_in_client_partner, response)
+    result = create_and_sync_voucher_to_mexchange(mpointshop_logged_in_client_partner, response)
     commit_result = find_and_commit_voucher_pool_in_mexchange(mexchange_client_ui, result["voucher_id"])
     id_voucher = commit_result["payload"]["voucher_id"]
     payload = {

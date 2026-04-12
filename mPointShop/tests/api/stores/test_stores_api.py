@@ -21,8 +21,8 @@ pytestmark = [
     (4, 15),
     (5, 30)
 ])
-def test_get_store_list_api(logged_in_client_partner, page, pageSize):
-    store_api = StoreAPI(client=logged_in_client_partner)
+def test_get_store_list_api(mpointshop_logged_in_client_partner, page, pageSize):
+    store_api = StoreAPI(client=mpointshop_logged_in_client_partner)
     params = {"page": page, "pageSize": pageSize}
     response = store_api.get_store_list(params=params)
     # store_api.client.debug_response(response)
@@ -32,8 +32,8 @@ def test_get_store_list_api(logged_in_client_partner, page, pageSize):
 @allure.story("Store listing")
 @allure.title("Get store list without token returns unauthorized")
 @allure.severity(allure.severity_level.NORMAL)
-def test_get_store_list_unauthorized(api_client):
-    store_api = StoreAPI(client=api_client)
+def test_get_store_list_unauthorized(mpointshop_api_client):
+    store_api = StoreAPI(client=mpointshop_api_client)
     response = store_api.get_store_list()
     # store_api.client.debug_response(response)
     assert_code_response(response=response, status_code=401, expected_code=401, expected_message="Token này đã hết hạn", expected_type="ERR_TOKEN_EXPIRED")
@@ -41,9 +41,9 @@ def test_get_store_list_unauthorized(api_client):
 @allure.story("Store listing")
 @allure.title("Get store list with invalid token returns unauthorized")
 @allure.severity(allure.severity_level.NORMAL)
-def test_get_store_list_invalid_token(api_client):
-    store_api = StoreAPI(client=api_client)
-    api_client.set_token("invalid_token")
+def test_get_store_list_invalid_token(mpointshop_api_client):
+    store_api = StoreAPI(client=mpointshop_api_client)
+    mpointshop_api_client.set_token("invalid_token")
     response = store_api.get_store_list()
     # store_api.client.debug_response(response)
     assert_code_response(response=response, status_code=401, expected_code=401, expected_message="Token này đã hết hạn", expected_type="ERR_TOKEN_EXPIRED")
@@ -60,8 +60,8 @@ def test_get_store_list_invalid_token(api_client):
     (1.5, 10,"numberInteger"),
     (1, 10.5,"numberInteger"),
 ],ids=["negative_page", "negative_pageSize", "zero_page", "non_numeric_page", "non_numeric_pageSize", "float_page", "float_pageSize"])
-def test_get_store_list_invalid_page_params(logged_in_client_partner,page,pageSize,type_text):
-    store_api = StoreAPI(client=logged_in_client_partner)
+def test_get_store_list_invalid_page_params(mpointshop_logged_in_client_partner,page,pageSize,type_text):
+    store_api = StoreAPI(client=mpointshop_logged_in_client_partner)
     params = {"page": page, "pageSize": pageSize}
     response = store_api.get_store_list(params=params)
     # store_api.client.debug_response(response)
@@ -75,8 +75,8 @@ def test_get_store_list_invalid_page_params(logged_in_client_partner,page,pageSi
     (1, 1000,100),
     (10, 0,10),
 ],ids=["pageSize_too_big","pageSize_too_small"])
-def test_get_store_list_pageSize_edge_cases(logged_in_client_partner, page, pageSize, expectedPageSize):
-    store_api = StoreAPI(client=logged_in_client_partner)
+def test_get_store_list_pageSize_edge_cases(mpointshop_logged_in_client_partner, page, pageSize, expectedPageSize):
+    store_api = StoreAPI(client=mpointshop_logged_in_client_partner)
     params = {"page": page, "pageSize": pageSize}
     response = store_api.get_store_list(params=params)
     # store_api.client.debug_response(response)
@@ -86,8 +86,8 @@ def test_get_store_list_pageSize_edge_cases(logged_in_client_partner, page, page
 @allure.story("Store listing")
 @allure.title("Get store list returns empty data when page exceeds max")
 @allure.severity(allure.severity_level.NORMAL)
-def test_get_store_list_exceeds_max_page(logged_in_client_partner):
-    store_api = StoreAPI(client=logged_in_client_partner)
+def test_get_store_list_exceeds_max_page(mpointshop_logged_in_client_partner):
+    store_api = StoreAPI(client=mpointshop_logged_in_client_partner)
     params_prerequisite = {"page": 1, "pageSize": 10}
     response_prerequisite = store_api.get_store_list(params=params_prerequisite)
     body_prerequisite = response_prerequisite.json()
@@ -103,8 +103,8 @@ def test_get_store_list_exceeds_max_page(logged_in_client_partner):
 @allure.story("Store listing")
 @allure.title("POST on store list endpoint is not allowed")
 @allure.severity(allure.severity_level.MINOR)
-def test_post_store_list_not_allowed(logged_in_client_partner):
-    store_api = StoreAPI(client=logged_in_client_partner)
+def test_post_store_list_not_allowed(mpointshop_logged_in_client_partner):
+    store_api = StoreAPI(client=mpointshop_logged_in_client_partner)
     response = store_api.post_store_list()
     # store_api.client.debug_response(response)
     assert_code_response(response=response, status_code=404, expected_code=404, expected_type="SERVICE_NOT_FOUND")
@@ -120,23 +120,23 @@ def test_post_store_list_not_allowed(logged_in_client_partner):
     {},
     {"page": None, "pageSize": None}
 ], ids=["no_pageSize", "no_page", "unexpected_param", "empty_dict", "null_params"])
-def test_missing_or_unexpected_params_get_store_list(logged_in_client_partner, params):
-    store_api = StoreAPI(client=logged_in_client_partner)
+def test_missing_or_unexpected_params_get_store_list(mpointshop_logged_in_client_partner, params):
+    store_api = StoreAPI(client=mpointshop_logged_in_client_partner)
     response = store_api.get_store_list(params=params)
     # store_api.client.debug_response(response)
     assert_code_response(response=response, status_code=200, expected_code=0)
     assert_store_page_response(data=response, expected_page=params.get("page"), expected_pageSize=params.get("pageSize"))
 
 @pytest.mark.api
-def test_create_store_no_payload(logged_in_client_partner):
-    store_api = StoreAPI(client=logged_in_client_partner)
+def test_create_store_no_payload(mpointshop_logged_in_client_partner):
+    store_api = StoreAPI(client=mpointshop_logged_in_client_partner)
     response = store_api.create_store(payload=None)
     # store_api.client.debug_response(response)
     assert_code_response(response=response, status_code=422, expected_code=422, expected_type="VALIDATION_ERROR")
 
 @pytest.mark.api
-def test_create_store_valid_payload(logged_in_client_partner,store_api_data):
-    store_api = StoreAPI(client=logged_in_client_partner)
+def test_create_store_valid_payload(mpointshop_logged_in_client_partner,store_api_data):
+    store_api = StoreAPI(client=mpointshop_logged_in_client_partner)
     
     payload = store_api_data.copy()
     response = store_api.create_store(payload=payload)
@@ -146,8 +146,8 @@ def test_create_store_valid_payload(logged_in_client_partner,store_api_data):
 # TODO: Add more test cases for create_store endpoint, such as invalid payload, missing required fields, etc.
 # yo mf, put a parametrize here for different invalid payloads to test the validation of the create_store endpoint
 @pytest.mark.api
-def test_create_store_invalid_payload(logged_in_client_partner,store_api_data):
-    store_api = StoreAPI(client=logged_in_client_partner)
+def test_create_store_invalid_payload(mpointshop_logged_in_client_partner,store_api_data):
+    store_api = StoreAPI(client=mpointshop_logged_in_client_partner)
     # Create a copy of the valid payload and remove a required field to make it invalid
     payload = store_api_data.copy()
     payload["nameStore"] = ""  # Assuming 'name' is a required field, setting it to empty string to make it invalid
@@ -166,8 +166,8 @@ def test_create_store_invalid_payload(logged_in_client_partner,store_api_data):
     "missing_password", "missing_phoneStore", "missing_province", 
     "missing_storeOwnerName", "missing_storeOwnerPhone", "missing_username", "missing_ward"
     ])
-def test_create_store_missing_required_fields(logged_in_client_partner, store_api_data, missing_field):
-    store_api = StoreAPI(client=logged_in_client_partner)
+def test_create_store_missing_required_fields(mpointshop_logged_in_client_partner, store_api_data, missing_field):
+    store_api = StoreAPI(client=mpointshop_logged_in_client_partner)
     payload = store_api_data.copy()
     payload.pop(missing_field)  # Remove the required field to test missing field validation
     response = store_api.create_store(payload=payload)
@@ -181,8 +181,8 @@ def test_create_store_missing_required_fields(logged_in_client_partner, store_ap
     {"skip": 0, "limit": 10, "phone": "0393704472"},
     {"skip": 0, "limit": 10}
 ], ids=["full_payload", "name_only", "phone_only", "pagination_only"])
-def test_search_store_valid_payload(logged_in_client_partner, payload):
-    store_api = StoreAPI(client=logged_in_client_partner)
+def test_search_store_valid_payload(mpointshop_logged_in_client_partner, payload):
+    store_api = StoreAPI(client=mpointshop_logged_in_client_partner)
     response = store_api.search_store(payload=payload)
     assert_code_response(response=response, status_code=200, expected_code=0)
 
@@ -192,8 +192,8 @@ def test_search_store_valid_payload(logged_in_client_partner, payload):
     {"skip": 0, "limit": 10, "name": ""},
     {"skip": 0, "limit": 10, "phone": ""}  
 ], ids=["empty_field", "empty_name_no_phone", "empty_phone_no_name"])
-def test_search_store_empty_fields(logged_in_client_partner, payload):
-    store_api = StoreAPI(client=logged_in_client_partner)
+def test_search_store_empty_fields(mpointshop_logged_in_client_partner, payload):
+    store_api = StoreAPI(client=mpointshop_logged_in_client_partner)
     response = store_api.search_store(payload=payload)
     assert_code_response(response=response, status_code=422, expected_code=422, expected_message="Tham số đầu vào không hợp lệ!")
 
@@ -208,8 +208,8 @@ def test_search_store_empty_fields(logged_in_client_partner, payload):
 ]
 , ids=["negative_skip", "missing_skip", "negative_limit", "missing_limit", "invalid_name_type", "invalid_phone_type"]
 )
-def test_search_store_invalid_payload(logged_in_client_partner, payload, response_code):
-    store_api = StoreAPI(client=logged_in_client_partner)
+def test_search_store_invalid_payload(mpointshop_logged_in_client_partner, payload, response_code):
+    store_api = StoreAPI(client=mpointshop_logged_in_client_partner)
     response = store_api.search_store(payload=payload)
     # store_api.client.debug_response(response)
     assert_code_response(response=response, status_code=response_code, expected_code=422)   

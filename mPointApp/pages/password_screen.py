@@ -2,6 +2,7 @@ from selenium.webdriver.common.by import By
 from appium.webdriver.common.appiumby import AppiumBy
 from mPointApp.pages.base_screen import BaseScreen
 from mPointApp.pages.home_screen import AppHomePage
+from mPointApp.pages.system.phone_dialog_page import AndroidPermissionDialog
 
 
 class PasswordScreen(BaseScreen):
@@ -18,4 +19,4 @@ class PasswordScreen(BaseScreen):
         self.type_text(self.CONFIRM_PASSWORD_INPUT, password)
     def click_confirm(self):
         self.tap(self.CONFIRM_BUTTON)
-        return AppHomePage(self.driver)
+        return AndroidPermissionDialog(self.driver)

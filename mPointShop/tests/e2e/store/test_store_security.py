@@ -31,8 +31,8 @@ def test_change_store_password(login_partner_success,password,toast):
 @allure.story("Locking stores")
 @allure.title("Lock store")
 @allure.severity(allure.severity_level.CRITICAL)
-def test_lock_store(login_partner_success,logged_in_client_partner,store_api_data):
-    store_api = StoreAPI(client=logged_in_client_partner)
+def test_lock_store(login_partner_success,mpointshop_logged_in_client_partner,store_api_data):
+    store_api = StoreAPI(client=mpointshop_logged_in_client_partner)
     payload = store_api_data.copy()
     store_api.create_store(payload=payload)
     menu = login_partner_success

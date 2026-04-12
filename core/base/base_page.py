@@ -37,8 +37,8 @@ class BasePage:
 
         self.driver.get(f"{self.base_url.rstrip('/')}/{path.lstrip('/')}")
 
-    def wait_visible(self, locator):
-        return self.wait.until(EC.visibility_of_element_located(locator))
+    def wait_visible(self, locator,timeout=10):
+        return WebDriverWait(self.driver, timeout).until(EC.visibility_of_element_located(locator))
 
     def wait_invisible(self, locator):
         return self.wait.until(EC.invisibility_of_element_located(locator))
@@ -143,9 +143,9 @@ class BasePage:
         element = self.find(locator)
         element.send_keys(absolute_path)
 
-    def is_visible(self, locator):
+    def is_visible(self, locator, timeout=10):
         try:
-            self.wait_visible(locator)
+            self.wait_visible(locator, timeout)
             return True
         except Exception:
             return False

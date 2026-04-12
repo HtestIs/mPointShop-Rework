@@ -25,9 +25,9 @@ pytestmark = [
     "discount_percentage", 
     "discount_constant", 
     "gift"],ids=["Pre-paid voucher","Percentage discount voucher","Constant discount voucher","Gift voucher"])
-def test_partner_create_voucher_page(voucher_data, logged_in_client_partner,login_partner_success,voucher_type): ## <--- delete this
+def test_partner_create_voucher_page(voucher_data, mpointshop_logged_in_client_partner,login_partner_success,voucher_type): ## <--- delete this
     # Step 1: Create voucher page
-    voucher_page = VoucherAPI(client = logged_in_client_partner)
+    voucher_page = VoucherAPI(client = mpointshop_logged_in_client_partner)
     payload = voucher_data(vouchertype=voucher_type)
     response = voucher_page.create_voucher(payload=payload)
     assert response.status_code == 200
@@ -44,20 +44,20 @@ def test_partner_create_voucher_page(voucher_data, logged_in_client_partner,logi
 @allure.story("Voucher page")
 @allure.title("Partner can sync voucher to mExchange")
 @allure.severity(allure.severity_level.CRITICAL)
-def test_sync_voucher_to_mExchange(logged_in_client_partner,create_cash_multiple_voucher,login_partner_success):
+def test_sync_voucher_to_mExchange(mpointshop_logged_in_client_partner,create_cash_multiple_voucher,login_partner_success):
 # API Magic
 # 1. Create voucher via api
     response = create_cash_multiple_voucher
 # 2. Get voucher ID from response
     voucher_id = response.json()["data"]["id"]
 # 3. Get list of stores
-    store_api = StoreAPI(client=logged_in_client_partner)
+    store_api = StoreAPI(client=mpointshop_logged_in_client_partner)
     store_response = store_api.get_store_list(params={"page": 1, "pageSize": 10})
     assert store_response.status_code == 200, f"Failed to get store list"
 # 4. Create payload to add store(s) to voucher
     payload = add_store_to_voucher_payload(store_response.json(),voucher_id)
 # 5. Move to Voucher Client and add store(s) to voucher using the sync endpoint
-    voucher_api = VoucherAPI(client=logged_in_client_partner)
+    voucher_api = VoucherAPI(client=mpointshop_logged_in_client_partner)
     add_store_response = voucher_api.add_store_to_voucher(payload=payload)
     assert add_store_response.status_code == 200, f"Failed to add store(s) to voucher"
 # 6. Sync voucher to mExchange

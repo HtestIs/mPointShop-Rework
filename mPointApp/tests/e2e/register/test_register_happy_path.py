@@ -27,6 +27,7 @@ def test_registration_flow(mobile_driver, user_data):
     password_screen.enter_password(data["password"])
     password_screen.enter_confirm_password(data["password"])
 
-    home_screen = password_screen.click_confirm()
+    permission_dialog = password_screen.click_confirm()
+    home_screen = permission_dialog.allow_permission()
     assert home_screen.is_homepage_displayed(), "Home screen should be visible after successful registration."
     assert home_screen.is_navigated_to_homepage(), "Should navigate to homepage after registration."

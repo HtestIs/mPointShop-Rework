@@ -7,7 +7,7 @@ from mPointShop.api.endpoints.auth_api import AuthAPI
 
 
 @pytest.fixture
-def valid_login_payload_partner(env_config):
+def mpointshop_valid_login_payload_partner(env_config):
     creds = env_config["users"]["partner"]
     return {
         "username": creds["username"],
@@ -16,7 +16,7 @@ def valid_login_payload_partner(env_config):
 
 
 @pytest.fixture
-def valid_login_payload_merchant(env_config):
+def mpointshop_valid_login_payload_merchant(env_config):
     creds = env_config["users"]["merchant"]
     return {
         "username": creds["username"],
@@ -25,35 +25,35 @@ def valid_login_payload_merchant(env_config):
 
 
 @pytest.fixture
-def api_client(env_config):
+def mpointshop_api_client(env_config):
     return MPointShopClient(base_url=env_config["api_url"])
 
 
 @pytest.fixture
-def fresh_api_client(env_config):
+def mpointshop_fresh_api_client(env_config):
     return MPointShopClient(base_url=env_config["api_url"])
 
 
 @pytest.fixture
-def auth_api(api_client):
-    return AuthAPI(api_client)
+def mpointshop_auth_api(mpointshop_api_client):
+    return AuthAPI(mpointshop_api_client)
 
 
 @pytest.fixture
-def logged_in_client_merchant(api_client, auth_api, valid_login_payload_merchant):
-    response = auth_api.login(valid_login_payload_merchant)
+def mpointshop_logged_in_client_merchant(mpointshop_api_client, mpointshop_auth_api, mpointshop_valid_login_payload_merchant):
+    response = mpointshop_auth_api.login(mpointshop_valid_login_payload_merchant)
     data = response.json()
     token = data["data"]["token"] if data["data"] else None
     if token:
-        api_client.set_token(token)
-    return api_client
+        mpointshop_api_client.set_token(token)
+    return mpointshop_api_client
 
 
 @pytest.fixture
-def logged_in_client_partner(api_client, auth_api, valid_login_payload_partner):
-    response = auth_api.login(valid_login_payload_partner)
+def mpointshop_logged_in_client_partner(mpointshop_api_client, mpointshop_auth_api, mpointshop_valid_login_payload_partner):
+    response = mpointshop_auth_api.login(mpointshop_valid_login_payload_partner)
     data = response.json()
     token = data["data"]["token"] if data["data"] else None
     if token:
-        api_client.set_token(token)
-    return api_client
+        mpointshop_api_client.set_token(token)
+    return mpointshop_api_client
