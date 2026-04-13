@@ -33,16 +33,27 @@ class APIClient:
         )
         return response
 
-    def post(self, endpoint, data=None, json_data=None, headers=None):
+    def post(self, endpoint, data=None, json_data=None, headers=None, params=None):
         url = self.base_url + "/" + endpoint.lstrip("/")
         response = self.session.post(
             url,
             data=data,
             json=json_data,
-            headers=headers
+            headers=headers,
+            params=params
         )
         return response
 
+    def patch(self, endpoint, data=None, json_data=None, headers=None, params=None):
+        url = self.base_url + "/" + endpoint.lstrip("/")
+        response = self.session.patch(
+            url,
+            data=data,
+            json=json_data,
+            headers=headers,
+            params=params
+        )
+        return response
     @staticmethod
     def debug_response(response):
         print("\n========== API DEBUG ==========")

@@ -117,3 +117,4 @@ allure serve allure-results
 
 - mShopAdmin login can be unstable in environments that enable captcha.
 - mPointApp suites are organized in `mPointApp/tests/e2e/register` and `mPointApp/tests/e2e/login`.
+- CI limitation: a reliable setup for Appium and Android virtual devices/emulators in CI has not been finalized yet.

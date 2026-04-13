@@ -2,6 +2,7 @@ import allure
 import pytest
 @pytest.mark.mpointapp
 @pytest.mark.e2e
+@pytest.mark.defect
 @allure.feature("Registration")
 @allure.story("Happy path")
 @allure.title("Register successfully with valid phone, OTP, and password")

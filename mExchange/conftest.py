@@ -25,38 +25,6 @@ def mexchange_auth_api(mexchange_client_ui):
     return ExchangeAuthAPI(mexchange_client_ui)
 
 
-@pytest.fixture(scope="session")
-def mexchange_token_from_ui(request, env_config):
-    browser = request.config.getoption("--browser")
-    cli_headless = request.config.getoption("--headless")
-    is_ci = os.getenv("CI", "").lower() == "true"
-
-    driver = DriverManager.get_driver(
-        browser,
-        headless=cli_headless or is_ci
-    )
-    try:
-        login_page = LoginPage(driver)
-        login_page.open(env_config["mexchange_web_url"])
-        login_page.login(
-            env_config["mexchange_username"],
-            env_config["mexchange_password"],
-        )
-
-        token = get_local_storage_token(driver, key="token")
-        if not token:
-            raise AssertionError("Failed to get mExchange token from localStorage")
-
-        return token
-    finally:
-        driver.quit()
-
-
-@pytest.fixture
-def mexchange_client_ui(env_config, mexchange_token_from_ui):
-    client = MExchangeClient(base_url=env_config["mexchange_api_url"])
-    client.set_x_access_token(mexchange_token_from_ui)
-    return client
 
 
 @pytest.fixture

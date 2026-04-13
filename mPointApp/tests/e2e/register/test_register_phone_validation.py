@@ -7,6 +7,7 @@ from mPointApp.pages.login_screen import LoginScreen
 @pytest.mark.mpointapp
 @pytest.mark.e2e
 @pytest.mark.registration
+@pytest.mark.defect
 @pytest.mark.parametrize(
     "invalid_phone",
     ["09123456789", "1234567890", "abcdefghij", "039484"],
@@ -27,6 +28,7 @@ def test_registration_with_invalid_phone(mobile_driver, invalid_phone):
 
 
 @pytest.mark.mpointapp
+@pytest.mark.defect
 @pytest.mark.e2e
 @pytest.mark.registration
 @allure.feature("Registration")
@@ -48,6 +50,7 @@ def test_registration_without_accepting_terms(mobile_driver, user_data):
 
 @pytest.mark.mpointapp
 @pytest.mark.e2e
+@pytest.mark.defect
 @pytest.mark.registration
 @allure.feature("Registration")
 @allure.story("Phone validation")
@@ -65,6 +68,7 @@ def test_registration_with_empty_phone_number(mobile_driver):
 
 @pytest.mark.mpointapp
 @pytest.mark.e2e
+@pytest.mark.defect
 @pytest.mark.registration
 @allure.feature("Registration")
 @allure.story("Phone validation")

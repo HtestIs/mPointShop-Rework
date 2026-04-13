@@ -6,6 +6,7 @@ from mPointApp.pages.login_screen import LoginScreen
 
 @pytest.mark.mpointapp
 @pytest.mark.e2e
+@pytest.mark.defect
 @pytest.mark.registration
 @allure.feature("Registration")
 @allure.story("OTP validation")

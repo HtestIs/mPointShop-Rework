@@ -7,6 +7,7 @@ from mPointApp.pages.login_screen import LoginScreen
 @pytest.mark.mpointapp
 @pytest.mark.e2e
 @pytest.mark.registration
+@pytest.mark.defect
 @allure.feature("Registration")
 @allure.story("Happy path")
 @allure.title("Register successfully with valid phone, OTP, and password")

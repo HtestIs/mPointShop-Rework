@@ -1,9 +1,3 @@
-"""Cross-system voucher flow helpers.
-
-These helpers are intentionally kept outside any single system package so they can
-be reused by both `mPointShop` and `mExchange` tests without cross-package coupling.
-"""
-
 from mExchange.api.flows.voucher_flow import find_and_commit_voucher_pool_in_mexchange
 from mPointShop.api.flows.voucher_flow import create_and_sync_voucher_to_mexchange
 

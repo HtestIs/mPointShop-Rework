@@ -7,6 +7,7 @@ from mPointApp.flows.register_prerequisite import RegisterFlow
 @pytest.mark.mpointapp
 @pytest.mark.e2e
 @pytest.mark.registration
+@pytest.mark.defect
 @allure.feature("Registration")
 @allure.story("Password validation")
 @allure.title("Reject registration when password confirmation does not match")
@@ -22,6 +23,7 @@ def test_password_mismatch_during_registration(mobile_driver, user_data):
 
 @pytest.mark.mpointapp
 @pytest.mark.e2e
+@pytest.mark.defect
 @pytest.mark.registration
 @allure.feature("Registration")
 @allure.story("Password validation")
@@ -38,6 +40,7 @@ def test_registration_with_weak_password(mobile_driver, user_data):
 
 @pytest.mark.mpointapp
 @pytest.mark.e2e
+@pytest.mark.defect
 @pytest.mark.registration
 @allure.feature("Registration")
 @allure.story("Password validation")
@@ -56,6 +59,7 @@ def test_registration_with_long_password(mobile_driver, user_data):
 @pytest.mark.mpointapp
 @pytest.mark.e2e
 @pytest.mark.registration
+@pytest.mark.defect
 @allure.feature("Registration")
 @allure.story("Password validation")
 @allure.title("Reject registration when password is not numeric")

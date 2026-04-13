@@ -1,0 +1,46 @@
+import json
+
+import pytest
+import allure
+from time import sleep
+
+from core.utils.shared_voucher_flows import get_synced_partner_voucher_alt_id
+from mExchange.api.flows.voucher_flow import find_and_commit_voucher_pool_in_mexchange, sync_voucher_to_partner
+from mPointShop.api.flows.voucher_flow import create_and_sync_voucher_to_mexchange
+from mShopAdmin.api.endpoints.voucher_api import VoucherAPI
+from mShopAdmin.api.helpers.voucher_helpers import create_approve_params, create_find_params, wait_for_voucher
+
+def test_finding_voucher_with_alt_id(mshopadmin_api_client_with_token):
+    voucher_page = VoucherAPI(mshopadmin_api_client_with_token)
+    params = create_find_params(page=308, api="find", voucher_id="voud7dr8b50bemc73d6nsi0")
+    response = voucher_page.find_voucher(params=params)
+    data = response.json()
+    # voucher_page.client.debug_response(response)
+    assert response.status_code == 200, "Expected status code 200"
+    assert data["count"] > 0, "Expected at least one voucher to be found"
+
+def test_approve_voucher(mshopadmin_api_client_with_token):
+    voucher_page = VoucherAPI(mshopadmin_api_client_with_token)
+    params = create_approve_params(page=308)
+    payload ={
+        "id": 128,
+        "isApprove": True,
+}
+    response = voucher_page.update_voucher(voucher_id=128,payload=payload ,params=params)
+    data = response.json()
+    voucher_page.client.debug_response(response)
+    assert response.status_code == 200
+    assert data["code"] == 0, "Expected code 0 for successful approval"
+
+def test_approve_synced_voucher(mshopadmin_api_client_with_token, create_cash_multiple_voucher, mpointshop_logged_in_client_partner, mexchange_client_ui):
+    response = create_cash_multiple_voucher
+    result = create_and_sync_voucher_to_mexchange(mpointshop_logged_in_client_partner, response)
+    commit_result = find_and_commit_voucher_pool_in_mexchange(mexchange_client_ui, result["voucher_id"])
+    sync_voucher_to_partner(commit_result["voucher_api"], commit_result["payload"]["voucher_id"])
+    voucher_id = commit_result["payload"]["voucher_id"]
+    sleep(5)
+    params = create_find_params(page=308, api="find", voucher_id=voucher_id)
+    voucher_page = VoucherAPI(mshopadmin_api_client_with_token)
+    find_response = wait_for_voucher(voucher_page,params)
+    voucher_page.client.debug_response(find_response)
+    assert find_response.status_code == 200, "Expected status code 200 when finding voucher"

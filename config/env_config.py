@@ -25,7 +25,8 @@ ENV_CONFIG = {
         "aap_username": os.getenv("DEV_AAP_USERNAME"),
         "aap_password": os.getenv("DEV_AAP_PASSWORD"),
         "app_username": os.getenv("DEV_APP_USERNAME"),
-        "app_password": os.getenv("DEV_APP_PASSWORD")
+        "app_password": os.getenv("DEV_APP_PASSWORD"),
+        "aap_token": os.getenv("DEV_AAP_TOKEN")
     },
 
     "prod" :{

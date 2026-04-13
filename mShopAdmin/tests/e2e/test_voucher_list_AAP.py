@@ -2,8 +2,6 @@ import allure
 import pytest
 
 from core.utils.shared_voucher_flows import get_synced_partner_voucher_alt_id
-from mExchange.conftest import mexchange_client_ui, mexchange_token_from_ui  # noqa: F401
-
 
 @pytest.mark.mshopadmin
 @pytest.mark.e2e

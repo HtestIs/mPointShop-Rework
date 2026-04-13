@@ -38,7 +38,6 @@ def test_commit_voucher(mpointshop_logged_in_client_partner,create_cash_multiple
     response = create_cash_multiple_voucher
     result = create_and_sync_voucher_to_mexchange(mpointshop_logged_in_client_partner, response)
     commit_result = find_and_commit_voucher_pool_in_mexchange(mexchange_client_ui, result["voucher_id"])
-
     assert commit_result["find_response"].status_code == 200
     assert commit_result["commit_response"].status_code == 200, "Failed to commit voucher pool in mExchange"
 
