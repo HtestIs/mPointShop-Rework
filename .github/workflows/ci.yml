@@ -36,6 +36,7 @@ jobs:
       DEV_AAP_BASE_URL: ${{ secrets.DEV_AAP_BASE_URL }}
       DEV_AAP_USERNAME: ${{ secrets.DEV_AAP_USERNAME }}
       DEV_AAP_PASSWORD: ${{ secrets.DEV_AAP_PASSWORD }}
+      DEV_AAP_TOKEN: ${{ secrets.DEV_AAP_TOKEN }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v5
