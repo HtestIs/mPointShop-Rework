@@ -30,6 +30,7 @@ def test_registration_with_invalid_otp(mobile_driver, user_data):
 @pytest.mark.mpointapp
 @pytest.mark.e2e
 @pytest.mark.registration
+@pytest.mark.defect
 @allure.feature("Registration")
 @allure.story("OTP validation")
 @allure.title("Require OTP during registration")
