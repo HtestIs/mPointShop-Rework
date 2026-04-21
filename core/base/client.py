@@ -54,6 +54,11 @@ class APIClient:
             params=params
         )
         return response
+
+    def set_key_app(self, key="mcoffee"):
+        self.session.headers.update({
+            "x-keyapp": key
+        })
     @staticmethod
     def debug_response(response):
         print("\n========== API DEBUG ==========")

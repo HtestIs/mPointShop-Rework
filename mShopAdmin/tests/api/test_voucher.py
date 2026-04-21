@@ -10,6 +10,17 @@ from mPointShop.api.flows.voucher_flow import create_and_sync_voucher_to_mexchan
 from mShopAdmin.api.endpoints.voucher_api import VoucherAPI
 from mShopAdmin.api.helpers.voucher_helpers import create_approve_params, create_find_params, wait_for_voucher
 
+pytestmark = [
+    pytest.mark.mshopadmin,
+    allure.parent_suite("mShopAdmin"),
+    allure.suite("API"),
+    allure.sub_suite("Voucher Management"),
+]
+
+@pytest.mark.api
+@allure.story("Voucher searching")
+@allure.title("Find voucher with alternative ID")
+@allure.severity(allure.severity_level.NORMAL)
 def test_finding_voucher_with_alt_id(mshopadmin_api_client_with_token):
     voucher_page = VoucherAPI(mshopadmin_api_client_with_token)
     params = create_find_params(page=308, api="find", voucher_id="voud7dr8b50bemc73d6nsi0")
@@ -32,6 +43,12 @@ def test_approve_voucher(mshopadmin_api_client_with_token):
     assert response.status_code == 200
     assert data["code"] == 0, "Expected code 0 for successful approval"
 
+@pytest.mark.api
+@pytest.mark.mpointshop
+@pytest.mark.mexchange
+@allure.story("Voucher approval workflow")
+@allure.title("Approve synced voucher across systems")
+@allure.severity(allure.severity_level.CRITICAL)
 def test_approve_synced_voucher(mshopadmin_api_client_with_token, create_cash_multiple_voucher, mpointshop_logged_in_client_partner, mexchange_client_ui):
 #1: mPointShop: Create voucher and sync to mExchange
     response = create_cash_multiple_voucher
@@ -54,7 +71,7 @@ def test_approve_synced_voucher(mshopadmin_api_client_with_token, create_cash_mu
     }
 #4: Approve the voucher in mShopAdmin and verify the response
     approve_response = voucher_page.update_voucher(voucher_id=admin_portal_voucher_id,payload=payload ,params=params_approve)
-    # voucher_page.client.debug_response(approve_response)
+    voucher_page.client.debug_response(approve_response)
     assert approve_response.status_code == 200, "Expected status code 200 when approving voucher"
     assert approve_response.json()["code"] == 0, "Expected code 0 for successful approval"
     assert approve_response.json()["message"] == "Update voucher successfully", "Expected success message for voucher approval"

@@ -65,3 +65,14 @@ def pytest_runtest_makereport(item, call):
                 )
         except Exception:
             pass
+@pytest.fixture
+def mexchange_base_url(env_config):
+    return env_config["mexchange_web_url"]
+
+@pytest.fixture
+def mshopadmin_base_url(env_config):
+    return env_config["mshopadmin_base_url"]  # Check if this exists in env_config
+
+@pytest.fixture
+def mpointshop_base_url(env_config):
+    return env_config["mpointshop_base_url"]  # Check if this exists in env_config
