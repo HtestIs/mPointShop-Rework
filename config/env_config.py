@@ -15,6 +15,10 @@ ENV_CONFIG = {
             "merchant": {
                 "username": os.getenv("DEV_MERCHANT_USERNAME"),
                 "password": os.getenv("DEV_MERCHANT_PASSWORD")
+            },
+            "valid_merchant": {
+                "username": os.getenv("DEV_MERCHANT_VALID_USERNAME"),
+                "password": os.getenv("DEV_MERCHANT_VALID_PASSWORD")
             }
         },
         "dup_username" : os.getenv("DEV_DUP_USERNAME"),

@@ -9,6 +9,10 @@ class VoucherScan(BasePage):
     VOUCHER_STATUS = (By.XPATH, "//li[span[1][normalize-space()='Tình trạng sử dụng:']]/span[2]")
     TOTAL_BILL = (By.XPATH, "//input[@placeholder='Nhập giá trị hóa đơn']")
     CONTINUE_BTN = (By.XPATH, "//button[span[normalize-space()='Tiếp tục']]")
+    INVALID_STORE = (By.XPATH,"//i[normalize-space()='Mã voucher không áp dụng cho cửa hàng này']")
+    MAX_BILL_AMOUNT = (By.XPATH,"//li[span[normalize-space()='Tổng thanh toán:']]/span[2]")
+    DISCOUNT_AMOUNT = (By.XPATH,"//li[span[normalize-space()='Giá trị giảm giá:']]/span[2]")
+    FINAL_BILL_AMOUNT = (By.XPATH,"//li[span[normalize-space()='Cần thanh toán:']]/span[2]")
     @allure.step("Check voucher scan page is loaded")
     def is_loaded(self):
         return self.wait_url_contains(self.URL)
@@ -29,3 +33,19 @@ class VoucherScan(BasePage):
     @allure.step("Click continue button")
     def click_continue(self):
         self.click(self.CONTINUE_BTN)
+    def get_invalid_store_message(self):
+        try:
+            return self.get_text(self.INVALID_STORE)
+        except:
+            return None
+    def get_max_bill_amount(self):
+        text = self.get_text(self.MAX_BILL_AMOUNT)
+        return self.money_to_int(text)
+
+    def get_discount_amount(self):
+        text = self.get_text(self.DISCOUNT_AMOUNT)
+        return self.money_to_int(text)
+
+    def get_final_bill_amount(self):
+        text = self.get_text(self.FINAL_BILL_AMOUNT)
+        return self.money_to_int(text)
